@@ -1,504 +1,551 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>เกมแฟลชการ์ดภาษาอังกฤษ (EN ⇄ TH)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วันนี้อนิเมะอะไรอัพ — On Air Guide</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
   :root{
-    --bg:#0b0f14;
-    --card:#121821;
-    --ink:#e9eef5;
-    --muted:#9fb0c3;
-    --accent:#72d2ff;
-    --good:#56d364;
-    --bad:#ff7b72;
-    --btn:#182233;
-    --btn2:#1f2a3d;
+    --bg: #0a0a0c;
+    --panel: #151517;
+    --panel-hi: #1d1d21;
+    --line: #2a2a2f;
+    --paper: #f5f2ea;
+    --muted: #8a8a92;
+    --signal: #e8482c;   /* broadcast red — live/on-air */
+    --signal-dim: #5c2018;
+    --teal: #3d9a82;     /* upcoming / time data */
+    --gold: #d9a441;     /* episode tag */
   }
-  *{box-sizing:border-box}
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html{ scroll-behavior:smooth; }
   body{
-    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Thai", "Noto Sans", sans-serif;
-    background:linear-gradient(180deg,#0b0f14 0%,#0b1017 50%,#0b0f14 100%);
-    color:var(--ink);
-    min-height:100svh; display:flex; flex-direction:column; gap:16px;
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 500px at 50% -15%, rgba(232,72,44,0.07), transparent 60%),
+      var(--bg);
+    color:var(--paper);
+    font-family:'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
   }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  header, main { max-width: 560px; margin: 0 auto; }
+
+  /* ── HEADER ── broadcast channel ident ── */
   header{
-    padding:16px 20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;
-    background:rgba(255,255,255,0.02); backdrop-filter: blur(6px); position:sticky; top:0; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
   }
-  header .title{font-weight:700}
-  header .controls{display:flex; gap:8px; flex-wrap:wrap}
-  button, select{
-    background:var(--btn); color:var(--ink); border:1px solid rgba(255,255,255,0.08); border-radius:12px;
-    padding:10px 14px; cursor:pointer; font-size:14px;
+  .channel-row{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:16px;
   }
-  button:hover{background:var(--btn2)}
-  button.primary{background:var(--accent); color:#001018; border:none; font-weight:700}
-  button.good{background:rgba(86,211,100,0.15); border:1px solid rgba(86,211,100,0.35)}
-  button.bad{background:rgba(255,123,114,0.12); border:1px solid rgba(255,123,114,0.32)}
-  main{display:grid; place-items:center; padding:8px 16px 24px}
-  .wrap{display:flex; flex-direction:column; gap:14px; max-width:900px; width:100%}
-  .stats{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-  .pill{
-    background:rgba(255,255,255,0.06); padding:8px 12px; border-radius:999px; font-size:13px; color:var(--muted); border:1px solid rgba(255,255,255,0.08)
+  .ident-mark{
+    display:flex; align-items:center; gap:8px; margin-bottom:10px;
   }
-  .big{
-    display:grid; gap:14px; grid-template-columns:1fr; align-items:center; justify-items:center;
+  .ident-dot{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--signal);
+    box-shadow: 0 0 0 3px var(--signal-dim);
+    animation: livepulse 1.6s ease-in-out infinite;
   }
+  @keyframes livepulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.5; transform:scale(0.85); }
+  }
+  .ident-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--signal);
+    font-weight:700;
+  }
+  h1{
+    margin:0;
+    font-family:'Archivo Black', sans-serif;
+    font-size: 26px;
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    color:var(--paper);
+  }
+  .sub{ color:var(--muted); font-size:12.5px; margin-top:6px; }
+  .clock-block{ text-align:right; flex-shrink:0; }
+  .clock-block .clock{
+    font-family:'JetBrains Mono', monospace; font-size:20px; font-weight:700; color:var(--paper);
+    letter-spacing:-0.02em;
+  }
+  .clock-block .tz{ font-size:10px; color:var(--muted); font-family:'JetBrains Mono', monospace; margin-top:2px; }
+
+  main{ padding: 20px 20px 60px; }
+
+  /* ── MODE TABS ── */
+  .tabs{ display:flex; gap:6px; margin-bottom:14px; }
+  .tab{
+    flex:1;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:9px 14px;
+    border-radius:8px;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    text-align:center;
+    transition: all .12s ease;
+    font-family:'Inter', sans-serif;
+  }
+  .tab.active{ background:var(--signal); border-color:var(--signal); color:#fff; }
+  .tab:not(.active):hover{ border-color:#3a3a42; color:var(--paper); }
+
+  /* ── DAY NAV (pagination) ── */
+  .day-nav{
+    display:flex; gap:6px; margin-bottom:18px;
+    overflow-x:auto; padding-bottom:2px; scrollbar-width:none;
+  }
+  .day-nav::-webkit-scrollbar{ display:none; }
+  .day-btn{
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:7px 10px;
+    border-radius:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:1px;
+    min-width:46px;
+    transition: all .15s ease;
+  }
+  .day-btn .d-name{ font-size:9.5px; opacity:0.75; letter-spacing:0.05em; }
+  .day-btn .d-num{ font-size:14px; font-weight:700; }
+  .day-btn.active{
+    background: rgba(232,72,44,0.12);
+    border-color: var(--signal);
+    color: var(--paper);
+  }
+  .day-btn.active .d-name{ color: var(--signal); opacity:1; }
+  .day-btn:not(.active):hover{ border-color:#3a3a42; color:var(--paper); }
+
+  /* ── STATUS ROW ── */
+  .refresh-row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; gap:12px;
+  }
+  .status{ font-size:11px; color:var(--muted); font-family:'JetBrains Mono', monospace; }
+  .status b{ color:var(--teal); }
+  button.refresh{
+    background:transparent; border:1px solid var(--line); color:var(--paper);
+    padding:7px 14px; border-radius:999px; font-size:12px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; gap:6px;
+    font-family:'Inter', sans-serif;
+  }
+  button.refresh:hover{ border-color:var(--signal); color:var(--signal); }
+  button.refresh:disabled{ opacity:0.5; cursor:default; }
+  .spin{ display:inline-block; animation: spin 0.8s linear infinite; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  #schedule-container{ display:flex; flex-direction:column; gap:1px; background:var(--line); border-radius:12px; overflow:hidden; border:1px solid var(--line); }
+
+  /* ── SCHEDULE ROW ── styled like a broadcast guide line ── */
   .card{
-    width:min(95vw,780px); aspect-ratio: 16/10; background:linear-gradient(180deg,#141c27,#0f1520);
-    border-radius:18px; border:1px solid rgba(255,255,255,0.09); display:flex; align-items:center; justify-content:center;
-    padding:24px; position:relative; cursor:pointer; user-select:none; transform: translateZ(0); transition: transform 200ms ease, box-shadow 200ms ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    background:var(--panel);
+    display:flex; flex-direction:row; align-items:stretch;
+    text-decoration:none; color:var(--paper);
+    transition: background .15s ease;
+    position: relative;
   }
-  .card:hover{transform: translateY(-2px)}
-  .side{
-    text-align:center; max-width:90%; line-height:1.3; font-size: clamp(22px, 3.6vw, 44px); letter-spacing: 0.3px;
+  .card:hover{ background:var(--panel-hi); }
+
+  .time-col{
+    width:64px; flex-shrink:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding: 10px 6px;
+    border-right: 1px solid var(--line);
+    gap:4px;
   }
-  .sub{color:var(--muted); font-size: clamp(13px, 2vw, 16px); line-height:1.35; margin-top:10px}
-  .hint{position:absolute; bottom:12px; right:16px; font-size:12px; color:var(--muted)}
-  .toolbar{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
-  .toolbar input[type="text"]{
-    background:#0f1520; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:var(--ink); width:200px;
+  .time-col .t{
+    font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:700; color:var(--paper);
   }
-  .grid{
-    display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:10px; width:100%;
+  .time-col .countdown{
+    font-family:'JetBrains Mono', monospace; font-size:9px; color:var(--muted);
+    text-align:center; line-height:1.3;
   }
-  details{
-    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px
+  .time-col .countdown.live{ color:var(--signal); font-weight:700; }
+  .time-col .countdown.live .lv-dot{
+    display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--signal);
+    margin-right:3px; animation: livepulse 1.4s ease-in-out infinite;
   }
-  summary{cursor:pointer; color:var(--muted)}
-  textarea{
-    width:100%; min-height:160px; background:#0f1520; border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:var(--ink); padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+
+  .poster{
+    width: 54px; height: 76px; margin: 8px 0 8px 10px;
+    border-radius: 5px; object-fit:cover; background: var(--panel-hi); flex-shrink: 0;
   }
-  .foot{color:var(--muted); font-size:12px; text-align:center; padding-bottom:12px}
+
+  .body{
+    display:flex; flex-direction:column; justify-content:center; gap:3px;
+    flex:1; min-width:0; padding: 8px 12px;
+  }
+  .title-en{
+    font-weight:700; font-size:13.5px; line-height:1.3; color:var(--paper);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .title-native{
+    font-size:11.5px; color: var(--teal); line-height:1.3;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    font-weight:500;
+  }
+  .meta{ display:flex; align-items:center; gap:8px; margin-top:3px; }
+  .ep{
+    font-family:'JetBrains Mono', monospace; font-size:10px; font-weight:700; color:#1a1408;
+    background: var(--gold);
+    padding:2px 7px; border-radius:4px; letter-spacing:0.02em;
+  }
+  .fmt{ font-size:10px; color:var(--muted); font-family:'JetBrains Mono', monospace; }
+
+  .empty, .loading, .error{
+    text-align:center; padding: 48px 20px; color:var(--muted);
+    font-family:'JetBrains Mono', monospace; font-size:12px;
+    background: var(--panel); border-radius:12px;
+  }
+  .error{ color: var(--signal); }
+  .loading .dot{ animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+
+  /* group divider for day-grouped week view */
+  .day-heading{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px; letter-spacing:0.15em; text-transform:uppercase;
+    color:var(--muted); padding: 16px 4px 8px; background:var(--bg);
+  }
+  .day-heading:first-child{ padding-top:0; }
+
+  footer{
+    text-align:center; color:#3a3a42; font-family:'JetBrains Mono', monospace;
+    font-size:11px; padding:24px 20px; max-width:560px; margin:0 auto;
+  }
+  footer a{ color: var(--teal); text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
 </style>
 </head>
 <body>
-  <header>
-    <div class="title">✨ เกมแฟลชการ์ดภาษาอังกฤษ (คลิกการ์ดเพื่อพลิก)</div>
-    <div class="controls">
-      <select id="mode">
-        <option value="en-th">โหมด: อังกฤษ ➜ ไทย</option>
-        <option value="th-en">โหมด: ไทย ➜ อังกฤษ</option>
-      </select>
-      <select id="deckSelect"></select>
-      <button id="shuffleBtn" title="สับไพ่ (R)">สับไพ่</button>
-      <button id="ttsBtn" title="อ่านออกเสียง (S)">อ่านคำ</button>
-      <button id="knownBtn" class="good" title="ฉันตอบถูก (K)">ฉันตอบถูก ✓</button>
-      <button id="unknownBtn" class="bad" title="ฉันยังจำไม่ได้ (F)">ยังจำไม่ได้ ✗</button>
-      <button id="nextBtn" class="primary" title="ถัดไป (Space)">ถัดไป</button>
-    </div>
-  </header>
 
-  <main>
-    <div class="wrap">
-      <div class="stats">
-        <div class="pill">การ์ดคงเหลือ: <b id="leftCount">0</b></div>
-        <div class="pill">คะแนนถูก: <b id="correct">0</b></div>
-        <div class="pill">ผิด/ข้าม: <b id="wrong">0</b></div>
-        <div class="pill">ความแม่นยำ: <b id="accuracy">0%</b></div>
-        <div class="pill">สตรีค: <b id="streak">0</b></div>
+<header>
+  <div class="channel-row">
+    <div>
+      <div class="ident-mark">
+        <span class="ident-dot"></span>
+        <span class="ident-label mono">ON AIR GUIDE</span>
       </div>
-
-      <div class="big">
-        <div class="card" id="card" role="button" aria-pressed="false">
-          <div class="side" id="front"></div>
-          <div class="side" id="back" style="display:none"></div>
-          <div class="hint">กด Space เพื่อพลิก / ปุ่มลูกศรถัดไปเพื่อไปการ์ดถัดไป</div>
-        </div>
-
-        <div class="toolbar">
-          <div class="grid" style="max-width:780px">
-            <button id="flipBtn" title="พลิกการ์ด (Space)">พลิกการ์ด</button>
-            <button id="reviewWrongBtn" title="เล่นเฉพาะที่ทำผิด">เล่นเฉพาะที่ทำผิด</button>
-            <button id="resetStatsBtn" title="รีเซ็ตสถิติ">รีเซ็ตสถิติ</button>
-            <button id="exportBtn" title="ส่งออกเด็คเป็น JSON">ส่งออกเด็ค</button>
-            <button id="importBtn" title="นำเข้าเด็คจาก JSON">นำเข้าเด็ค</button>
-            <input type="text" id="search" placeholder="ค้นหาคำ / ความหมาย" />
-            <button id="addBtn">เพิ่มการ์ดเอง</button>
-          </div>
-        </div>
-
-        <details>
-          <summary>เพิ่ม/แก้ไขเด็ค (รูปแบบ JSON) • คลิกเพื่อแสดง</summary>
-          <p class="sub">รูปแบบข้อมูลเด็ค:</p>
-          <pre class="sub" style="white-space:pre-wrap; background:#0d121b; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.08)">
-{
-  "name": "พื้นฐาน",
-  "cards": [
-    {"en":"apple","th":"แอปเปิ้ล","ex":"I eat an apple every morning."},
-    {"en":"travel","th":"ท่องเที่ยว","ex":"We love to travel during holidays."}
-  ]
-}
-          </pre>
-          <textarea id="deckEditor"></textarea>
-          <div style="display:flex; gap:8px; margin-top:8px">
-            <button id="applyDeckBtn" class="primary">นำไปใช้กับเด็คปัจจุบัน</button>
-            <button id="downloadDeckBtn">ดาวน์โหลดไฟล์เด็ค (.json)</button>
-          </div>
-        </details>
-
-        <p class="foot">เคล็ดลับ: ปุ่มลัด — Space: พลิก/ถัดไป • R: สับไพ่ • S: อ่านคำ • K: ถูก • F: ยังจำไม่ได้ • /: ค้นหา</p>
-      </div>
+      <h1>วันนี้อนิเมะอะไรอัพ</h1>
+      <div class="sub">ตารางออกอากาศจริงจาก AniList</div>
     </div>
-  </main>
+    <div class="clock-block">
+      <div class="clock mono" id="clock"></div>
+      <div class="tz mono" id="tz"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-mode="today">วันนี้</div>
+    <div class="tab" data-mode="week">7 วันข้างหน้า</div>
+  </div>
+
+  <div class="day-nav" id="dayNav" style="display: none;"></div>
+
+  <div class="refresh-row">
+    <span class="status mono" id="statusText">กำลังโหลด...</span>
+    <button class="refresh" id="refreshBtn">⟳ รีเฟรช</button>
+  </div>
+
+  <div id="schedule-container">
+    <div class="loading">กำลังดึงข้อมูล<span class="dot">...</span></div>
+  </div>
+</main>
+
+<footer>ข้อมูลจาก <a href="https://anilist.co" target="_blank" rel="noopener">AniList.co</a></footer>
 
 <script>
-const defaultDecks = [
-  {
-    name: "พื้นฐาน A1",
-    cards: [
-      {en:"apple", th:"แอปเปิ้ล", ex:"I eat an apple every morning."},
-      {en:"book", th:"หนังสือ", ex:"This book is very interesting."},
-      {en:"family", th:"ครอบครัว", ex:"My family lives in Bangkok."},
-      {en:"friend", th:"เพื่อน", ex:"He is my best friend."},
-      {en:"travel", th:"ท่องเที่ยว", ex:"We travel every summer."},
-      {en:"learn", th:"เรียนรู้", ex:"I want to learn English well."},
-      {en:"work", th:"ทำงาน", ex:"She works at a bank."},
-      {en:"school", th:"โรงเรียน", ex:"The school is near my house."},
-      {en:"food", th:"อาหาร", ex:"Thai food is delicious."},
-      {en:"water", th:"น้ำ", ex:"Drink more water."},
-      {en:"music", th:"ดนตรี", ex:"I listen to music at night."},
-      {en:"movie", th:"ภาพยนตร์", ex:"We watched a movie yesterday."},
-      {en:"health", th:"สุขภาพ", ex:"Health is more important than wealth."},
-      {en:"happy", th:"มีความสุข", ex:"I am happy to see you."},
-      {en:"practice", th:"ฝึกฝน", ex:"Practice makes perfect."},
-      {en:"city", th:"เมือง", ex:"Bangkok is a big city."},
-      {en:"market", th:"ตลาด", ex:"The market opens at 6 a.m."},
-      {en:"price", th:"ราคา", ex:"The price is too high."},
-      {en:"cheap", th:"ราคาถูก", ex:"This shirt is cheap and good."},
-      {en:"beautiful", th:"สวยงาม", ex:"The temple is beautiful."}
-    ]
-  },
-  {
-    name: "คำกริยาใช้บ่อย",
-    cards: [
-      {en:"go", th:"ไป", ex:"I go to work by bus."},
-      {en:"come", th:"มา", ex:"Please come here."},
-      {en:"take", th:"เอา/พา/รับ", ex:"Take an umbrella with you."},
-      {en:"make", th:"ทำ/สร้าง", ex:"They make cakes on Sundays."},
-      {en:"get", th:"ได้/รับ", ex:"I get many emails every day."},
-      {en:"need", th:"ต้องการ", ex:"We need more time."},
-      {en:"want", th:"ต้องการ/อยาก", ex:"I want a new phone."},
-      {en:"like", th:"ชอบ", ex:"Do you like coffee?"},
-      {en:"know", th:"รู้", ex:"She knows the answer."},
-      {en:"think", th:"คิด", ex:"I think it's going to rain."},
-      {en:"tell", th:"บอก/เล่า", ex:"Tell me the truth."},
-      {en:"call", th:"โทร/เรียก", ex:"Call me later."},
-      {en:"try", th:"ลอง/พยายาม", ex:"Try your best."},
-      {en:"use", th:"ใช้", ex:"Use this key to open the door."},
-      {en:"find", th:"หา/พบ", ex:"I can't find my keys."}
-    ]
-  }
-];
+  const ANILIST_URL = 'https://graphql.anilist.co';
+  let currentMode = 'today';
+  let selectedOffset = 1; // ค่าเริ่มต้นเวลาเปิดโหมด 7 วันให้โชว์ของ 'พรุ่งนี้'
+  let cache = { today: null, week: null };
+  let countdownTimer = null;
 
-const el = (id)=>document.getElementById(id);
-const front = el("front");
-const back  = el("back");
-const card  = el("card");
-
-const state = {
-  decks: [],
-  deckIndex: 0,
-  queue: [], // indexes of cards
-  current: 0,
-  showBack: false,
-  correct: 0,
-  wrong: 0,
-  streak: 0,
-  wrongSet: new Set(),
-  mode: "en-th", // en-th | th-en
-};
-
-function saveLocal(){
-  const data = {
-    decks: state.decks,
-    deckIndex: state.deckIndex,
-    stats: {correct: state.correct, wrong: state.wrong, streak: state.streak},
-    wrongSet: [...state.wrongSet],
-    mode: state.mode
-  };
-  localStorage.setItem("en_th_flashcards_v1", JSON.stringify(data));
-}
-
-function loadLocal(){
-  try{
-    const raw = localStorage.getItem("en_th_flashcards_v1");
-    if(!raw) return false;
-    const data = JSON.parse(raw);
-    state.decks = data.decks?.length ? data.decks : defaultDecks;
-    state.deckIndex = data.deckIndex ?? 0;
-    state.correct = data.stats?.correct ?? 0;
-    state.wrong = data.stats?.wrong ?? 0;
-    state.streak = data.stats?.streak ?? 0;
-    state.wrongSet = new Set(data.wrongSet ?? []);
-    state.mode = data.mode ?? "en-th";
-    return true;
-  }catch(e){ console.warn(e); return false; }
-}
-
-function init(){
-  if(!loadLocal()){
-    state.decks = defaultDecks;
-  }
-  // build deck select
-  refreshDeckSelect();
-  el("mode").value = state.mode;
-  startDeck(state.deckIndex);
-  wireEvents();
-}
-
-function refreshDeckSelect(){
-  const sel = el("deckSelect");
-  sel.innerHTML = "";
-  state.decks.forEach((d, i)=>{
-    const opt = document.createElement("option");
-    opt.value = i; opt.textContent = `เด็ค: ${d.name} (${d.cards.length})`;
-    sel.appendChild(opt);
-  });
-  sel.value = state.deckIndex;
-}
-
-function startDeck(idx){
-  state.deckIndex = Number(idx) || 0;
-  const deck = state.decks[state.deckIndex];
-  state.queue = Array.from(deck.cards.keys());
-  shuffle(state.queue);
-  state.current = 0;
-  state.showBack = false;
-  updateCard();
-  updateStats();
-  el("deckEditor").value = JSON.stringify(deck, null, 2);
-  saveLocal();
-}
-
-function shuffle(arr){
-  for(let i=arr.length-1; i>0; i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
-function formatCard(c){
-  if(state.mode === "en-th"){
-    front.innerHTML = `<div><div style="font-weight:800">${escapeHTML(c.en)}</div>` +
-      (c.ph?`<div class="sub">/${escapeHTML(c.ph)}/</div>`:"") + `</div>`;
-    back.innerHTML  = `<div><div style="font-weight:700">${escapeHTML(c.th)}</div>` +
-      (c.ex?`<div class="sub">Example: ${escapeHTML(c.ex)}</div>`:"") + `</div>`;
-  }else{
-    front.innerHTML = `<div><div style="font-weight:800">${escapeHTML(c.th)}</div></div>`;
-    back.innerHTML  = `<div><div style="font-weight:700">${escapeHTML(c.en)}</div>` +
-      (c.ex?`<div class="sub">Example: ${escapeHTML(c.ex)}</div>`:"") + `</div>`;
-  }
-}
-
-function escapeHTML(s){
-  return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-function currentCard(){
-  const deck = state.decks[state.deckIndex];
-  const idx = state.queue[state.current] ?? 0;
-  return deck.cards[idx];
-}
-
-function updateCard(){
-  const c = currentCard();
-  if(!c){ front.textContent = "จบเด็คแล้ว!"; back.textContent = ""; return; }
-  formatCard(c);
-  back.style.display = state.showBack ? "block" : "none";
-  front.style.display = state.showBack ? "none" : "block";
-  el("leftCount").textContent = (state.queue.length - state.current);
-}
-
-function flip(){
-  state.showBack = !state.showBack;
-  updateCard();
-}
-
-function speak(){
-  try{
-    const c = currentCard(); if(!c) return;
-    const utter = new SpeechSynthesisUtterance(state.mode==='en-th' ? c.en : c.en);
-    utter.lang = "en-US";
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utter);
-  }catch(e){ console.warn("TTS failed", e); }
-}
-
-function nextCard(){
-  if(state.current < state.queue.length-1){
-    state.current += 1;
-    state.showBack = false;
-    updateCard();
-  }else{
-    front.innerHTML = "<b>เยี่ยมมาก! เล่นครบแล้ว 🎉</b>";
-    back.style.display = "none";
-  }
-  updateStats();
-  saveLocal();
-}
-
-function markKnown(isKnown){
-  const deck = state.decks[state.deckIndex];
-  const idx = state.queue[state.current];
-  if(isKnown){
-    state.correct += 1;
-    state.streak += 1;
-    state.wrongSet.delete(idx);
-  }else{
-    state.wrong += 1;
-    state.streak = 0;
-    // ส่งการ์ดใบนี้ไปข้างหลังของคิว เพื่อทบทวนซ้ำแบบ spaced-repetition เบื้องต้น
-    state.queue.push(idx);
-    state.wrongSet.add(idx);
-  }
-  updateStats();
-  saveLocal();
-}
-
-function updateStats(){
-  const total = state.correct + state.wrong;
-  const acc = total ? Math.round((state.correct/total)*100) : 0;
-  el("correct").textContent = state.correct;
-  el("wrong").textContent = state.wrong;
-  el("accuracy").textContent = acc + "%";
-  el("streak").textContent = state.streak;
-  el("leftCount").textContent = Math.max(0, state.queue.length - state.current);
-}
-
-function reviewWrongOnly(){
-  const wrongIdx = [...state.wrongSet];
-  if(wrongIdx.length === 0){ alert("ยังไม่มีการ์ดที่ทำผิด"); return; }
-  state.queue = wrongIdx.slice();
-  shuffle(state.queue);
-  state.current = 0;
-  state.showBack = false;
-  updateCard();
-  updateStats();
-  saveLocal();
-}
-
-function resetStats(){
-  if(!confirm("รีเซ็ตสถิติ (ถูก/ผิด/สตรีค) ทั้งหมด?")) return;
-  state.correct = 0; state.wrong = 0; state.streak = 0; state.wrongSet.clear();
-  updateStats(); saveLocal();
-}
-
-function applyEditorToDeck(){
-  try{
-    const data = JSON.parse(el("deckEditor").value);
-    if(!data.name || !Array.isArray(data.cards)) throw new Error("รูปแบบไม่ถูกต้อง");
-    state.decks[state.deckIndex] = data;
-    refreshDeckSelect();
-    startDeck(state.deckIndex);
-  }catch(e){
-    alert("ไม่สามารถอ่าน JSON ได้: " + e.message);
-  }
-}
-
-function downloadDeck(){
-  const data = el("deckEditor").value;
-  const blob = new Blob([data], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = `deck_${Date.now()}.json`; a.click();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-}
-
-function exportCurrentDeck(){
-  const deck = state.decks[state.deckIndex];
-  const blob = new Blob([JSON.stringify(deck, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = `${deck.name.replace(/\s+/g,'_')}.json`; a.click();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
-}
-
-function importDeck(){
-  const inp = document.createElement("input");
-  inp.type = "file"; inp.accept = ".json,application/json";
-  inp.onchange = (e)=>{
-    const file = e.target.files?.[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      try{
-        const data = JSON.parse(String(reader.result));
-        if(!data.name || !Array.isArray(data.cards)) throw new Error("รูปแบบไม่ถูกต้อง");
-        state.decks.push(data);
-        refreshDeckSelect();
-        state.deckIndex = state.decks.length - 1;
-        startDeck(state.deckIndex);
-      }catch(err){
-        alert("ไฟล์ไม่ถูกต้อง: " + err.message);
+  const QUERY = `
+    query ($start: Int, $end: Int, $page: Int) {
+      Page(page: $page, perPage: 50) {
+        pageInfo { hasNextPage }
+        airingSchedules(airingAt_greater: $start, airingAt_lesser: $end, sort: TIME) {
+          airingAt
+          episode
+          media {
+            title { romaji english native }
+            format
+            coverImage { large medium }
+            siteUrl
+          }
+        }
       }
-    };
-    reader.readAsText(file);
-  };
-  inp.click();
-}
+    }
+  `;
 
-function addCardQuick(){
-  const en = prompt("ใส่คำอังกฤษ (EN):"); if(!en) return;
-  const th = prompt("ใส่คำแปลไทย (TH):") || "";
-  const ex = prompt("ตัวอย่างประโยค (ไม่บังคับ):") || "";
-  const deck = state.decks[state.deckIndex];
-  deck.cards.push({en, th, ex});
-  el("deckEditor").value = JSON.stringify(deck, null, 2);
-  startDeck(state.deckIndex);
-}
+  function getRange(mode){
+    const now = new Date();
+    if(mode === 'today'){
+      const start = new Date(now); start.setHours(0,0,0,0);
+      const end = new Date(now); end.setHours(23,59,59,999);
+      return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
+    } else {
+      const start = new Date(now);
+      const end = new Date(now); end.setDate(end.getDate() + 7);
+      return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
+    }
+  }
 
-function searchFilter(){
-  const q = el("search").value.trim().toLowerCase();
-  const deck = state.decks[state.deckIndex];
-  if(!q){ startDeck(state.deckIndex); return; }
-  const matched = [];
-  deck.cards.forEach((c, i)=>{
-    const hay = `${c.en} ${c.th} ${c.ex||""}`.toLowerCase();
-    if(hay.includes(q)) matched.push(i);
+  async function fetchSchedule(mode){
+    const { start, end } = getRange(mode);
+    let allResults = [];
+    let page = 1;
+    let hasNext = true;
+
+    while(hasNext && page <= 4){
+      const res = await fetch(ANILIST_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ query: QUERY, variables: { start, end, page } })
+      });
+      if(!res.ok) throw new Error('AniList API error: ' + res.status);
+      const json = await res.json();
+      if(json.errors) throw new Error(json.errors[0]?.message || 'Unknown API error');
+      const pageData = json.data.Page;
+      allResults = allResults.concat(pageData.airingSchedules);
+      hasNext = pageData.pageInfo.hasNextPage;
+      page++;
+    }
+    return allResults;
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+
+  function formatType(fmt){
+    const map = { TV:'TV', TV_SHORT:'TV Short', MOVIE:'Movie', OVA:'OVA', ONA:'ONA', SPECIAL:'Special', MUSIC:'Music' };
+    return map[fmt] || fmt || '';
+  }
+
+  function countdownLabel(airingAt){
+    const now = Date.now()/1000;
+    const diff = airingAt - now;
+    const hourWindow = 3600;
+
+    if(diff <= 0 && diff > -hourWindow){
+      return { text: '<span class="lv-dot"></span>ON AIR', live: true };
+    }
+    if(diff > 0 && diff <= hourWindow){
+      const mins = Math.round(diff/60);
+      return { text: `ใน ${mins} นาที`, live: false, soon: true };
+    }
+    if(diff <= -hourWindow){
+      return { text: 'ออกอากาศแล้ว', live: false };
+    }
+    const hrs = diff/3600;
+    if(hrs < 24){
+      return { text: `ใน ${Math.round(hrs)} ชม.`, live: false };
+    }
+    const days = Math.round(hrs/24);
+    return { text: `ใน ${days} วัน`, live: false };
+  }
+
+  function createCard(item) {
+    const m = item.media;
+    const titleEn = m.title.english || m.title.romaji;
+    const titleNative = m.title.romaji !== titleEn ? m.title.romaji : (m.title.native || '');
+
+    const card = document.createElement('a');
+    card.className = 'card';
+    card.href = m.siteUrl;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.dataset.airingAt = item.airingAt;
+
+    const timeFormatted = new Date(item.airingAt * 1000).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+    const cd = countdownLabel(item.airingAt);
+
+    card.innerHTML = `
+      <div class="time-col">
+        <span class="t mono">${timeFormatted}</span>
+        <span class="countdown mono ${cd.live ? 'live' : ''}">${cd.text}</span>
+      </div>
+      <img class="poster" src="${m.coverImage.large || m.coverImage.medium}" alt="${escapeHtml(titleEn)}" loading="lazy">
+      <div class="body">
+        <div class="title-en" title="${escapeHtml(titleEn)}">${escapeHtml(titleEn)}</div>
+        ${titleNative ? `<div class="title-native" title="${escapeHtml(titleNative)}">${escapeHtml(titleNative)}</div>` : ''}
+        <div class="meta">
+          <span class="ep">EP ${item.episode}</span>
+          <span class="fmt">${formatType(m.format)}</span>
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  function renderList(list, groupByDay=false){
+    const container = document.getElementById('schedule-container');
+    container.innerHTML = '';
+
+    if(!list || list.length === 0){
+      container.innerHTML = '<div class="empty">ไม่พบข้อมูลอนิเมะที่ออกอากาศ</div>';
+      document.getElementById('statusText').innerHTML = `พบ <b>0</b> ตอน`;
+      return;
+    }
+
+    const seen = new Set();
+    const uniqueList = list.filter(item => {
+      const title = item.media.title.english || item.media.title.romaji;
+      const key = `${title}-EP${item.episode}`;
+      if(seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    uniqueList.forEach(item => container.appendChild(createCard(item)));
+
+    document.getElementById('statusText').innerHTML = `พบ <b>${uniqueList.length}</b> ตอน`;
+  }
+
+  function renderDayNav() {
+    const dayNav = document.getElementById('dayNav');
+    dayNav.innerHTML = '';
+    const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    for(let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+
+      const btn = document.createElement('div');
+      btn.className = 'day-btn' + (i === selectedOffset ? ' active' : '');
+      btn.innerHTML = `<span class="d-name">${dayNames[d.getDay()]}</span><span class="d-num">${d.getDate()}</span>`;
+
+      btn.onclick = () => {
+        selectedOffset = i;
+        renderCurrentView();
+      };
+
+      dayNav.appendChild(btn);
+    }
+  }
+
+  function renderCurrentView() {
+    const dayNav = document.getElementById('dayNav');
+
+    if(currentMode === 'today') {
+      dayNav.style.display = 'none';
+      renderList(cache.today);
+    } else {
+      dayNav.style.display = 'flex';
+      renderDayNav();
+
+      if(cache.week) {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const targetDay = new Date(today);
+        targetDay.setDate(today.getDate() + selectedOffset);
+
+        const filtered = cache.week.filter(item => {
+          const d = new Date(item.airingAt * 1000);
+          return d.getFullYear() === targetDay.getFullYear() &&
+                 d.getMonth() === targetDay.getMonth() &&
+                 d.getDate() === targetDay.getDate();
+        });
+        renderList(filtered);
+      }
+    }
+  }
+
+  function refreshCountdowns(){
+    document.querySelectorAll('.card').forEach(card => {
+      const airingAt = parseFloat(card.dataset.airingAt);
+      if(!airingAt) return;
+      const cd = countdownLabel(airingAt);
+      const el = card.querySelector('.countdown');
+      if(el){
+        el.innerHTML = cd.text;
+        el.classList.toggle('live', !!cd.live);
+      }
+    });
+  }
+
+  async function load(mode, forceRefresh=false){
+    const container = document.getElementById('schedule-container');
+    const btn = document.getElementById('refreshBtn');
+    const statusEl = document.getElementById('statusText');
+
+    if(!cache[mode] || forceRefresh){
+      container.innerHTML = '<div class="loading">กำลังดึงข้อมูล<span class="dot">...</span></div>';
+      statusEl.textContent = 'กำลังโหลด...';
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">⟳</span> โหลด';
+
+      try{
+        cache[mode] = await fetchSchedule(mode);
+      }catch(err){
+        container.innerHTML = `<div class="error">โหลดข้อมูลไม่สำเร็จ: ${escapeHtml(err.message)}<br><br>ลองกดรีเฟรชอีกครั้ง</div>`;
+        statusEl.textContent = 'เกิดข้อผิดพลาด';
+        btn.disabled = false;
+        btn.innerHTML = '⟳ รีเฟรช';
+        return;
+      }
+    }
+
+    renderCurrentView();
+
+    btn.disabled = false;
+    btn.innerHTML = '⟳ รีเฟรช';
+  }
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentMode = tab.dataset.mode;
+
+      if (currentMode === 'week' && selectedOffset === 0) {
+        selectedOffset = 1;
+      }
+
+      load(currentMode);
+    });
   });
-  if(matched.length===0){ alert("ไม่พบคำที่ค้นหา"); return; }
-  state.queue = matched;
-  state.current = 0; state.showBack=false;
-  updateCard(); updateStats();
-}
 
-function wireEvents(){
-  card.addEventListener("click", flip);
-  el("flipBtn").addEventListener("click", flip);
-  el("ttsBtn").addEventListener("click", speak);
-  el("nextBtn").addEventListener("click", nextCard);
-  el("shuffleBtn").addEventListener("click", ()=>{ shuffle(state.queue); state.current=0; state.showBack=false; updateCard(); saveLocal(); });
-  el("knownBtn").addEventListener("click", ()=>{ markKnown(true); nextCard(); });
-  el("unknownBtn").addEventListener("click", ()=>{ markKnown(false); nextCard(); });
-
-  el("deckSelect").addEventListener("change", (e)=> startDeck(e.target.value));
-  el("mode").addEventListener("change", (e)=>{ state.mode=e.target.value; updateCard(); saveLocal(); });
-
-  el("reviewWrongBtn").addEventListener("click", reviewWrongOnly);
-  el("resetStatsBtn").addEventListener("click", resetStats);
-  el("applyDeckBtn").addEventListener("click", applyEditorToDeck);
-  el("downloadDeckBtn").addEventListener("click", downloadDeck);
-  el("exportBtn").addEventListener("click", exportCurrentDeck);
-  el("importBtn").addEventListener("click", importDeck);
-  el("addBtn").addEventListener("click", addCardQuick);
-  el("search").addEventListener("keydown", (e)=>{ if(e.key==="Enter") searchFilter(); });
-
-  document.addEventListener("keydown", (e)=>{
-    if(e.target === el("search")) return;
-    if(e.key === " "){ e.preventDefault(); if(!state.showBack) flip(); else nextCard(); }
-    else if(e.key.toLowerCase() === "r"){ shuffle(state.queue); state.current=0; state.showBack=false; updateCard(); }
-    else if(e.key.toLowerCase() === "s"){ speak(); }
-    else if(e.key.toLowerCase() === "k"){ markKnown(true); nextCard(); }
-    else if(e.key.toLowerCase() === "f"){ markKnown(false); nextCard(); }
-    else if(e.key === "ArrowRight"){ nextCard(); }
-    else if(e.key === "/"){ e.preventDefault(); el("search").focus(); }
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    load(currentMode, true);
   });
-}
 
-init();
+  function updateClock(){
+    const now = new Date();
+    document.getElementById('clock').innerHTML = now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    const tzOffset = -now.getTimezoneOffset()/60;
+    document.getElementById('tz').textContent = `UTC${tzOffset >= 0 ? '+' : ''}${tzOffset}`;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+  countdownTimer = setInterval(refreshCountdowns, 30000);
+
+  load('today');
 </script>
+
 </body>
 </html>
