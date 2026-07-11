@@ -1,357 +1,369 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>วันนี้อนิเมะอะไรอัพ — On Air Guide (HUD Edition)</title>
+<title>วันนี้อนิเมะอะไรอัพ — On Air Monitor</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-  :root {
-    --bg: #050508;
-    --panel: rgba(15, 15, 20, 0.65);
-    --panel-hi: rgba(30, 30, 40, 0.85);
-    --line: rgba(61, 154, 130, 0.2);
-    --line-glow: rgba(61, 154, 130, 0.5);
-    --paper: #f0f4f8;
-    --muted: #8c97a7;
-    --signal: #ff3b30;   
-    --signal-dim: #5c1616;
-    --teal: #00f0ff;     
-    --gold: #ffcc00;     
-    --page-max: 1200px;
-    --glass-blur: blur(12px);
+  :root{
+    --bg:#050508;
+    --panel: rgba(16,17,22,0.7);
+    --panel-hi: rgba(28,30,38,0.85);
+    --line: rgba(0,240,255,0.16);
+    --line-glow: rgba(0,240,255,0.5);
+    --paper:#eef3f7;
+    --muted:#8b96a8;
+    --signal:#ff3b30;
+    --signal-dim:#4a1512;
+    --teal:#00e5ff;
+    --gold:#ffcc33;
+    --page-max:1200px;
+    --blur: blur(14px);
+    --radar-size: 46px;
   }
-
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html { scroll-behavior: smooth; }
-  
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background-color: var(--bg);
-    /* Sci-Fi Grid Background */
-    background-image: 
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; min-height:100vh; background-color:var(--bg); color:var(--paper);
+    font-family:'Inter', system-ui, sans-serif; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    background-image:
       linear-gradient(var(--line) 1px, transparent 1px),
       linear-gradient(90deg, var(--line) 1px, transparent 1px),
-      radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.1), transparent 50%);
-    background-size: 40px 40px, 40px 40px, 100% 100%;
-    color: var(--paper);
-    font-family: 'Inter', system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+      radial-gradient(circle at 50% 0%, rgba(0,229,255,0.09), transparent 55%);
+    background-size:42px 42px, 42px 42px, 100% 100%;
+    background-attachment:fixed;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  ::selection{ background:var(--teal); color:#00161a; }
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
   }
 
-  .mono { font-family: 'JetBrains Mono', monospace; }
-  
-  header, main { max-width: var(--page-max); margin: 0 auto; }
+  header, main, footer{ max-width:var(--page-max); margin:0 auto; }
 
-  /* ── HEADER ── */
-  header {
-    padding: 24px 20px;
-    background: linear-gradient(180deg, rgba(5,5,8,0.9) 0%, transparent 100%);
-    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
-    backdrop-filter: var(--glass-blur);
-    position: sticky;
-    top: 0;
-    z-index: 50;
+  /* ══ HEADER — radar sweep ident ══ */
+  header{
+    padding:18px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px;
+    background:linear-gradient(180deg, rgba(5,5,8,0.92), rgba(5,5,8,0.6));
+    border-bottom:1px solid var(--line);
+    backdrop-filter:var(--blur);
+    position:sticky; top:0; z-index:60;
   }
-  .channel-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-  
-  .ident-mark { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .ident-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--signal);
-    box-shadow: 0 0 8px var(--signal), 0 0 0 3px var(--signal-dim);
-    animation: livepulse 1.5s ease-in-out infinite;
+  .brand{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .radar{
+    width:var(--radar-size); height:var(--radar-size); border-radius:50%; flex-shrink:0;
+    border:1px solid var(--line-glow); position:relative; overflow:hidden;
+    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
   }
-  @keyframes livepulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.85); box-shadow: 0 0 2px var(--signal); }
+  .radar::before{
+    content:''; position:absolute; inset:0;
+    background: repeating-radial-gradient(circle, transparent 0, transparent 7px, rgba(0,229,255,0.12) 8px);
   }
-  .ident-label {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.25em; 
-    color: var(--signal); font-weight: 700; text-shadow: 0 0 5px rgba(255,59,48,0.5);
+  .radar::after{
+    content:''; position:absolute; top:50%; left:50%; width:50%; height:2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    transform-origin: left center; transform: rotate(0deg);
+    animation: sweep 3s linear infinite;
+    box-shadow: 0 0 6px var(--teal);
   }
-  
-  h1 {
-    margin: 0; font-family: 'Archivo Black', sans-serif; font-size: 28px;
-    background: linear-gradient(90deg, #fff, var(--teal));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-transform: uppercase; letter-spacing: 1px;
-    filter: drop-shadow(0 0 8px rgba(0,240,255,0.3));
+  @keyframes sweep{ to{ transform: rotate(360deg); } }
+  .brand-text{ min-width:0; }
+  .ident-label{
+    font-size:10px; letter-spacing:.22em; color:var(--signal); font-weight:700;
+    text-shadow:0 0 6px rgba(255,59,48,.5); display:flex; align-items:center; gap:6px;
   }
-  .clock-block { text-align: right; }
-  .clock { font-size: 22px; font-weight: 700; color: var(--teal); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+  .ident-dot{ width:6px; height:6px; border-radius:50%; background:var(--signal); box-shadow:0 0 6px var(--signal); animation:blink 1.5s ease-in-out infinite; flex-shrink:0; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  h1{
+    margin:2px 0 0; font-family:'Archivo Black', sans-serif; font-size:19px; letter-spacing:.01em;
+    background:linear-gradient(90deg,#fff,var(--teal) 70%); -webkit-background-clip:text; background-clip:text; color:transparent;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    filter:drop-shadow(0 0 6px rgba(0,229,255,.25));
+  }
+  .clock-block{ text-align:right; flex-shrink:0; }
+  .clock{ font-size:20px; font-weight:700; color:var(--teal); text-shadow:0 0 10px rgba(0,229,255,.4); font-variant-numeric:tabular-nums; }
+  .clock-sub{ font-size:9px; letter-spacing:.15em; color:var(--muted); margin-top:2px; }
 
-  /* ── HERO SLIDER (อลังการ) ── */
-  .hero-container {
-    width: 100%; height: 55vh; min-height: 400px; max-height: 600px;
-    position: relative; overflow: hidden;
-    border-bottom: 2px solid var(--line-glow);
-    background: #000;
+  /* ══ HERO SLIDER ══ */
+  .hero-container{
+    width:100%; height:min(52vh, 460px); min-height:280px; position:relative; overflow:hidden;
+    border-bottom:1px solid var(--line-glow); background:#000; display:none;
   }
-  .hero-slide {
-    position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease-in-out, transform 4s ease-out;
-    transform: scale(1.05); z-index: 1;
+  .hero-container.show{ display:block; }
+  .hero-slide{
+    position:absolute; inset:0; opacity:0; z-index:1;
+    transition:opacity .9s ease;
   }
-  .hero-slide.active { opacity: 1; transform: scale(1); z-index: 2; }
-  .hero-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-  .hero-gradient {
-    position: absolute; inset: 0;
-    background: linear-gradient(0deg, var(--bg) 0%, rgba(5,5,8,0.2) 50%, transparent 100%);
+  .hero-slide.active{ opacity:1; z-index:2; }
+  .hero-img{
+    width:100%; height:100%; object-fit:cover; opacity:.55;
+    transform:scale(1.08); transition:transform 7s ease-out;
   }
-  .hero-content {
-    position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 20px;
-    max-width: var(--page-max); margin: 0 auto; left: 50%; transform: translateX(-50%);
+  .hero-slide.active .hero-img{ transform:scale(1); }
+  .hero-gradient{ position:absolute; inset:0; background:linear-gradient(0deg, var(--bg) 4%, rgba(5,5,8,.35) 45%, rgba(5,5,8,.15) 100%); }
+  .hero-vignette{ position:absolute; inset:0; box-shadow:inset 0 0 140px rgba(0,0,0,.7); pointer-events:none; }
+  .hero-content{
+    position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:100%;
+    max-width:var(--page-max); padding:0 20px 28px; box-sizing:border-box;
   }
-  .hero-tag {
-    display: inline-block; padding: 4px 10px; background: rgba(0, 240, 255, 0.2);
-    border: 1px solid var(--teal); color: var(--teal); font-size: 11px;
-    border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-weight: 700;
-    margin-bottom: 12px; backdrop-filter: blur(4px); box-shadow: 0 0 10px rgba(0,240,255,0.2);
+  .hero-tag{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 10px;
+    background:rgba(0,229,255,.14); border:1px solid var(--teal); color:var(--teal);
+    font-size:10px; font-weight:700; letter-spacing:.1em; border-radius:4px;
+    font-family:'JetBrains Mono', monospace; margin-bottom:12px; backdrop-filter:blur(4px);
   }
-  .hero-title {
-    font-size: clamp(24px, 5vw, 42px); font-weight: 800; line-height: 1.1;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin-bottom: 8px;
+  .hero-tag .ep-tag{ color:var(--gold); }
+  .hero-title{
+    font-size:clamp(22px, 4.4vw, 40px); font-weight:800; line-height:1.12;
+    text-shadow:0 4px 24px rgba(0,0,0,.85); margin-bottom:8px;
+    max-width: 720px;
   }
-  .hero-desc {
-    font-size: 14px; color: var(--muted); max-width: 600px;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  .hero-desc{ font-size:13.5px; color:#c3cbd6; max-width:600px; line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .hero-cta{ display:flex; gap:10px; margin-top:16px; }
+  .hero-btn{
+    font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:700; letter-spacing:.05em;
+    padding:9px 16px; border-radius:6px; cursor:pointer; border:1px solid var(--teal); color:var(--teal);
+    background:rgba(0,229,255,.08); transition:all .2s;
   }
+  .hero-btn:hover{ background:var(--teal); color:#00161a; box-shadow:0 0 16px rgba(0,229,255,.4); }
 
-  .slider-nav {
-    position: absolute; bottom: 20px; right: 20px; z-index: 10; display: flex; gap: 8px;
-  }
-  .slider-dot {
-    width: 12px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px;
-    cursor: pointer; transition: all 0.3s ease;
-  }
-  .slider-dot.active { background: var(--teal); width: 24px; box-shadow: 0 0 8px var(--teal); }
+  .slider-nav{ position:absolute; bottom:28px; right:20px; z-index:10; display:flex; gap:7px; }
+  .slider-dot{ width:20px; height:3px; background:rgba(255,255,255,.22); border-radius:2px; cursor:pointer; transition:all .3s; }
+  .slider-dot.active{ background:var(--teal); width:30px; box-shadow:0 0 8px var(--teal); }
+  .hero-progress{ position:absolute; top:0; left:0; height:2px; background:var(--teal); width:0%; z-index:11; box-shadow:0 0 6px var(--teal); }
 
-  /* ── MAIN CONTENT ── */
-  main { padding: 30px 20px 80px; }
+  /* ══ MAIN ══ */
+  main{ padding:24px 20px 70px; }
 
-  /* ── TABS (HUD Style) ── */
-  .tabs { display: flex; gap: 10px; margin-bottom: 24px; }
-  .tab {
-    flex: 1; padding: 12px; text-align: center; font-size: 13px; font-weight: 700;
-    background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2);
-    color: var(--muted); cursor: pointer; transition: all 0.2s;
-    text-transform: uppercase; letter-spacing: 1px; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  .tabs{ display:flex; gap:10px; margin-bottom:20px; }
+  .tab{
+    flex:1; padding:12px; text-align:center; font-size:12px; font-weight:700;
+    background:rgba(0,229,255,.04); border:1px solid var(--line); color:var(--muted); cursor:pointer;
+    text-transform:uppercase; letter-spacing:.08em; transition:all .2s; font-family:'Inter',sans-serif;
+    clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
   }
-  .tab.active {
-    background: rgba(0, 240, 255, 0.15); color: var(--teal); border-color: var(--teal);
-    box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.1);
-  }
+  .tab.active{ background:rgba(0,229,255,.15); color:var(--teal); border-color:var(--teal); box-shadow:inset 0 0 15px rgba(0,229,255,.12); }
+  .tab:not(.active):hover{ color:var(--paper); border-color:#3a4652; }
 
-  /* ── DAY NAV ── */
-  .day-nav { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
-  .day-nav::-webkit-scrollbar { height: 4px; }
-  .day-nav::-webkit-scrollbar-thumb { background: var(--line-glow); border-radius: 2px; }
-  .day-btn {
-    background: var(--panel); border: 1px solid var(--line); color: var(--muted);
-    padding: 10px 14px; border-radius: 8px; font-family: 'JetBrains Mono', monospace;
-    cursor: pointer; min-width: 60px; text-align: center; transition: all 0.2s;
-    backdrop-filter: var(--glass-blur);
+  .day-nav{ display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin; }
+  .day-nav::-webkit-scrollbar{ height:4px; }
+  .day-nav::-webkit-scrollbar-thumb{ background:var(--line-glow); border-radius:2px; }
+  .day-btn{
+    background:var(--panel); border:1px solid var(--line); color:var(--muted);
+    padding:9px 14px; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:11px;
+    cursor:pointer; min-width:58px; text-align:center; transition:all .2s; backdrop-filter:var(--blur); flex-shrink:0;
   }
-  .day-btn .d-num { font-size: 18px; font-weight: 700; display: block; margin-top: 4px; }
-  .day-btn.active {
-    background: rgba(0, 240, 255, 0.1); border-color: var(--teal); color: var(--paper);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-  }
+  .day-btn .d-num{ font-size:17px; font-weight:700; display:block; margin-top:3px; color:var(--paper); }
+  .day-btn.active{ background:rgba(0,229,255,.12); border-color:var(--teal); color:var(--teal); box-shadow:0 0 14px rgba(0,229,255,.15); }
+  .day-btn.active .d-num{ color:var(--teal); }
+  .day-btn.is-today::after{ content:'•'; color:var(--signal); margin-left:3px; }
 
-  .refresh-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .status { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono'; }
-  .status b { color: var(--teal); font-size: 14px; }
-  
-  button.refresh {
-    background: transparent; border: 1px solid var(--teal); color: var(--teal);
-    padding: 8px 16px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+  .refresh-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:12px; }
+  .status{ font-size:11px; color:var(--muted); letter-spacing:.04em; }
+  .status b{ color:var(--teal); font-size:13px; }
+  button.refresh{
+    background:transparent; border:1px solid var(--teal); color:var(--teal); padding:8px 14px;
+    border-radius:5px; font-family:'JetBrains Mono', monospace; font-size:11px; cursor:pointer;
+    transition:all .2s; text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:6px;
   }
-  button.refresh:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 10px rgba(0,240,255,0.3); }
+  button.refresh:hover:not(:disabled){ background:rgba(0,229,255,.12); box-shadow:0 0 12px rgba(0,229,255,.3); }
+  button.refresh:disabled{ opacity:.45; cursor:default; }
+  .spin{ display:inline-block; animation:spin .8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 
-  /* ── GRID & CARDS (Glassmorphism) ── */
-  #schedule-container {
-    display: grid; grid-template-columns: 1fr; gap: 16px;
-  }
-  
-  .card {
-    display: flex; background: var(--panel); border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px; overflow: hidden; backdrop-filter: var(--glass-blur);
-    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    position: relative; opacity: 0; animation: cardIn 0.5s ease forwards;
-  }
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-    background: var(--teal); opacity: 0; transition: opacity 0.2s;
-  }
-  .card:hover { transform: translateY(-3px); border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  .card:hover::before { opacity: 1; box-shadow: 0 0 10px var(--teal); }
+  #schedule-container{ display:grid; grid-template-columns:1fr; gap:14px; }
 
-  .time-col {
-    padding: 16px; min-width: 80px; text-align: center; border-right: 1px solid rgba(255,255,255,0.05);
-    display: flex; flex-direction: column; justify-content: center; background: rgba(0,0,0,0.2);
+  .card{
+    display:flex; background:var(--panel); border:1px solid rgba(255,255,255,.06);
+    border-radius:12px; overflow:hidden; backdrop-filter:var(--blur); cursor:pointer;
+    transition:transform .2s, box-shadow .2s, border-color .2s; position:relative;
+    opacity:0; animation:cardIn .5s ease forwards; text-align:left;
   }
-  .time-col .t { font-size: 16px; font-weight: 700; color: var(--paper); }
-  .time-col .countdown { font-size: 10px; color: var(--muted); margin-top: 6px; }
-  .time-col .countdown.live { color: var(--signal); font-weight: 700; text-shadow: 0 0 5px rgba(255,59,48,0.5); }
-  
-  .poster { width: 70px; height: 100px; object-fit: cover; flex-shrink: 0; }
-  
-  .body { padding: 14px 16px; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-  .title-en { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-  .title-native { font-size: 12px; color: var(--teal); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.8; }
-  .meta { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
-  .ep { background: var(--teal); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; }
-  
-  /* ── SKELETON (Shimmer) ── */
-  .skeleton-wrap { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; }
-  .skeleton-row { display: flex; background: var(--panel); border-radius: 12px; padding: 16px; gap: 16px; }
-  .skel {
-    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
-    background-size: 200% 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px;
-  }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  
-  /* ── PREVIEW PANEL (Monitor HUD) ── */
-  .preview-overlay { position: fixed; inset: 0; z-index: 100; visibility: hidden; pointer-events: none; }
-  .preview-overlay.open { visibility: visible; pointer-events: auto; }
-  .preview-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); opacity: 0; transition: 0.3s; }
-  .preview-overlay.open .preview-backdrop { opacity: 1; }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+  .card::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--teal); opacity:0; transition:opacity .2s; box-shadow:0 0 10px var(--teal); }
+  .card:hover, .card:focus-visible{ transform:translateY(-3px); border-color:rgba(0,229,255,.4); box-shadow:0 12px 30px rgba(0,0,0,.5); }
+  .card:hover::before, .card:focus-visible::before{ opacity:1; }
+  .card:active{ transform:scale(.99); }
 
-  .preview-panel {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -45%) scale(0.95); opacity: 0;
-    width: min(600px, 95vw); max-height: 85vh; background: rgba(10,10,15,0.9);
-    border: 1px solid var(--teal); border-radius: 16px; overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05);
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1); display: flex; flex-direction: column;
+  .time-col{
+    padding:14px; min-width:76px; text-align:center; border-right:1px solid rgba(255,255,255,.06);
+    display:flex; flex-direction:column; justify-content:center; align-items:center; background:rgba(0,0,0,.22); gap:5px;
   }
-  .preview-overlay.open .preview-panel { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  
-  .preview-banner { height: 180px; background-size: cover; background-position: center; position: relative; }
-  .preview-banner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10,10,15,1) 0%, transparent 100%); }
-  /* Scanline FX */
-  .preview-banner::before {
-    content: ''; position: absolute; inset: 0; z-index: 1; mix-blend-mode: overlay;
-    background: repeating-linear-gradient(180deg, transparent 0, transparent 2px, rgba(0,240,255,0.2) 3px);
-  }
+  .time-col .t{ font-size:15px; font-weight:700; color:var(--paper); }
+  .time-col .countdown{ font-size:9.5px; color:var(--muted); letter-spacing:.02em; }
+  .time-col .countdown.live{ color:var(--signal); font-weight:700; text-shadow:0 0 6px rgba(255,59,48,.5); display:flex; align-items:center; gap:4px; }
+  .live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal); box-shadow:0 0 5px var(--signal); animation:blink 1.4s ease-in-out infinite; flex-shrink:0; }
 
-  .preview-scroll { overflow-y: auto; padding: 0 24px 24px; position: relative; z-index: 2; margin-top: -60px; }
-  .preview-head { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px; }
-  .preview-poster { width: 100px; height: 140px; border-radius: 8px; border: 2px solid var(--teal); box-shadow: 0 10px 20px rgba(0,0,0,0.5); object-fit: cover; background: #000; }
-  
-  .preview-title-en { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
-  .preview-title-native { color: var(--teal); font-size: 13px; }
-  
-  .chip { padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); font-size: 11px; font-family: 'JetBrains Mono'; }
-  .preview-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  
-  .preview-desc { font-size: 14px; line-height: 1.6; color: #b0bac5; background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px; border-left: 2px solid var(--teal); }
-  
-  .preview-link {
-    display: block; text-align: center; margin-top: 24px; background: var(--teal); color: #000;
-    padding: 14px; border-radius: 8px; font-weight: 800; text-decoration: none; text-transform: uppercase;
-    transition: 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.3);
-  }
-  .preview-link:hover { background: #fff; box-shadow: 0 0 20px #fff; }
-  
-  .preview-close {
-    position: absolute; top: 16px; right: 16px; z-index: 10; width: 32px; height: 32px;
-    background: rgba(0,0,0,0.5); border: 1px solid var(--teal); color: var(--teal); border-radius: 50%;
-    cursor: pointer; display: grid; place-items: center; transition: 0.2s; backdrop-filter: blur(4px);
-  }
-  .preview-close:hover { background: var(--teal); color: #000; transform: rotate(90deg); }
+  .poster{ width:66px; height:94px; object-fit:cover; flex-shrink:0; background:var(--panel-hi); }
+  .poster-wrap{ position:relative; flex-shrink:0; }
+  .poster-wrap .poster{ display:block; }
 
-  /* ── RESPONSIVE ADAPTATIONS ── */
-  @media (min-width: 768px) {
-    #schedule-container { grid-template-columns: repeat(2, 1fr); }
-    .skeleton-wrap { grid-template-columns: repeat(2, 1fr); }
-    .card { flex-direction: column; }
-    .time-col { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); flex-direction: row; justify-content: space-between; align-items: center; padding: 12px 16px; }
-    .time-col .countdown { margin-top: 0; }
-    .poster { width: 100%; height: 200px; }
+  .body{ padding:12px 16px; flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+  .title-en{ font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .title-native{ font-size:11.5px; color:var(--teal); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.85; }
+  .meta{ display:flex; gap:8px; margin-top:5px; align-items:center; flex-wrap:wrap; }
+  .ep{ background:var(--teal); color:#00161a; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:800; letter-spacing:.02em; }
+  .fmt-tag{ font-size:10px; color:var(--muted); }
+  .score-tag{ font-size:10px; color:var(--gold); }
+
+  .skeleton-wrap{ display:grid; grid-template-columns:1fr; gap:14px; width:100%; }
+  .skeleton-row{ display:flex; background:var(--panel); border-radius:12px; padding:14px; gap:14px; border:1px solid rgba(255,255,255,.05); }
+  .skel{ background:linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.05) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite linear; border-radius:4px; }
+  @keyframes shimmer{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+
+  .empty, .error{ text-align:center; padding:56px 20px; border-radius:12px; background:var(--panel); border:1px solid var(--line); }
+  .empty{ color:var(--muted); font-size:12px; }
+  .error{ color:var(--signal); font-size:12px; }
+  .error small{ display:block; margin-top:8px; color:var(--muted); }
+
+  /* ══ PREVIEW PANEL ══ */
+  .preview-overlay{ position:fixed; inset:0; z-index:100; visibility:hidden; pointer-events:none; }
+  .preview-overlay.open{ visibility:visible; pointer-events:auto; }
+  .preview-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(6px); opacity:0; transition:.3s; }
+  .preview-overlay.open .preview-backdrop{ opacity:1; }
+
+  .preview-panel{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-46%) scale(.95); opacity:0;
+    width:min(600px, 94vw); max-height:86vh; background:rgba(9,10,14,.92);
+    border:1px solid var(--teal); border-radius:16px; overflow:hidden;
+    box-shadow:0 0 46px rgba(0,229,255,.16), inset 0 0 22px rgba(0,229,255,.05);
+    transition:all .32s cubic-bezier(.2,.9,.3,1); display:flex; flex-direction:column;
   }
-  @media (min-width: 1024px) {
-    #schedule-container { grid-template-columns: repeat(3, 1fr); }
-    .skeleton-wrap { grid-template-columns: repeat(3, 1fr); }
-    .hero-container { height: 60vh; }
-    .hero-content { padding-bottom: 60px; }
+  .preview-overlay.open .preview-panel{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+
+  .preview-banner{ height:170px; background-size:cover; background-position:center; position:relative; flex-shrink:0; }
+  .preview-banner::after{ content:''; position:absolute; inset:0; background:linear-gradient(0deg, rgba(9,10,14,1) 0%, transparent 100%); }
+  .preview-banner::before{ content:''; position:absolute; inset:0; z-index:1; mix-blend-mode:overlay; background:repeating-linear-gradient(180deg, transparent 0, transparent 2px, rgba(0,229,255,.2) 3px); }
+
+  .preview-scroll{ overflow-y:auto; padding:0 24px 26px; position:relative; z-index:2; margin-top:-58px; }
+  .preview-head{ display:flex; gap:18px; align-items:flex-end; margin-bottom:18px; }
+  .preview-poster{ width:92px; height:130px; border-radius:8px; border:2px solid var(--teal); box-shadow:0 10px 22px rgba(0,0,0,.5); object-fit:cover; background:#000; flex-shrink:0; }
+  .preview-titles{ min-width:0; }
+  .preview-title-en{ font-size:18px; font-weight:800; margin-bottom:4px; line-height:1.25; }
+  .preview-title-native{ color:var(--teal); font-size:12.5px; opacity:.9; }
+
+  .preview-chips{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px; }
+  .chip{ padding:4px 10px; border-radius:4px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); font-size:10.5px; font-family:'JetBrains Mono',monospace; }
+  .chip.live{ color:var(--signal); border-color:rgba(255,59,48,.4); background:rgba(255,59,48,.1); display:inline-flex; align-items:center; gap:5px; }
+  .chip.score{ color:var(--gold); border-color:rgba(255,204,51,.35); }
+
+  .preview-facts{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+  .fact{ background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+  .fact .fk{ font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .fact .fv{ font-size:12.5px; font-weight:700; color:var(--paper); margin-top:3px; font-family:'JetBrains Mono',monospace; }
+
+  .preview-desc{ font-size:13.5px; line-height:1.65; color:#b0bac5; background:rgba(0,0,0,.28); padding:14px; border-radius:8px; border-left:2px solid var(--teal); }
+  .preview-desc.clamp{ display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical; overflow:hidden; }
+  .desc-toggle{ background:none; border:none; color:var(--teal); font-size:11.5px; font-weight:700; cursor:pointer; padding:8px 0 0; font-family:'JetBrains Mono',monospace; }
+
+  .preview-link{
+    display:block; text-align:center; margin-top:20px; background:var(--teal); color:#00161a;
+    padding:13px; border-radius:8px; font-weight:800; text-decoration:none; text-transform:uppercase;
+    letter-spacing:.04em; font-size:12.5px; transition:.2s; box-shadow:0 0 16px rgba(0,229,255,.3);
   }
-  @media (min-width: 1280px) {
-    #schedule-container { grid-template-columns: repeat(4, 1fr); }
-    .skeleton-wrap { grid-template-columns: repeat(4, 1fr); }
+  .preview-link:hover{ background:#fff; box-shadow:0 0 22px #fff; }
+
+  .preview-close{
+    position:absolute; top:14px; right:14px; z-index:10; width:32px; height:32px;
+    background:rgba(0,0,0,.55); border:1px solid var(--teal); color:var(--teal); border-radius:50%;
+    cursor:pointer; display:grid; place-items:center; transition:.2s; backdrop-filter:blur(4px);
+  }
+  .preview-close:hover{ background:var(--teal); color:#00161a; transform:rotate(90deg); }
+
+  footer{ text-align:center; color:#414d5a; font-size:11px; padding:24px 20px; letter-spacing:.05em; }
+  footer a{ color:var(--teal); text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
+
+  /* ══ RESPONSIVE — phone → iPad portrait → iPad landscape → desktop ══ */
+  @media (min-width:700px){
+    h1{ font-size:22px; }
+    #schedule-container, .skeleton-wrap{ grid-template-columns:repeat(2,1fr); }
+    .card{ flex-direction:column; }
+    .time-col{ border-right:none; border-bottom:1px solid rgba(255,255,255,.06); flex-direction:row; justify-content:space-between; padding:10px 14px; }
+    .poster{ width:100%; height:190px; }
+    .skeleton-row{ flex-direction:column; }
+    .skeleton-row .skel:first-child{ width:100% !important; height:150px !important; }
+  }
+  @media (min-width:980px) and (orientation:landscape){
+    #schedule-container, .skeleton-wrap{ grid-template-columns:repeat(3,1fr); }
+    .hero-container{ height:min(60vh, 560px); }
+    .day-nav{ flex-wrap:wrap; overflow:visible; }
+  }
+  @media (min-width:1280px){
+    #schedule-container, .skeleton-wrap{ grid-template-columns:repeat(4,1fr); }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="channel-row">
-    <div>
-      <div class="ident-mark">
-        <span class="ident-dot"></span>
-        <span class="ident-label mono">SYS.ON_AIR_MONITOR</span>
-      </div>
+  <div class="brand">
+    <div class="radar" aria-hidden="true"></div>
+    <div class="brand-text">
+      <div class="ident-label mono"><span class="ident-dot"></span>SYS.ON_AIR_MONITOR</div>
       <h1>วันนี้อนิเมะอะไรอัพ</h1>
     </div>
-    <div class="clock-block">
-      <div class="clock mono" id="clock">00:00</div>
-      <div class="status mono">LOCAL TIME</div>
-    </div>
+  </div>
+  <div class="clock-block">
+    <div class="clock mono" id="clock">00:00</div>
+    <div class="clock-sub mono">LOCAL TIME</div>
   </div>
 </header>
 
-<div class="hero-container" id="heroContainer" style="display: none;">
+<div class="hero-container" id="heroContainer">
+  <div class="hero-progress" id="heroProgress"></div>
   <div id="heroSlider"></div>
   <div class="slider-nav" id="sliderNav"></div>
 </div>
 
 <main>
   <div class="tabs" id="tabs">
-    <div class="tab active" data-mode="today">DAILY SCAN (วันนี้)</div>
-    <div class="tab" data-mode="week">FORECAST (7 วัน)</div>
+    <div class="tab active" data-mode="today">DAILY SCAN · วันนี้</div>
+    <div class="tab" data-mode="week">FORECAST · 7 วัน</div>
   </div>
 
-  <div class="day-nav" id="dayNav" style="display: none;"></div>
+  <div class="day-nav" id="dayNav" style="display:none;"></div>
 
   <div class="refresh-row">
-    <span class="status mono" id="statusText">SYSTEM STANDBY...</span>
-    <button class="refresh" id="refreshBtn">REBOOT SCAN ⟳</button>
+    <span class="status mono" id="statusText">SYSTEM STANDBY…</span>
+    <button class="refresh" id="refreshBtn">⟳ REBOOT SCAN</button>
   </div>
 
   <div id="schedule-container">
     <div class="skeleton-wrap" id="skeletonWrap">
-      <div class="skeleton-row"><div class="skel" style="width:70px;height:100px;"></div><div style="flex:1"><div class="skel" style="height:15px;width:80%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:50%;"></div></div></div>
-      <div class="skeleton-row"><div class="skel" style="width:70px;height:100px;"></div><div style="flex:1"><div class="skel" style="height:15px;width:60%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:40%;"></div></div></div>
-      <div class="skeleton-row"><div class="skel" style="width:70px;height:100px;"></div><div style="flex:1"><div class="skel" style="height:15px;width:90%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:60%;"></div></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:66px;height:94px;"></div><div style="flex:1"><div class="skel" style="height:14px;width:80%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:50%;"></div></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:66px;height:94px;"></div><div style="flex:1"><div class="skel" style="height:14px;width:60%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:40%;"></div></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:66px;height:94px;"></div><div style="flex:1"><div class="skel" style="height:14px;width:90%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:60%;"></div></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:66px;height:94px;"></div><div style="flex:1"><div class="skel" style="height:14px;width:70%;margin-bottom:8px;"></div><div class="skel" style="height:10px;width:45%;"></div></div></div>
     </div>
   </div>
 </main>
 
+<footer>ข้อมูลจาก <a href="https://anilist.co" target="_blank" rel="noopener">AniList.co</a></footer>
+
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-backdrop" id="previewBackdrop"></div>
-  <div class="preview-panel">
-    <button class="preview-close" id="previewClose">✕</button>
+  <div class="preview-panel" role="dialog" aria-modal="true">
+    <button class="preview-close" id="previewClose" aria-label="ปิด">✕</button>
     <div class="preview-banner" id="previewBanner"></div>
     <div class="preview-scroll">
       <div class="preview-head">
         <img class="preview-poster" id="previewPoster" src="" alt="">
-        <div>
+        <div class="preview-titles">
           <div class="preview-title-en" id="previewTitleEn"></div>
           <div class="preview-title-native" id="previewTitleNative"></div>
         </div>
       </div>
       <div class="preview-chips" id="previewChips"></div>
-      <div class="preview-desc" id="previewDesc"></div>
-      <a class="preview-link" id="previewLink" href="#" target="_blank" rel="noopener">Access Database ↗</a>
+      <div class="preview-facts" id="previewFacts"></div>
+      <div class="preview-desc clamp" id="previewDesc"></div>
+      <button class="desc-toggle" id="descToggle" style="display:none;">อ่านเพิ่มเติม</button>
+      <a class="preview-link" id="previewLink" href="#" target="_blank" rel="noopener">ACCESS DATABASE ↗</a>
     </div>
   </div>
 </div>
@@ -359,13 +371,12 @@
 <script>
   const ANILIST_URL = 'https://graphql.anilist.co';
   let currentMode = 'today';
-  let selectedOffset = 0; // Fix: ค่าเริ่มต้นให้เป็น 0 (วันนี้) เพื่อความต่อเนื่อง
+  let selectedOffset = 0;
   let cache = { today: null, week: null };
-  let itemIndex = {}; 
-  
-  // Slider Data
-  let slideInterval;
+  let itemIndex = {};
+  let slideInterval, progressInterval;
   let currentSlide = 0;
+  const SLIDE_MS = 6000;
 
   const QUERY = `
     query ($start: Int, $end: Int, $page: Int) {
@@ -380,12 +391,22 @@
             description(asHtml: false)
             coverImage { large medium }
             bannerImage
+            studios(isMain: true) { nodes { name } }
             siteUrl
           }
         }
       }
     }
   `;
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+  function cleanDesc(desc){
+    return (desc || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').trim();
+  }
 
   function getRange(mode){
     const now = new Date();
@@ -394,7 +415,7 @@
       const end = new Date(now); end.setHours(23,59,59,999);
       return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
     } else {
-      const start = new Date(now); start.setHours(0,0,0,0); // ให้เริ่มตัดตั้งแต่ต้นวันปัจจุบัน
+      const start = new Date(now); start.setHours(0,0,0,0);
       const end = new Date(now); end.setDate(end.getDate() + 7); end.setHours(23,59,59,999);
       return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
     }
@@ -405,15 +426,15 @@
     let allResults = [];
     let page = 1;
     let hasNext = true;
-
     while(hasNext && page <= 4){
       const res = await fetch(ANILIST_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ query: QUERY, variables: { start, end, page } })
       });
-      if(!res.ok) throw new Error('API Sync Failed: ' + res.status);
+      if(!res.ok) throw new Error('API Sync Failed: HTTP ' + res.status);
       const json = await res.json();
+      if(json.errors) throw new Error(json.errors[0]?.message || 'Unknown API error');
       allResults = allResults.concat(json.data.Page.airingSchedules);
       hasNext = json.data.Page.pageInfo.hasNextPage;
       page++;
@@ -421,82 +442,114 @@
     return allResults;
   }
 
-  // ==== Hero Slider Logic ====
-  function buildHeroSlider(list) {
-    if(!list || list.length === 0) return;
+  /* ══ Hero Slider ══ */
+  function stopSlider(){ clearInterval(slideInterval); clearInterval(progressInterval); }
+
+  function buildHeroSlider(list){
     const heroContainer = document.getElementById('heroContainer');
-    const slider = document.getElementById('heroSlider');
-    const nav = document.getElementById('sliderNav');
-    
-    // กรองหาตัวที่มีแบนเนอร์และคะแนนสูงสุด 5 อันดับแรก
+    stopSlider();
+
+    if(!list || list.length === 0){ heroContainer.classList.remove('show'); return; }
+
     const topPicks = list
       .filter(item => item.media.bannerImage)
-      .sort((a, b) => (b.media.averageScore || 0) - (a.media.averageScore || 0))
-      .slice(0, 5);
+      .sort((a,b) => (b.media.averageScore||0) - (a.media.averageScore||0))
+      .slice(0,5);
 
-    if (topPicks.length === 0) return;
+    if(topPicks.length === 0){ heroContainer.classList.remove('show'); return; }
 
+    const slider = document.getElementById('heroSlider');
+    const nav = document.getElementById('sliderNav');
     slider.innerHTML = ''; nav.innerHTML = '';
-    
+
     topPicks.forEach((item, index) => {
       const m = item.media;
       const title = m.title.english || m.title.romaji;
-      
+      const desc = cleanDesc(m.description) || 'ยังไม่มีเรื่องย่อสำหรับเรื่องนี้ในฐานข้อมูล';
+      const key = itemKey(item);
+      itemIndex[key] = item;
+
       const slide = document.createElement('div');
-      slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+      slide.className = 'hero-slide' + (index === 0 ? ' active' : '');
       slide.innerHTML = `
-        <img class="hero-img" src="${m.bannerImage}" alt="Banner">
+        <img class="hero-img" src="${escapeHtml(m.bannerImage)}" alt="">
         <div class="hero-gradient"></div>
+        <div class="hero-vignette"></div>
         <div class="hero-content">
-          <div class="hero-tag">FEATURED BROADCAST</div>
-          <div class="hero-title">${title}</div>
-          <div class="hero-desc">${m.description ? m.description.replace(/<[^>]+>/g, '') : 'No description available in the database.'}</div>
+          <div class="hero-tag">FEATURED BROADCAST<span class="ep-tag"> · EP ${escapeHtml(item.episode)}</span></div>
+          <div class="hero-title">${escapeHtml(title)}</div>
+          <div class="hero-desc">${escapeHtml(desc)}</div>
+          <div class="hero-cta">
+            <button class="hero-btn" type="button" data-key="${escapeHtml(key)}">ดูรายละเอียด</button>
+          </div>
         </div>
       `;
       slider.appendChild(slide);
 
       const dot = document.createElement('div');
-      dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
-      dot.onclick = () => goToSlide(index);
+      dot.className = 'slider-dot' + (index === 0 ? ' active' : '');
+      dot.onclick = () => goToSlide(index, topPicks.length);
       nav.appendChild(dot);
     });
 
-    heroContainer.style.display = 'block';
-    
-    clearInterval(slideInterval);
+    slider.querySelectorAll('.hero-btn').forEach(btn => {
+      btn.addEventListener('click', () => openPreview(btn.dataset.key));
+    });
+
+    heroContainer.classList.add('show');
+    currentSlide = 0;
+    startSlider(topPicks.length);
+  }
+
+  function startSlider(count){
+    if(count <= 1) return;
+    const progressEl = document.getElementById('heroProgress');
+    let elapsed = 0;
+    progressInterval = setInterval(() => {
+      elapsed += 100;
+      progressEl.style.width = Math.min(100, (elapsed / SLIDE_MS) * 100) + '%';
+    }, 100);
     slideInterval = setInterval(() => {
-      currentSlide = (currentSlide + 1) % topPicks.length;
-      goToSlide(currentSlide);
-    }, 6000); // เปลี่ยนสไลด์ทุก 6 วินาที
+      currentSlide = (currentSlide + 1) % count;
+      goToSlide(currentSlide, count);
+    }, SLIDE_MS);
   }
 
-  function goToSlide(index) {
+  function goToSlide(index, count){
     currentSlide = index;
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.slider-dot');
-    slides.forEach((s, i) => s.classList.toggle('active', i === index));
-    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('active', i === index));
+    document.querySelectorAll('.slider-dot').forEach((d,i) => d.classList.toggle('active', i === index));
+    document.getElementById('heroProgress').style.width = '0%';
+    if(count) { clearInterval(slideInterval); slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%count; goToSlide(currentSlide, count); }, SLIDE_MS); }
   }
 
-  // ==== Card & Listing Logic ====
+  /* ══ Cards ══ */
   function countdownLabel(airingAt){
     const diff = airingAt - (Date.now()/1000);
-    if(diff <= 0 && diff > -3600) return { text: '<span class="ident-dot" style="display:inline-block;width:6px;height:6px;margin-right:4px;"></span>LIVE', live: true };
-    if(diff > 0 && diff <= 3600) return { text: `T-${Math.round(diff/60)} MIN`, live: false };
-    if(diff <= -3600) return { text: 'OFF AIR', live: false };
-    return diff < 86400 ? { text: `T-${Math.round(diff/3600)} HRS`, live: false } : { text: `T-${Math.round(diff/86400)} DAYS`, live: false };
+    if(diff <= 0 && diff > -3600) return { html: '<span class="live-dot"></span>LIVE', live:true };
+    if(diff > 0 && diff <= 3600) return { html: `T-${Math.round(diff/60)} MIN`, live:false };
+    if(diff <= -3600) return { html: 'OFF AIR', live:false };
+    return diff < 86400 ? { html:`T-${Math.round(diff/3600)} HRS`, live:false } : { html:`T-${Math.round(diff/86400)} DAYS`, live:false };
   }
 
-  function createCard(item, delayIndex) {
+  function itemKey(item){
+    const title = item.media.title.english || item.media.title.romaji;
+    return `${title}-EP${item.episode}-${item.airingAt}`;
+  }
+
+  function createCard(item, delayIndex){
     const m = item.media;
     const titleEn = m.title.english || m.title.romaji;
-    const key = `${titleEn}-EP${item.episode}`;
+    const titleNative = m.title.romaji !== titleEn ? m.title.romaji : (m.title.native || '');
+    const key = itemKey(item);
     itemIndex[key] = item;
 
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.airingAt = item.airingAt;
-    card.style.animationDelay = `${Math.min(delayIndex * 40, 500)}ms`;
+    card.style.animationDelay = Math.min(delayIndex * 40, 500) + 'ms';
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
 
     const timeStr = new Date(item.airingAt * 1000).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
     const cd = countdownLabel(item.airingAt);
@@ -504,27 +557,32 @@
     card.innerHTML = `
       <div class="time-col mono">
         <span class="t">${timeStr}</span>
-        <span class="countdown ${cd.live ? 'live' : ''}">${cd.text}</span>
+        <span class="countdown ${cd.live?'live':''}">${cd.html}</span>
       </div>
-      <img class="poster" src="${m.coverImage.large}" loading="lazy">
+      <img class="poster" src="${escapeHtml(m.coverImage.large || m.coverImage.medium)}" alt="${escapeHtml(titleEn)}" loading="lazy">
       <div class="body">
-        <div class="title-en">${titleEn}</div>
+        <div class="title-en" title="${escapeHtml(titleEn)}">${escapeHtml(titleEn)}</div>
+        ${titleNative ? `<div class="title-native" title="${escapeHtml(titleNative)}">${escapeHtml(titleNative)}</div>` : ''}
         <div class="meta mono">
-          <span class="ep">EP ${item.episode}</span>
-          <span style="font-size:11px;color:var(--muted)">${m.format || 'TV'}</span>
+          <span class="ep">EP ${escapeHtml(item.episode)}</span>
+          <span class="fmt-tag">${escapeHtml(m.format || 'TV')}</span>
+          ${m.averageScore ? `<span class="score-tag">★ ${escapeHtml(m.averageScore)}%</span>` : ''}
         </div>
       </div>
     `;
-    card.onclick = () => openPreview(key);
+    const open = (e) => { e.preventDefault(); openPreview(key); };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openPreview(key); } });
     return card;
   }
 
   function renderList(list){
     const container = document.getElementById('schedule-container');
     container.innerHTML = '';
-    
+
     if(!list || list.length === 0){
-      document.getElementById('statusText').innerHTML = `<span style="color:var(--signal)">NO DATA FOUND</span>`;
+      container.innerHTML = '<div class="empty mono">NO SIGNAL — ไม่พบข้อมูลอนิเมะที่ออกอากาศช่วงนี้</div>';
+      document.getElementById('statusText').innerHTML = 'DETECTED: <b>0</b> SIGNALS';
       return;
     }
 
@@ -535,47 +593,45 @@
       if(seen.has(key)) return false; seen.add(key); return true;
     });
 
-    uniqueList.forEach((item, i) => container.appendChild(createCard(item, i)));
+    uniqueList.forEach((item,i) => container.appendChild(createCard(item,i)));
     document.getElementById('statusText').innerHTML = `DETECTED: <b>${uniqueList.length}</b> SIGNALS`;
   }
 
-  // ==== Mode & Tab Controllers ====
-  function renderDayNav() {
+  /* ══ Day nav / mode switching ══ */
+  function renderDayNav(){
     const dayNav = document.getElementById('dayNav');
     dayNav.innerHTML = '';
-    const dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-    const today = new Date();
+    const dayNames = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const today = new Date(); today.setHours(0,0,0,0);
 
-    for(let i = 0; i < 7; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-
+    for(let i=0;i<7;i++){
+      const d = new Date(today); d.setDate(today.getDate()+i);
       const btn = document.createElement('div');
-      btn.className = `day-btn ${i === selectedOffset ? 'active' : ''}`;
+      btn.className = `day-btn${i===selectedOffset?' active':''}${i===0?' is-today':''}`;
       btn.innerHTML = `<span>${dayNames[d.getDay()]}</span><span class="d-num">${d.getDate()}</span>`;
       btn.onclick = () => { selectedOffset = i; renderCurrentView(); };
       dayNav.appendChild(btn);
     }
   }
 
-  function renderCurrentView() {
+  function renderCurrentView(){
     const dayNav = document.getElementById('dayNav');
     const heroContainer = document.getElementById('heroContainer');
 
-    if(currentMode === 'today') {
+    if(currentMode === 'today'){
       dayNav.style.display = 'none';
       if(cache.today) buildHeroSlider(cache.today);
       renderList(cache.today);
     } else {
       dayNav.style.display = 'flex';
-      heroContainer.style.display = 'none'; // ซ่อน Hero ตอนเลือกโหมดสัปดาห์
+      heroContainer.classList.remove('show');
+      stopSlider();
       renderDayNav();
 
-      if(cache.week) {
-        const targetDay = new Date();
+      if(cache.week){
+        const targetDay = new Date(); targetDay.setHours(0,0,0,0);
         targetDay.setDate(targetDay.getDate() + selectedOffset);
-        // FIX: แก้บั๊กข้ามวันโดยใช้ toLocaleDateString เพื่อเปรียบเทียบใน Timezone เดียวกัน
-        const targetStr = targetDay.toLocaleDateString('en-CA'); 
+        const targetStr = targetDay.toLocaleDateString('en-CA');
 
         const filtered = cache.week.filter(item => {
           const itemDayStr = new Date(item.airingAt * 1000).toLocaleDateString('en-CA');
@@ -589,76 +645,110 @@
   async function load(mode, force=false){
     const container = document.getElementById('schedule-container');
     const btn = document.getElementById('refreshBtn');
-    
+    const statusEl = document.getElementById('statusText');
+
     if(!cache[mode] || force){
       container.innerHTML = document.getElementById('skeletonWrap').outerHTML;
-      btn.innerHTML = 'SYNCING...';
-      try {
+      statusEl.textContent = 'SCANNING…';
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">⟳</span> SYNCING';
+      try{
         cache[mode] = await fetchSchedule(mode);
-      } catch(err) {
-        btn.innerHTML = 'RETRY CONNECTION';
+      }catch(err){
+        container.innerHTML = `<div class="error mono">SYNC FAILED — ${escapeHtml(err.message)}<small>ลองกด REBOOT SCAN อีกครั้ง</small></div>`;
+        statusEl.textContent = 'ERROR';
+        btn.disabled = false;
+        btn.innerHTML = '⟳ RETRY CONNECTION';
         return;
       }
     }
     renderCurrentView();
-    btn.innerHTML = 'REBOOT SCAN ⟳';
+    btn.disabled = false;
+    btn.innerHTML = '⟳ REBOOT SCAN';
   }
 
-  // ==== Event Listeners ====
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentMode = tab.dataset.mode;
-      // รีเซ็ตวันกลับมาเป็น 'วันนี้' เสมอเมื่อกดเข้าโหมด 7 วัน
-      if (currentMode === 'week') selectedOffset = 0; 
+      if(currentMode === 'week') selectedOffset = 0;
       load(currentMode);
     });
   });
 
   document.getElementById('refreshBtn').addEventListener('click', () => load(currentMode, true));
 
-  // ==== Clock & Timer ====
   function updateClock(){
-    document.getElementById('clock').innerHTML = new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
   }
   setInterval(updateClock, 10000); updateClock();
-  
+
   setInterval(() => {
     document.querySelectorAll('.card').forEach(card => {
-      const cd = countdownLabel(card.dataset.airingAt);
+      const cd = countdownLabel(parseFloat(card.dataset.airingAt));
       const el = card.querySelector('.countdown');
-      if(el){ el.innerHTML = cd.text; el.className = `countdown mono ${cd.live?'live':''}`; }
+      if(el){ el.innerHTML = cd.html; el.className = `countdown ${cd.live?'live':''}`; }
     });
   }, 30000);
 
-  // ==== Preview Panel ====
+  /* ══ Preview panel ══ */
   const overlay = document.getElementById('previewOverlay');
+
   function openPreview(key){
     const item = itemIndex[key];
+    if(!item) return;
     const m = item.media;
-    
-    document.getElementById('previewBanner').style.backgroundImage = `url('${m.bannerImage || m.coverImage.large}')`;
-    document.getElementById('previewPoster').src = m.coverImage.large;
-    document.getElementById('previewTitleEn').textContent = m.title.english || m.title.romaji;
-    document.getElementById('previewTitleNative').textContent = m.title.native || '';
-    
-    let chipsHTML = `<span class="chip mono" style="color:var(--gold);border-color:var(--gold)">★ ${m.averageScore||'N/A'}%</span>`;
-    chipsHTML += `<span class="chip mono">EP ${item.episode}</span>`;
-    (m.genres || []).slice(0,3).forEach(g => chipsHTML += `<span class="chip mono">${g}</span>`);
+    const titleEn = m.title.english || m.title.romaji;
+    const titleNative = m.title.romaji !== titleEn ? m.title.romaji : (m.title.native || '');
+
+    document.getElementById('previewBanner').style.backgroundImage = `url('${(m.bannerImage || m.coverImage.large || '').replace(/'/g,"%27")}')`;
+    document.getElementById('previewPoster').src = m.coverImage.large || m.coverImage.medium;
+    document.getElementById('previewPoster').alt = titleEn;
+    document.getElementById('previewTitleEn').textContent = titleEn;
+    document.getElementById('previewTitleNative').textContent = titleNative;
+
+    const cd = countdownLabel(item.airingAt);
+    let chipsHTML = '';
+    chipsHTML += `<span class="chip ${cd.live?'live':''} mono">${cd.live ? '<span class="live-dot"></span>ON AIR' : new Date(item.airingAt*1000).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span>`;
+    chipsHTML += `<span class="chip mono">${escapeHtml(m.format || 'TV')}</span>`;
+    if(m.averageScore) chipsHTML += `<span class="chip score mono">★ ${escapeHtml(m.averageScore)}%</span>`;
+    (m.genres || []).slice(0,3).forEach(g => chipsHTML += `<span class="chip mono">${escapeHtml(g)}</span>`);
     document.getElementById('previewChips').innerHTML = chipsHTML;
-    
-    document.getElementById('previewDesc').textContent = m.description ? m.description.replace(/<[^>]+>/g, '') : 'No classified data available.';
+
+    const studioName = (m.studios && m.studios.nodes && m.studios.nodes[0]) ? m.studios.nodes[0].name : '—';
+    document.getElementById('previewFacts').innerHTML = `
+      <div class="fact"><div class="fk">EPISODE</div><div class="fv">EP ${escapeHtml(item.episode)}${m.episodes ? ' / ' + escapeHtml(m.episodes) : ''}</div></div>
+      <div class="fact"><div class="fk">STUDIO</div><div class="fv" style="font-size:11px;">${escapeHtml(studioName)}</div></div>
+      <div class="fact"><div class="fk">FORMAT</div><div class="fv">${escapeHtml(m.format || 'TV')}</div></div>
+    `;
+
+    const descEl = document.getElementById('previewDesc');
+    const toggleBtn = document.getElementById('descToggle');
+    const rawDesc = cleanDesc(m.description) || 'ยังไม่มีเรื่องย่อสำหรับเรื่องนี้ในฐานข้อมูล';
+    descEl.textContent = rawDesc;
+    descEl.classList.add('clamp');
+    toggleBtn.style.display = rawDesc.length > 200 ? 'block' : 'none';
+    toggleBtn.textContent = 'อ่านเพิ่มเติม';
+    toggleBtn.onclick = () => {
+      const clamped = descEl.classList.toggle('clamp');
+      toggleBtn.textContent = clamped ? 'อ่านเพิ่มเติม' : 'ย่อข้อความ';
+    };
+
     document.getElementById('previewLink').href = m.siteUrl;
-    
+
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-  
-  document.getElementById('previewClose').onclick = () => { overlay.classList.remove('open'); document.body.style.overflow=''; };
-  document.getElementById('previewBackdrop').onclick = document.getElementById('previewClose').onclick;
 
-  // Boot
+  function closePreview(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('previewClose').addEventListener('click', closePreview);
+  document.getElementById('previewBackdrop').addEventListener('click', closePreview);
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePreview(); });
+
   load('today');
 </script>
 
