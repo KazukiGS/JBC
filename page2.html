@@ -140,28 +140,34 @@
   /* ══ MAIN ══ */
   main{ padding:24px 20px 70px; }
 
-  .tabs{ display:flex; gap:10px; margin-bottom:20px; }
-  .tab{
-    flex:1; padding:12px; text-align:center; font-size:12px; font-weight:700;
-    background:rgba(0,229,255,.04); border:1px solid var(--line); color:var(--muted); cursor:pointer;
-    text-transform:uppercase; letter-spacing:.08em; transition:all .2s; font-family:'Inter',sans-serif;
-    clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  /* ══ DAY STRIP — the single navigation control, today locked at load ══ */
+  .day-strip-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; gap:10px; }
+  .day-strip-label{ font-size:10px; letter-spacing:.18em; color:var(--muted); text-transform:uppercase; }
+  .today-jump{
+    background:none; border:none; color:var(--teal); font-size:10.5px; font-weight:700;
+    letter-spacing:.06em; cursor:pointer; font-family:'JetBrains Mono',monospace; padding:2px 0;
+    display:none; align-items:center; gap:4px;
   }
-  .tab.active{ background:rgba(0,229,255,.15); color:var(--teal); border-color:var(--teal); box-shadow:inset 0 0 15px rgba(0,229,255,.12); }
-  .tab:not(.active):hover{ color:var(--paper); border-color:#3a4652; }
+  .today-jump.show{ display:inline-flex; }
+  .today-jump:hover{ text-decoration:underline; }
 
-  .day-nav{ display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin; }
+  .day-nav{ display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin; scroll-snap-type:x proximity; }
   .day-nav::-webkit-scrollbar{ height:4px; }
   .day-nav::-webkit-scrollbar-thumb{ background:var(--line-glow); border-radius:2px; }
   .day-btn{
     background:var(--panel); border:1px solid var(--line); color:var(--muted);
     padding:9px 14px; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:11px;
     cursor:pointer; min-width:58px; text-align:center; transition:all .2s; backdrop-filter:var(--blur); flex-shrink:0;
+    scroll-snap-align:center; position:relative;
   }
   .day-btn .d-num{ font-size:17px; font-weight:700; display:block; margin-top:3px; color:var(--paper); }
+  .day-btn .d-count{ font-size:8.5px; color:var(--muted); display:block; margin-top:2px; }
   .day-btn.active{ background:rgba(0,229,255,.12); border-color:var(--teal); color:var(--teal); box-shadow:0 0 14px rgba(0,229,255,.15); }
   .day-btn.active .d-num{ color:var(--teal); }
-  .day-btn.is-today::after{ content:'•'; color:var(--signal); margin-left:3px; }
+  .day-btn.active .d-count{ color:var(--teal); opacity:.8; }
+  .day-btn.is-today{ border-color:var(--signal-dim); }
+  .day-btn.is-today::after{ content:''; position:absolute; top:6px; right:6px; width:5px; height:5px; border-radius:50%; background:var(--signal); box-shadow:0 0 5px var(--signal); }
+  .day-btn.is-today.active::after{ background:var(--teal); box-shadow:0 0 5px var(--teal); }
 
   .refresh-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:12px; }
   .status{ font-size:11px; color:var(--muted); letter-spacing:.04em; }
@@ -199,9 +205,7 @@
   .time-col .countdown.live{ color:var(--signal); font-weight:700; text-shadow:0 0 6px rgba(255,59,48,.5); display:flex; align-items:center; gap:4px; }
   .live-dot{ width:5px; height:5px; border-radius:50%; background:var(--signal); box-shadow:0 0 5px var(--signal); animation:blink 1.4s ease-in-out infinite; flex-shrink:0; }
 
-  .poster{ width:66px; height:94px; object-fit:cover; flex-shrink:0; background:var(--panel-hi); }
-  .poster-wrap{ position:relative; flex-shrink:0; }
-  .poster-wrap .poster{ display:block; }
+  .poster{ width:66px; height:94px; object-fit:cover; flex-shrink:0; background:var(--panel-hi); display:block; }
 
   .body{ padding:12px 16px; flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:4px; }
   .title-en{ font-size:14.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -322,16 +326,15 @@
 </div>
 
 <main>
-  <div class="tabs" id="tabs">
-    <div class="tab active" data-mode="today">DAILY SCAN · วันนี้</div>
-    <div class="tab" data-mode="week">FORECAST · 7 วัน</div>
+  <div class="day-strip-head">
+    <span class="day-strip-label mono">7-DAY SCAN WINDOW</span>
+    <button class="today-jump" id="todayJump">← กลับวันนี้</button>
   </div>
-
-  <div class="day-nav" id="dayNav" style="display:none;"></div>
+  <div class="day-nav" id="dayNav"></div>
 
   <div class="refresh-row">
     <span class="status mono" id="statusText">SYSTEM STANDBY…</span>
-    <button class="refresh" id="refreshBtn">⟳ REBOOT SCAN</button>
+    <button class="refresh" id="refreshBtn" type="button">⟳ REBOOT SCAN</button>
   </div>
 
   <div id="schedule-container">
@@ -349,7 +352,7 @@
 <div class="preview-overlay" id="previewOverlay">
   <div class="preview-backdrop" id="previewBackdrop"></div>
   <div class="preview-panel" role="dialog" aria-modal="true">
-    <button class="preview-close" id="previewClose" aria-label="ปิด">✕</button>
+    <button class="preview-close" id="previewClose" aria-label="ปิด" type="button">✕</button>
     <div class="preview-banner" id="previewBanner"></div>
     <div class="preview-scroll">
       <div class="preview-head">
@@ -362,7 +365,7 @@
       <div class="preview-chips" id="previewChips"></div>
       <div class="preview-facts" id="previewFacts"></div>
       <div class="preview-desc clamp" id="previewDesc"></div>
-      <button class="desc-toggle" id="descToggle" style="display:none;">อ่านเพิ่มเติม</button>
+      <button class="desc-toggle" id="descToggle" type="button" style="display:none;">อ่านเพิ่มเติม</button>
       <a class="preview-link" id="previewLink" href="#" target="_blank" rel="noopener">ACCESS DATABASE ↗</a>
     </div>
   </div>
@@ -370,9 +373,8 @@
 
 <script>
   const ANILIST_URL = 'https://graphql.anilist.co';
-  let currentMode = 'today';
-  let selectedOffset = 0;
-  let cache = { today: null, week: null };
+  let selectedOffset = 0;      // 0 = today, locked at load
+  let weekData = null;         // full 7-day dataset, single source of truth
   let itemIndex = {};
   let slideInterval, progressInterval;
   let currentSlide = 0;
@@ -408,25 +410,19 @@
     return (desc || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '').trim();
   }
 
-  function getRange(mode){
+  function getWeekRange(){
     const now = new Date();
-    if(mode === 'today'){
-      const start = new Date(now); start.setHours(0,0,0,0);
-      const end = new Date(now); end.setHours(23,59,59,999);
-      return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
-    } else {
-      const start = new Date(now); start.setHours(0,0,0,0);
-      const end = new Date(now); end.setDate(end.getDate() + 7); end.setHours(23,59,59,999);
-      return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
-    }
+    const start = new Date(now); start.setHours(0,0,0,0);
+    const end = new Date(now); end.setDate(end.getDate() + 7); end.setHours(23,59,59,999);
+    return { start: Math.floor(start.getTime()/1000), end: Math.floor(end.getTime()/1000) };
   }
 
-  async function fetchSchedule(mode){
-    const { start, end } = getRange(mode);
+  async function fetchWeek(){
+    const { start, end } = getWeekRange();
     let allResults = [];
     let page = 1;
     let hasNext = true;
-    while(hasNext && page <= 4){
+    while(hasNext && page <= 6){
       const res = await fetch(ANILIST_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -442,7 +438,7 @@
     return allResults;
   }
 
-  /* ══ Hero Slider ══ */
+  /* ══ Hero Slider — always sourced from today's picks ══ */
   function stopSlider(){ clearInterval(slideInterval); clearInterval(progressInterval); }
 
   function buildHeroSlider(list){
@@ -520,7 +516,7 @@
     document.querySelectorAll('.hero-slide').forEach((s,i) => s.classList.toggle('active', i === index));
     document.querySelectorAll('.slider-dot').forEach((d,i) => d.classList.toggle('active', i === index));
     document.getElementById('heroProgress').style.width = '0%';
-    if(count) { clearInterval(slideInterval); slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%count; goToSlide(currentSlide, count); }, SLIDE_MS); }
+    if(count){ clearInterval(slideInterval); slideInterval = setInterval(() => { currentSlide = (currentSlide+1)%count; goToSlide(currentSlide, count); }, SLIDE_MS); }
   }
 
   /* ══ Cards ══ */
@@ -581,7 +577,7 @@
     container.innerHTML = '';
 
     if(!list || list.length === 0){
-      container.innerHTML = '<div class="empty mono">NO SIGNAL — ไม่พบข้อมูลอนิเมะที่ออกอากาศช่วงนี้</div>';
+      container.innerHTML = '<div class="empty mono">NO SIGNAL — ไม่พบข้อมูลอนิเมะที่ออกอากาศวันนี้</div>';
       document.getElementById('statusText').innerHTML = 'DETECTED: <b>0</b> SIGNALS';
       return;
     }
@@ -597,7 +593,17 @@
     document.getElementById('statusText').innerHTML = `DETECTED: <b>${uniqueList.length}</b> SIGNALS`;
   }
 
-  /* ══ Day nav / mode switching ══ */
+  /* ══ Day strip — single control, always shows all 7 days, today locked at load ══ */
+  function dayKeyFromDate(d){ return d.toLocaleDateString('en-CA'); }
+
+  function getDayList(offset){
+    if(!weekData) return null;
+    const targetDay = new Date(); targetDay.setHours(0,0,0,0);
+    targetDay.setDate(targetDay.getDate() + offset);
+    const targetStr = dayKeyFromDate(targetDay);
+    return weekData.filter(item => dayKeyFromDate(new Date(item.airingAt * 1000)) === targetStr);
+  }
+
   function renderDayNav(){
     const dayNav = document.getElementById('dayNav');
     dayNav.innerHTML = '';
@@ -606,54 +612,50 @@
 
     for(let i=0;i<7;i++){
       const d = new Date(today); d.setDate(today.getDate()+i);
+      const countList = weekData ? getDayList(i) : null;
+      const count = countList ? new Set(countList.map(it => (it.media.title.english||it.media.title.romaji)+'-EP'+it.episode)).size : null;
+
       const btn = document.createElement('div');
       btn.className = `day-btn${i===selectedOffset?' active':''}${i===0?' is-today':''}`;
-      btn.innerHTML = `<span>${dayNames[d.getDay()]}</span><span class="d-num">${d.getDate()}</span>`;
+      btn.innerHTML = `<span>${dayNames[d.getDay()]}</span><span class="d-num">${d.getDate()}</span>${count!==null ? `<span class="d-count mono">${count} EP</span>` : ''}`;
       btn.onclick = () => { selectedOffset = i; renderCurrentView(); };
       dayNav.appendChild(btn);
     }
+
+    document.getElementById('todayJump').classList.toggle('show', selectedOffset !== 0);
   }
 
   function renderCurrentView(){
-    const dayNav = document.getElementById('dayNav');
+    renderDayNav();
     const heroContainer = document.getElementById('heroContainer');
 
-    if(currentMode === 'today'){
-      dayNav.style.display = 'none';
-      if(cache.today) buildHeroSlider(cache.today);
-      renderList(cache.today);
+    if(selectedOffset === 0){
+      buildHeroSlider(getDayList(0));
     } else {
-      dayNav.style.display = 'flex';
       heroContainer.classList.remove('show');
       stopSlider();
-      renderDayNav();
-
-      if(cache.week){
-        const targetDay = new Date(); targetDay.setHours(0,0,0,0);
-        targetDay.setDate(targetDay.getDate() + selectedOffset);
-        const targetStr = targetDay.toLocaleDateString('en-CA');
-
-        const filtered = cache.week.filter(item => {
-          const itemDayStr = new Date(item.airingAt * 1000).toLocaleDateString('en-CA');
-          return itemDayStr === targetStr;
-        });
-        renderList(filtered);
-      }
     }
+
+    renderList(getDayList(selectedOffset));
   }
 
-  async function load(mode, force=false){
+  document.getElementById('todayJump').addEventListener('click', () => {
+    selectedOffset = 0;
+    renderCurrentView();
+  });
+
+  async function load(force=false){
     const container = document.getElementById('schedule-container');
     const btn = document.getElementById('refreshBtn');
     const statusEl = document.getElementById('statusText');
 
-    if(!cache[mode] || force){
+    if(!weekData || force){
       container.innerHTML = document.getElementById('skeletonWrap').outerHTML;
       statusEl.textContent = 'SCANNING…';
       btn.disabled = true;
       btn.innerHTML = '<span class="spin">⟳</span> SYNCING';
       try{
-        cache[mode] = await fetchSchedule(mode);
+        weekData = await fetchWeek();
       }catch(err){
         container.innerHTML = `<div class="error mono">SYNC FAILED — ${escapeHtml(err.message)}<small>ลองกด REBOOT SCAN อีกครั้ง</small></div>`;
         statusEl.textContent = 'ERROR';
@@ -667,17 +669,7 @@
     btn.innerHTML = '⟳ REBOOT SCAN';
   }
 
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentMode = tab.dataset.mode;
-      if(currentMode === 'week') selectedOffset = 0;
-      load(currentMode);
-    });
-  });
-
-  document.getElementById('refreshBtn').addEventListener('click', () => load(currentMode, true));
+  document.getElementById('refreshBtn').addEventListener('click', () => load(true));
 
   function updateClock(){
     document.getElementById('clock').textContent = new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
@@ -749,7 +741,7 @@
   document.getElementById('previewBackdrop').addEventListener('click', closePreview);
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePreview(); });
 
-  load('today');
+  load();
 </script>
 
 </body>
