@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Audio Counter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0C0A;
+    --panel: #141714;
+    --panel-inset: #0D0F0D;
+    --line: #2C312B;
+    --line-dim: #1E221D;
+    --text: #C9D6C4;
+    --text-dim: #6B7568;
+    --text-faint: #3E453D;
+    --accent: #5EE88F;
+    --accent-dim: #2E6B47;
+    --warn: #FF6B4A;
+    --warn-dim: #7A3626;
+    color-scheme: dark;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  .device {
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 2px 4px 10px;
+    border-bottom: 1px solid var(--line-dim);
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .brand span { color: var(--text-dim); }
+  .model-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.03em;
+  }
+
+  /* ---------- Status row ---------- */
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+  .led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-faint);
+    flex-shrink: 0;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .led.on {
+    background: var(--accent);
+    box-shadow: 0 0 6px 1px var(--accent);
+  }
+  .led.warn {
+    background: var(--warn);
+    box-shadow: 0 0 6px 1px var(--warn);
+  }
+  .status-text {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    flex: 1;
+  }
+  .status-text.on { color: var(--text); }
+  .mode-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-faint);
+    border: 1px solid var(--line);
+    padding: 3px 7px;
+  }
+
+  /* ---------- Counter ---------- */
+  .counter-panel {
+    background: var(--panel-inset);
+    border: 1px solid var(--line);
+    padding: 22px 10px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .counter-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(64px, 24vw, 96px);
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 24px rgba(94, 232, 143, 0.25);
+    transition: transform 0.08s ease-out;
+  }
+  .counter-num.pulse { transform: scale(1.04); }
+  .counter-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ---------- Scope (waveform) ---------- */
+  .scope-panel {
+    background: var(--panel-inset);
+    border: 1px solid var(--line);
+    padding: 8px;
+  }
+  .scope-panel canvas {
+    display: block;
+    width: 100%;
+    height: 140px;
+    background: #070907;
+  }
+  .scope-legend {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    padding-top: 8px;
+    font-size: 10.5px;
+    color: var(--text-faint);
+  }
+  .scope-legend .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ---------- Sensitivity ---------- */
+  .control-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+  }
+  .control-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .control-label {
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+  .control-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 26px;
+    background: transparent;
+    margin: 0;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: -7px;
+    box-shadow: 0 0 8px rgba(94,232,143,0.4);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 2px;
+    background: var(--line);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(94,232,143,0.4);
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--text-faint);
+    margin-top: -4px;
+  }
+
+  .mode-switch {
+    display: flex;
+    border: 1px solid var(--line);
+    margin-top: 12px;
+  }
+  .mode-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 9px 4px;
+    cursor: pointer;
+  }
+  .mode-btn:not(:last-child) { border-right: 1px solid var(--line); }
+  .mode-btn.active {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  button.dev-btn {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 16px 10px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  button.dev-btn:active { transform: translateY(1px); }
+  button.dev-btn.primary {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  button.dev-btn.stop {
+    color: var(--warn);
+    border-color: var(--warn-dim);
+  }
+  button.dev-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  button.dev-btn.small {
+    font-size: 12px;
+    padding: 12px 8px;
+    color: var(--text-dim);
+  }
+
+  /* ---------- Calibration ---------- */
+  .calib-panel {
+    background: var(--panel);
+    border: 1px solid var(--accent-dim);
+    padding: 14px 16px;
+    display: none;
+  }
+  .calib-panel.active { display: block; }
+  .calib-title {
+    font-size: 12.5px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .calib-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .calib-progress {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .calib-dot {
+    flex: 1;
+    height: 4px;
+    background: var(--line);
+  }
+  .calib-dot.filled { background: var(--accent); }
+  .calib-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* ---------- Debug ---------- */
+  .debug-panel {
+    background: var(--panel-inset);
+    border: 1px solid var(--line);
+    padding: 4px 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+  }
+  .debug-panel.open {
+    max-height: 400px;
+    padding: 14px 16px;
+  }
+  .debug-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+  }
+  .debug-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--line-dim);
+    font-size: 12px;
+  }
+  .debug-row:last-child { border-bottom: none; }
+  .debug-key { color: var(--text-dim); }
+  .debug-val {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+  }
+
+  .footer-row {
+    display: flex;
+    justify-content: center;
+  }
+  .debug-toggle {
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    padding: 8px;
+    cursor: pointer;
+  }
+  .debug-toggle.open { color: var(--accent); }
+
+  .privacy-note {
+    font-size: 11px;
+    color: var(--text-faint);
+    text-align: center;
+    line-height: 1.6;
+    padding: 4px 12px 2px;
+  }
+
+  .error-banner {
+    display: none;
+    background: var(--warn-dim);
+    border: 1px solid var(--warn);
+    color: #FFD4C7;
+    font-size: 12px;
+    padding: 10px 14px;
+    line-height: 1.5;
+  }
+  .error-banner.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="device">
+
+  <div class="header">
+    <div class="brand">AUDIO <span>COUNTER</span></div>
+    <div class="model-tag mono">MODEL AC-1</div>
+  </div>
+
+  <div class="error-banner" id="errorBanner"></div>
+
+  <div class="status-row">
+    <div class="led" id="statusLed"></div>
+    <div class="status-text" id="statusText">ไมโครโฟนหยุดทำงาน</div>
+    <div class="mode-tag mono" id="modeTag">AUTO</div>
+  </div>
+
+  <div class="counter-panel">
+    <div class="counter-num mono" id="counterNum">0</div>
+    <div class="counter-label">ITEMS</div>
+  </div>
+
+  <div class="scope-panel">
+    <canvas id="scopeCanvas"></canvas>
+    <div class="scope-legend">
+      <span><span class="dot" style="background:var(--text-dim)"></span>waveform</span>
+      <span><span class="dot" style="background:var(--warn)"></span>threshold</span>
+      <span><span class="dot" style="background:var(--accent)"></span>event</span>
+    </div>
+  </div>
+
+  <div class="calib-panel" id="calibPanel">
+    <div class="calib-title">CALIBRATION MODE</div>
+    <div class="calib-desc" id="calibDesc">รูดผ่านวัตถุที่ต้องการนับ ประมาณ 8 ครั้ง ด้วยจังหวะปกติ ระบบจะเรียนรู้ลักษณะเสียงโดยอัตโนมัติ</div>
+    <div class="calib-progress" id="calibProgress"></div>
+    <div class="calib-count mono" id="calibCount">0 / 8 ครั้ง</div>
+    <button class="dev-btn small" id="calibCancelBtn" style="width:100%">ยกเลิก</button>
+  </div>
+
+  <div class="control-panel">
+    <div class="control-label-row">
+      <span class="control-label">ความไว (Sensitivity)</span>
+      <span class="control-value mono" id="sensValue">50%</span>
+    </div>
+    <input type="range" id="sensSlider" min="0" max="100" value="50">
+    <div class="scale-labels">
+      <span>ต่ำ</span>
+      <span>สูง</span>
+    </div>
+
+    <div class="mode-switch">
+      <button class="mode-btn active" id="autoModeBtn">AUTO</button>
+      <button class="mode-btn" id="calibModeBtn">MANUAL CALIBRATION</button>
+    </div>
+  </div>
+
+  <div class="btn-grid">
+    <button class="dev-btn primary" id="startBtn">เริ่มตรวจจับ</button>
+    <button class="dev-btn stop" id="stopBtn" disabled>หยุด</button>
+    <button class="dev-btn" id="calibrateBtn">CALIBRATE</button>
+    <button class="dev-btn" id="resetBtn">รีเซ็ตจำนวน</button>
+  </div>
+
+  <div class="debug-panel" id="debugPanel">
+    <div class="debug-title">// DEBUG</div>
+    <div class="debug-row"><span class="debug-key">RMS / Volume</span><span class="debug-val mono" id="dbgRms">0.000</span></div>
+    <div class="debug-row"><span class="debug-key">Noise Floor</span><span class="debug-val mono" id="dbgFloor">0.000</span></div>
+    <div class="debug-row"><span class="debug-key">Peak Threshold</span><span class="debug-val mono" id="dbgThresh">0.000</span></div>
+    <div class="debug-row"><span class="debug-key">Frequency Peak</span><span class="debug-val mono" id="dbgFreq">– Hz</span></div>
+    <div class="debug-row"><span class="debug-key">Min Interval</span><span class="debug-val mono" id="dbgInterval">– ms</span></div>
+    <div class="debug-row"><span class="debug-key">Last Event Δt</span><span class="debug-val mono" id="dbgLastEvent">–</span></div>
+    <div class="debug-row"><span class="debug-key">Total Events</span><span class="debug-val mono" id="dbgTotal">0</span></div>
+  </div>
+
+  <div class="footer-row">
+    <button class="debug-toggle" id="debugToggle">[ DEBUG ]</button>
+  </div>
+
+  <div class="privacy-note">การประมวลผลเสียงทำงานภายในอุปกรณ์ของคุณ และไม่มีการอัปโหลดเสียงไปยังเซิร์ฟเวอร์</div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =======================================================
+     1. CONFIGURATION
+     ======================================================= */
+  const CONFIG = {
+    fftSize: 2048,
+    smoothingTimeConstant: 0, // we do our own smoothing on envelope
+    sampleHistorySize: 8,     // frames used for short-term envelope smoothing
+
+    // noise floor tracking
+    noiseFloorAlpha: 0.02,       // slow-moving average, follows ambient noise
+    noiseFloorAlphaFast: 0.15,   // used only when volume is below current floor (adapt down quickly)
+
+    // sensitivity slider maps to a threshold multiplier range
+    thresholdMultiplierMin: 1.8,  // low sensitivity = needs a much bigger jump above floor
+    thresholdMultiplierMax: 1.15, // high sensitivity = small jump above floor triggers
+
+    // minimum time between accepted events (debounce), ms — used only as a floor;
+    // real value is derived from calibration or adapts in auto mode
+    minIntervalFloorMs: 90,
+    minIntervalDefaultMs: 160,
+    minIntervalCeilMs: 900,
+
+    // envelope must fall back near floor before a new rising edge can trigger again
+    releaseRatio: 0.6, // fraction of (threshold - floor) it must drop back below, relative to floor
+
+    calibrationTargetEvents: 8,
+    calibrationTimeoutMs: 15000,
+
+    canvasHistorySeconds: 3.2
+  };
+
+  /* =======================================================
+     2. STATE
+     ======================================================= */
+  const state = {
+    audioCtx: null,
+    analyser: null,
+    stream: null,
+    source: null,
+    dataArray: null,      // time-domain Uint8
+    freqArray: null,      // frequency-domain Uint8
+    running: false,
+
+    noiseFloor: 0.02,
+    envelopeHistory: [],  // rolling short buffer for smoothing
+    lastRms: 0,
+
+    // detection state machine: 'idle' waiting for rise, 'above' currently above threshold
+    detectPhase: 'idle',
+    lastEventTime: 0,
+    minIntervalMs: CONFIG.minIntervalDefaultMs,
+    sensitivity: 50, // 0-100 from slider
+
+    mode: 'auto', // 'auto' | 'manual'
+    manualThresholdOffset: null, // set after calibration (absolute value above floor)
+    manualMinIntervalMs: null,
+
+    counter: 0,
+
+    // calibration
+    calibrating: false,
+    calibEvents: [],       // timestamps of detected taps during calibration
+    calibPeakLevels: [],
+    calibStartTime: 0,
+    calibTimeoutId: null,
+
+    // debug / viz
+    lastFreqPeakHz: 0,
+    lastEventDeltaMs: null,
+    totalEvents: 0,
+    debugOpen: false,
+
+    // waveform ring buffer for canvas drawing with event markers
+    waveRing: [],          // {v: normalizedVolume, event: bool}
+    waveRingMax: 220,
+
+    rafId: null
+  };
+
+  /* =======================================================
+     3. DOM REFS
+     ======================================================= */
+  const el = {
+    startBtn: document.getElementById('startBtn'),
+    stopBtn: document.getElementById('stopBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    calibrateBtn: document.getElementById('calibrateBtn'),
+    calibCancelBtn: document.getElementById('calibCancelBtn'),
+
+    statusLed: document.getElementById('statusLed'),
+    statusText: document.getElementById('statusText'),
+    modeTag: document.getElementById('modeTag'),
+
+    counterNum: document.getElementById('counterNum'),
+
+    sensSlider: document.getElementById('sensSlider'),
+    sensValue: document.getElementById('sensValue'),
+    autoModeBtn: document.getElementById('autoModeBtn'),
+    calibModeBtn: document.getElementById('calibModeBtn'),
+
+    calibPanel: document.getElementById('calibPanel'),
+    calibDesc: document.getElementById('calibDesc'),
+    calibProgress: document.getElementById('calibProgress'),
+    calibCount: document.getElementById('calibCount'),
+
+    debugPanel: document.getElementById('debugPanel'),
+    debugToggle: document.getElementById('debugToggle'),
+    dbgRms: document.getElementById('dbgRms'),
+    dbgFloor: document.getElementById('dbgFloor'),
+    dbgThresh: document.getElementById('dbgThresh'),
+    dbgFreq: document.getElementById('dbgFreq'),
+    dbgInterval: document.getElementById('dbgInterval'),
+    dbgLastEvent: document.getElementById('dbgLastEvent'),
+    dbgTotal: document.getElementById('dbgTotal'),
+
+    errorBanner: document.getElementById('errorBanner'),
+
+    canvas: document.getElementById('scopeCanvas')
+  };
+  const ctx2d = el.canvas.getContext('2d');
+
+  /* =======================================================
+     4. AUDIO PROCESSING (setup / teardown)
+     ======================================================= */
+  async function startMicrophone() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false
+        }
+      });
+      state.stream = stream;
+
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      state.audioCtx = new AudioContextClass();
+      if (state.audioCtx.state === 'suspended') {
+        await state.audioCtx.resume();
+      }
+
+      state.source = state.audioCtx.createMediaStreamSource(stream);
+      state.analyser = state.audioCtx.createAnalyser();
+      state.analyser.fftSize = CONFIG.fftSize;
+      state.analyser.smoothingTimeConstant = CONFIG.smoothingTimeConstant;
+
+      state.source.connect(state.analyser);
+
+      state.dataArray = new Uint8Array(state.analyser.fftSize);
+      state.freqArray = new Uint8Array(state.analyser.frequencyBinCount);
+
+      state.running = true;
+      state.detectPhase = 'idle';
+      state.envelopeHistory = [];
+      state.noiseFloor = 0.02;
+      state.waveRing = [];
+
+      setStatus(true);
+      hideError();
+      el.startBtn.disabled = true;
+      el.stopBtn.disabled = false;
+
+      loop();
+    } catch (err) {
+      showError(errorMessageFor(err));
+      setStatus(false);
+    }
+  }
+
+  function stopMicrophone() {
+    state.running = false;
+    if (state.rafId) cancelAnimationFrame(state.rafId);
+    if (state.stream) {
+      state.stream.getTracks().forEach(t => t.stop());
+    }
+    if (state.source) {
+      try { state.source.disconnect(); } catch (e) {}
+    }
+    if (state.audioCtx) {
+      state.audioCtx.close().catch(() => {});
+    }
+    state.stream = null;
+    state.audioCtx = null;
+    state.source = null;
+    state.analyser = null;
+
+    if (state.calibrating) cancelCalibration();
+
+    setStatus(false);
+    el.startBtn.disabled = false;
+    el.stopBtn.disabled = true;
+  }
+
+  function errorMessageFor(err) {
+    if (err && err.name === 'NotAllowedError') {
+      return 'ไม่ได้รับอนุญาตให้ใช้ไมโครโฟน กรุณาอนุญาตการเข้าถึงไมโครโฟนแล้วลองใหม่';
+    }
+    if (err && err.name === 'NotFoundError') {
+      return 'ไม่พบไมโครโฟนบนอุปกรณ์นี้';
+    }
+    return 'เกิดข้อผิดพลาดในการเข้าถึงไมโครโฟน: ' + (err && err.message ? err.message : 'ไม่ทราบสาเหตุ');
+  }
+
+  function showError(msg) {
+    el.errorBanner.textContent = msg;
+    el.errorBanner.classList.add('show');
+  }
+  function hideError() {
+    el.errorBanner.classList.remove('show');
+  }
+
+  function setStatus(active) {
+    el.statusLed.classList.toggle('on', active);
+    el.statusText.classList.toggle('on', active);
+    el.statusText.textContent = active ? 'ไมโครโฟนกำลังทำงาน' : 'ไมโครโฟนหยุดทำงาน';
+  }
+
+  /* =======================================================
+     5. DETECTION ALGORITHM
+     ======================================================= */
+
+  // Compute RMS (root-mean-square) volume from time-domain samples — more
+  // stable than peak sample value, less sensitive to single-sample spikes.
+  function computeRms(timeData) {
+    let sumSquares = 0;
+    const len = timeData.length;
+    for (let i = 0; i < len; i++) {
+      const norm = (timeData[i] - 128) / 128; // -1..1
+      sumSquares += norm * norm;
+    }
+    return Math.sqrt(sumSquares / len);
+  }
+
+  // Find the dominant frequency bin from frequency-domain data (for debug display
+  // and to help distinguish tonal transients from broadband noise).
+  function computeFreqPeak(freqData, sampleRate, fftSize) {
+    let maxVal = 0;
+    let maxIdx = 0;
+    // skip the very first bin (DC offset)
+    for (let i = 1; i < freqData.length; i++) {
+      if (freqData[i] > maxVal) {
+        maxVal = freqData[i];
+        maxIdx = i;
+      }
+    }
+    const hz = (maxIdx * sampleRate) / fftSize;
+    return { hz, magnitude: maxVal / 255 };
+  }
+
+  // Update the noise floor as a slow-adapting moving average of RMS,
+  // but only pull it toward the CURRENT rms when we're not in an active event —
+  // this way loud transient events don't drag the floor upward.
+  function updateNoiseFloor(rms, isEventActive) {
+    if (isEventActive) return; // don't learn from the event itself
+    const alpha = rms < state.noiseFloor ? CONFIG.noiseFloorAlphaFast : CONFIG.noiseFloorAlpha;
+    state.noiseFloor = state.noiseFloor * (1 - alpha) + rms * alpha;
+    if (state.noiseFloor < 0.0008) state.noiseFloor = 0.0008; // avoid divide-by-near-zero threshold
+  }
+
+  // Smooth the raw RMS with a tiny rolling window (envelope follower) to reduce
+  // single-frame jitter without adding much latency.
+  function smoothEnvelope(rms) {
+    state.envelopeHistory.push(rms);
+    if (state.envelopeHistory.length > CONFIG.sampleHistorySize) {
+      state.envelopeHistory.shift();
+    }
+    let sum = 0;
+    for (let i = 0; i < state.envelopeHistory.length; i++) sum += state.envelopeHistory[i];
+    return sum / state.envelopeHistory.length;
+  }
+
+  // Sensitivity slider (0-100) -> threshold multiplier applied over noise floor.
+  function currentThresholdMultiplier() {
+    const t = state.sensitivity / 100;
+    return CONFIG.thresholdMultiplierMin + (CONFIG.thresholdMultiplierMax - CONFIG.thresholdMultiplierMin) * t;
+  }
+
+  // The absolute threshold volume level, given current mode.
+  function currentThreshold() {
+    if (state.mode === 'manual' && state.manualThresholdOffset !== null) {
+      return state.noiseFloor + state.manualThresholdOffset;
+    }
+    const mult = currentThresholdMultiplier();
+    return state.noiseFloor * mult + 0.006; // small additive floor so near-silent envs still need a real jump
+  }
+
+  function currentMinInterval() {
+    if (state.mode === 'manual' && state.manualMinIntervalMs !== null) {
+      return state.manualMinIntervalMs;
+    }
+    return state.minIntervalMs;
+  }
+
+  // Core rising-edge + debounce + release-based detector.
+  // Uses a simple state machine so a single event with multiple peaks
+  // (e.g. one "ka-chak" with two bumps) is only counted once: after triggering,
+  // we require the envelope to fall back down near the floor ("release")
+  // before we arm again for the next rising edge.
+  function detectEvent(smoothedRms, nowMs) {
+    const threshold = currentThreshold();
+    const releaseLevel = state.noiseFloor + (threshold - state.noiseFloor) * CONFIG.releaseRatio;
+    const minInterval = currentMinInterval();
+
+    let firedEvent = false;
+
+    if (state.detectPhase === 'idle') {
+      if (smoothedRms >= threshold) {
+        const sinceLast = nowMs - state.lastEventTime;
+        if (sinceLast >= minInterval) {
+          firedEvent = true;
+          state.lastEventDeltaMs = state.lastEventTime === 0 ? null : sinceLast;
+          state.lastEventTime = nowMs;
+        }
+        // whether or not it counted (debounced), we're now "above" until it releases
+        state.detectPhase = 'above';
+      }
+    } else if (state.detectPhase === 'above') {
+      if (smoothedRms <= releaseLevel) {
+        state.detectPhase = 'idle';
+      }
+    }
+
+    return { firedEvent, threshold, releaseLevel };
+  }
+
+  /* =======================================================
+     6. MAIN LOOP
+     ======================================================= */
+  function loop() {
+    if (!state.running) return;
+    state.rafId = requestAnimationFrame(loop);
+
+    const analyser = state.analyser;
+    analyser.getByteTimeDomainData(state.dataArray);
+    analyser.getByteFrequencyData(state.freqArray);
+
+    const rawRms = computeRms(state.dataArray);
+    const smoothed = smoothEnvelope(rawRms);
+    state.lastRms = smoothed;
+
+    const nowMs = performance.now();
+    const { firedEvent, threshold } = detectEvent(smoothed, nowMs);
+
+    updateNoiseFloor(smoothed, state.detectPhase === 'above');
+
+    if (firedEvent) {
+      if (state.calibrating) {
+        handleCalibrationEvent(nowMs, smoothed);
+      } else {
+        registerCountedEvent();
+      }
+    }
+
+    const freqPeak = computeFreqPeak(state.freqArray, state.audioCtx.sampleRate, analyser.fftSize);
+    if (freqPeak.magnitude > 0.15) {
+      state.lastFreqPeakHz = freqPeak.hz;
+    }
+
+    // push to waveform ring buffer
+    state.waveRing.push({ v: smoothed, thresh: threshold, event: firedEvent });
+    if (state.waveRing.length > state.waveRingMax) state.waveRing.shift();
+
+    drawScope();
+    updateDebugPanel(threshold);
+  }
+
+  function registerCountedEvent() {
+    state.counter++;
+    state.totalEvents++;
+    el.counterNum.textContent = state.counter;
+    pulseCounter();
+  }
+
+  function pulseCounter() {
+    el.counterNum.classList.remove('pulse');
+    // force reflow so the animation can restart
+    void el.counterNum.offsetWidth;
+    el.counterNum.classList.add('pulse');
+  }
+
+  /* =======================================================
+     7. CALIBRATION MODE
+     ======================================================= */
+  function startCalibration() {
+    if (!state.running) {
+      showError('กรุณากด "เริ่มตรวจจับ" ก่อนเข้าสู่โหมด Calibration');
+      return;
+    }
+    state.calibrating = true;
+    state.calibEvents = [];
+    state.calibPeakLevels = [];
+    state.calibStartTime = performance.now();
+    state.detectPhase = 'idle';
+
+    el.calibPanel.classList.add('active');
+    el.calibrateBtn.disabled = true;
+    updateCalibProgress();
+
+    state.calibTimeoutId = setTimeout(() => {
+      if (state.calibrating) {
+        if (state.calibEvents.length >= 3) {
+          finishCalibration();
+        } else {
+          cancelCalibration();
+          showError('ตรวจจับเสียงได้ไม่พอสำหรับ Calibration กรุณาลองใหม่และรูดวัตถุให้ชัดเจนขึ้น');
+        }
+      }
+    }, CONFIG.calibrationTimeoutMs);
+  }
+
+  function handleCalibrationEvent(nowMs, level) {
+    state.calibEvents.push(nowMs);
+    state.calibPeakLevels.push(level);
+    updateCalibProgress();
+
+    if (state.calibEvents.length >= CONFIG.calibrationTargetEvents) {
+      finishCalibration();
+    }
+  }
+
+  function updateCalibProgress() {
+    const target = CONFIG.calibrationTargetEvents;
+    const count = state.calibEvents.length;
+    el.calibProgress.innerHTML = '';
+    for (let i = 0; i < target; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'calib-dot' + (i < count ? ' filled' : '');
+      el.calibProgress.appendChild(dot);
+    }
+    el.calibCount.textContent = count + ' / ' + target + ' ครั้ง';
+  }
+
+  function finishCalibration() {
+    clearTimeout(state.calibTimeoutId);
+
+    // derive minimum interval from median gap between calibration events
+    const events = state.calibEvents;
+    const gaps = [];
+    for (let i = 1; i < events.length; i++) {
+      gaps.push(events[i] - events[i - 1]);
+    }
+    gaps.sort((a, b) => a - b);
+    let medianGap = CONFIG.minIntervalDefaultMs;
+    if (gaps.length > 0) {
+      medianGap = gaps[Math.floor(gaps.length / 2)];
+    }
+    // allow events a bit faster than the calibrated rhythm, but never faster than the safety floor
+    let derivedInterval = Math.max(CONFIG.minIntervalFloorMs, medianGap * 0.55);
+    derivedInterval = Math.min(derivedInterval, CONFIG.minIntervalCeilMs);
+
+    // derive threshold offset from average peak level observed during calibration events
+    let avgPeak = 0;
+    if (state.calibPeakLevels.length > 0) {
+      avgPeak = state.calibPeakLevels.reduce((a, b) => a + b, 0) / state.calibPeakLevels.length;
+    }
+    // set threshold partway between the noise floor and the average observed peak,
+    // so genuine repeats reliably cross it but ambient noise doesn't
+    const offset = Math.max(0.006, (avgPeak - state.noiseFloor) * 0.55);
+
+    state.manualThresholdOffset = offset;
+    state.manualMinIntervalMs = Math.round(derivedInterval);
+    state.mode = 'manual';
+
+    setModeUI('manual');
+
+    state.calibrating = false;
+    el.calibPanel.classList.remove('active');
+    el.calibrateBtn.disabled = false;
+
+    el.calibDesc.textContent = 'Calibration เสร็จสิ้น: ใช้ค่าที่ปรับเทียบแล้วในการนับ';
+    setTimeout(() => {
+      el.calibDesc.textContent = 'รูดผ่านวัตถุที่ต้องการนับ ประมาณ 8 ครั้ง ด้วยจังหวะปกติ ระบบจะเรียนรู้ลักษณะเสียงโดยอัตโนมัติ';
+    }, 2500);
+  }
+
+  function cancelCalibration() {
+    clearTimeout(state.calibTimeoutId);
+    state.calibrating = false;
+    el.calibPanel.classList.remove('active');
+    el.calibrateBtn.disabled = false;
+  }
+
+  /* =======================================================
+     8. UI: mode / sensitivity / debug / reset
+     ======================================================= */
+  function setModeUI(mode) {
+    state.mode = mode;
+    el.autoModeBtn.classList.toggle('active', mode === 'auto');
+    el.calibModeBtn.classList.toggle('active', mode === 'manual');
+    el.modeTag.textContent = mode === 'auto' ? 'AUTO' : 'MANUAL';
+  }
+
+  el.autoModeBtn.addEventListener('click', () => setModeUI('auto'));
+  el.calibModeBtn.addEventListener('click', () => {
+    if (state.manualThresholdOffset === null) {
+      showError('ยังไม่มีข้อมูล Calibration กรุณากด CALIBRATE ก่อน');
+      return;
+    }
+    setModeUI('manual');
+  });
+
+  el.sensSlider.addEventListener('input', (e) => {
+    state.sensitivity = parseInt(e.target.value, 10);
+    el.sensValue.textContent = state.sensitivity + '%';
+    // sensitivity also nudges the base min-interval slightly in auto mode:
+    // higher sensitivity -> allow slightly faster repeats
+    const t = state.sensitivity / 100;
+    state.minIntervalMs = Math.round(CONFIG.minIntervalCeilMs - (CONFIG.minIntervalCeilMs - CONFIG.minIntervalFloorMs * 1.8) * t);
+  });
+
+  el.debugToggle.addEventListener('click', () => {
+    state.debugOpen = !state.debugOpen;
+    el.debugPanel.classList.toggle('open', state.debugOpen);
+    el.debugToggle.classList.toggle('open', state.debugOpen);
+    el.debugToggle.textContent = state.debugOpen ? '[ DEBUG ▲ ]' : '[ DEBUG ]';
+  });
+
+  el.resetBtn.addEventListener('click', () => {
+    state.counter = 0;
+    state.totalEvents = 0;
+    state.lastEventTime = 0;
+    state.lastEventDeltaMs = null;
+    el.counterNum.textContent = '0';
+  });
+
+  el.startBtn.addEventListener('click', startMicrophone);
+  el.stopBtn.addEventListener('click', stopMicrophone);
+  el.calibrateBtn.addEventListener('click', startCalibration);
+  el.calibCancelBtn.addEventListener('click', cancelCalibration);
+
+  function updateDebugPanel(threshold) {
+    el.dbgRms.textContent = state.lastRms.toFixed(4);
+    el.dbgFloor.textContent = state.noiseFloor.toFixed(4);
+    el.dbgThresh.textContent = threshold.toFixed(4);
+    el.dbgFreq.textContent = state.lastFreqPeakHz > 0 ? Math.round(state.lastFreqPeakHz) + ' Hz' : '– Hz';
+    el.dbgInterval.textContent = currentMinInterval() + ' ms';
+    el.dbgLastEvent.textContent = state.lastEventDeltaMs !== null ? Math.round(state.lastEventDeltaMs) + ' ms' : '–';
+    el.dbgTotal.textContent = state.totalEvents;
+  }
+
+  /* =======================================================
+     9. VISUALIZATION (Canvas)
+     ======================================================= */
+  function resizeCanvas() {
+    const rect = el.canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    el.canvas.width = Math.max(1, Math.round(rect.width * dpr));
+    el.canvas.height = Math.max(1, Math.round(rect.height * dpr));
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  function drawScope() {
+    const w = el.canvas.width;
+    const h = el.canvas.height;
+    if (w === 0 || h === 0) return;
+
+    ctx2d.clearRect(0, 0, w, h);
+
+    // background grid (subtle)
+    ctx2d.strokeStyle = 'rgba(44, 49, 43, 0.5)';
+    ctx2d.lineWidth = 1;
+    const gridLines = 4;
+    for (let i = 1; i < gridLines; i++) {
+      const y = (h / gridLines) * i;
+      ctx2d.beginPath();
+      ctx2d.moveTo(0, y);
+      ctx2d.lineTo(w, y);
+      ctx2d.stroke();
+    }
+
+    const ring = state.waveRing;
+    if (ring.length < 2) return;
+
+    const stepX = w / state.waveRingMax;
+    const baseline = h * 0.92;
+    const scaleY = h * 3.2; // amplify small RMS values to fill the view
+
+    // threshold line (use most recent threshold value)
+    const lastThresh = ring[ring.length - 1].thresh;
+    const threshY = baseline - Math.min(lastThresh * scaleY, h * 0.85);
+    ctx2d.strokeStyle = '#FF6B4A';
+    ctx2d.globalAlpha = 0.55;
+    ctx2d.lineWidth = 1;
+    ctx2d.setLineDash([4, 4]);
+    ctx2d.beginPath();
+    ctx2d.moveTo(0, threshY);
+    ctx2d.lineTo(w, threshY);
+    ctx2d.stroke();
+    ctx2d.setLineDash([]);
+    ctx2d.globalAlpha = 1;
+
+    // waveform envelope line
+    ctx2d.strokeStyle = '#5EE88F';
+    ctx2d.lineWidth = 2;
+    ctx2d.beginPath();
+    const offset = state.waveRingMax - ring.length;
+    for (let i = 0; i < ring.length; i++) {
+      const x = (offset + i) * stepX;
+      const y = baseline - Math.min(ring[i].v * scaleY, h * 0.85);
+      if (i === 0) ctx2d.moveTo(x, y);
+      else ctx2d.lineTo(x, y);
+    }
+    ctx2d.stroke();
+
+    // fill under curve (subtle)
+    ctx2d.lineTo((offset + ring.length - 1) * stepX, baseline);
+    ctx2d.lineTo(offset * stepX, baseline);
+    ctx2d.closePath();
+    ctx2d.fillStyle = 'rgba(94, 232, 143, 0.06)';
+    ctx2d.fill();
+
+    // event markers
+    for (let i = 0; i < ring.length; i++) {
+      if (ring[i].event) {
+        const x = (offset + i) * stepX;
+        const y = baseline - Math.min(ring[i].v * scaleY, h * 0.85);
+        ctx2d.fillStyle = '#5EE88F';
+        ctx2d.beginPath();
+        ctx2d.arc(x, y, 4, 0, Math.PI * 2);
+        ctx2d.fill();
+        ctx2d.strokeStyle = 'rgba(94, 232, 143, 0.35)';
+        ctx2d.lineWidth = 1;
+        ctx2d.beginPath();
+        ctx2d.moveTo(x, 0);
+        ctx2d.lineTo(x, h);
+        ctx2d.stroke();
+      }
+    }
+  }
+
+  // static idle draw so the scope isn't blank before mic starts
+  function drawIdleScope() {
+    const w = el.canvas.width;
+    const h = el.canvas.height;
+    if (w === 0 || h === 0) return;
+    ctx2d.clearRect(0, 0, w, h);
+    ctx2d.strokeStyle = 'rgba(44, 49, 43, 0.5)';
+    ctx2d.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      const y = (h / 4) * i;
+      ctx2d.beginPath();
+      ctx2d.moveTo(0, y);
+      ctx2d.lineTo(w, y);
+      ctx2d.stroke();
+    }
+    ctx2d.strokeStyle = 'rgba(107, 117, 104, 0.6)';
+    ctx2d.lineWidth = 1.5;
+    ctx2d.beginPath();
+    ctx2d.moveTo(0, h * 0.92);
+    ctx2d.lineTo(w, h * 0.92);
+    ctx2d.stroke();
+  }
+
+  /* =======================================================
+     10. INIT
+     ======================================================= */
+  function init() {
+    resizeCanvas();
+    drawIdleScope();
+    setStatus(false);
+    setModeUI('auto');
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showError('เบราว์เซอร์นี้ไม่รองรับการเข้าถึงไมโครโฟน (Web Audio API)');
+      el.startBtn.disabled = true;
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
