@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>เช็กสต็อกน้ำผลไม้ & นม</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; padding: 12px; background: var(--bg); color: var(--text); padding-bottom: 40px; }
+    .container { max-width: 500px; margin: 0 auto; }
+    
+    .card { background: var(--card); border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    h2 { margin: 0 0 12px 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+    label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: #475569; }
+    .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    
+    /* Summary Bar */
+    .summary-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; background: #1e293b; color: white; padding: 12px; border-radius: 12px; margin-bottom: 14px; }
+    .summary-box span { display: block; font-size: 0.75rem; color: #94a3b8; }
+    .summary-box strong { font-size: 1.3rem; color: #38bdf8; }
+    .summary-box.total strong { color: #4ade80; }
+
+    /* Pill Buttons for Selection */
+    .pill-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+    .pill-group.three-col { grid-template-columns: repeat(3, 1fr); }
+    .pill-btn { padding: 10px 8px; border: 2px solid var(--border); background: #f8fafc; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-align: center; transition: 0.15s; color: var(--text); }
+    .pill-btn.active { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
+    .pill-btn.add-custom { border-style: dashed; color: #64748b; background: #ffffff; }
+
+    /* Custom Drink Input Box */
+    .custom-box { display: none; gap: 8px; margin-top: -6px; margin-bottom: 14px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px dashed var(--border); }
+    .custom-box.show { display: flex; }
+
+    /* Inputs & Steppers */
+    .row-inputs { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+    select, input[type="text"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: white; }
+    
+    .qty-control { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--border); background: #f8fafc; font-size: 1.4rem; font-weight: bold; cursor: pointer; }
+    .qty-btn:active { background: #e2e8f0; }
+    .qty-display { width: 60px; text-align: center; font-size: 1.2rem; font-weight: bold; border: 1px solid var(--border); border-radius: 8px; height: 44px; }
+
+    /* Action Buttons */
+    .btn-main { width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-add { background: var(--primary); }
+    .btn-copy { background: var(--success); margin-top: 10px; font-size: 1.05rem; }
+    .btn-main:active { opacity: 0.85; }
+
+    /* Item List */
+    .item-list { list-style: none; padding: 0; margin: 0; }
+    .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .item-row:last-child { border-bottom: none; }
+    .item-info { font-size: 0.95rem; }
+    .item-info small { color: #64748b; display: block; font-size: 0.8rem; }
+    .item-actions { display: flex; align-items: center; gap: 6px; }
+    .mini-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); background: white; font-weight: bold; cursor: pointer; }
+    .mini-btn.del { border-color: #fecaca; color: var(--danger); background: #fef2f2; }
+
+    textarea { width: 100%; height: 300px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: monospace; font-size: 0.9rem; resize: vertical; background: #f8fafc; }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 100; white-space: nowrap; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- แถบสรุปยอดแบบเรียลไทม์ -->
+  <div class="summary-bar">
+    <div class="summary-box">
+      <span>🍉 น้ำผลไม้</span>
+      <strong id="sumJuice">0</strong>
+    </div>
+    <div class="summary-box">
+      <span>🥛 นมเมจิเรย์</span>
+      <strong id="sumMilk">0</strong>
+    </div>
+    <div class="summary-box total">
+      <span>✅ รวมทั้งหมด</span>
+      <strong id="sumAll">0</strong>
+    </div>
+  </div>
+
+  <!-- ตั้งค่าวันที่อัปเดต (ค.ศ.) -->
+  <div class="card">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <label style="margin:0; white-space: nowrap;">📅 วันที่ Update (ค.ศ.):</label>
+      <input type="text" id="updateDate" style="max-width: 150px; text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+  <!-- ฟอร์มกดเพิ่มรายการ -->
+  <div class="card">
+    <label>1. เลือกจุดเช็กสต็อก</label>
+    <div class="pill-group three-col" id="locGroup">
+      <button type="button" class="pill-btn active" onclick="selectLoc('f2_pantry', this)">แพนตี้</button>
+      <button type="button" class="pill-btn" onclick="selectLoc('f2_crow', this)">Crown (F2)</button>
+      <button type="button" class="pill-btn" onclick="selectLoc('f3', this)">Store (F3)</button>
+    </div>
+
+    <div class="label-row">
+      <label style="margin:0;">2. เลือกเครื่องดื่ม</label>
+      <button type="button" id="clearCustomBtn" class="mini-btn del" style="width:auto; height:auto; padding:3px 8px; font-size:0.75rem; display:none;" onclick="clearCustomDrinks()">ล้างเมนูที่เพิ่มเอง</button>
+    </div>
+    
+    <!-- ปุ่มเครื่องดื่มจะถูกสร้างอัตโนมัติด้วย JS -->
+    <div class="pill-group" id="drinkGroup"></div>
+
+    <!-- ช่องพิมพ์เพิ่มเมนูใหม่ -->
+    <div class="custom-box" id="customDrinkBox">
+      <input type="text" id="customDrinkInput" placeholder="พิมพ์ชื่อ เช่น น้ำฝรั่ง, น้ำพันช์">
+      <button type="button" class="pill-btn active" style="white-space:nowrap; padding: 0 14px;" onclick="saveCustomDrink()">บันทึก</button>
+    </div>
+
+    <label id="expLabel">3. วันหมดอายุ (EXP วัน/เดือน/26)</label>
+    <div class="row-inputs">
+      <select id="expDay"></select>
+      <span style="font-weight:bold;">/</span>
+      <select id="expMonth"></select>
+      <span style="font-weight:bold;">/</span>
+      <input type="text" id="expYear" value="" style="width: 60px; text-align: center; background:#f1f5f9;" readonly>
+    </div>
+
+    <label>4. จำนวนแกลลอน <small style="font-weight:normal; color:#64748b;">(ขวดเปิดแล้วก็นับเป็น 1 เลย)</small></label>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div class="qty-control">
+        <button type="button" class="qty-btn" onclick="changeQty(-1)">-</button>
+        <input type="number" id="qtyInput" class="qty-display" value="1" min="1">
+        <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <div style="display:flex; gap:4px;">
+        <button type="button" class="mini-btn" onclick="setQty(1)">1</button>
+        <button type="button" class="mini-btn" onclick="setQty(2)">2</button>
+        <button type="button" class="mini-btn" onclick="setQty(4)">4</button>
+        <button type="button" class="mini-btn" onclick="setQty(7)">7</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn-main btn-add" onclick="addItem()">➕ เพิ่มเข้ารายการ</button>
+  </div>
+
+  <!-- รายการที่กดเพิ่มแล้ว -->
+  <div class="card">
+    <h2>
+      <span>📝 รายการที่นับแล้ว</span>
+      <button type="button" class="mini-btn del" style="width:auto; padding:0 10px; font-size:0.8rem;" onclick="clearAll()">ล้างทั้งหมด</button>
+    </h2>
+    <div id="listContainer"></div>
+  </div>
+
+  <!-- ช่องข้อความพร้อมคัดลอก -->
+  <div class="card">
+    <h2>📋 ข้อความพร้อมส่ง</h2>
+    <textarea id="outputText" readonly></textarea>
+    <button type="button" class="btn-main btn-copy" onclick="copyText()">📋 คัดลอกข้อความ</button>
+  </div>
+</div>
+
+<div id="toast" class="toast">คัดลอกข้อความเรียบร้อย!</div>
+
+<script>
+  const defaultDrinks = [
+    { name: 'นมเมจิเรย์', label: '🥛 นมเมจิเรย์' },
+    { name: 'น้ำส้ม', label: '🍊 น้ำส้ม' },
+    { name: 'น้ำสับปะรด', label: '🍍 น้ำสับปะรด' },
+    { name: 'น้ำแอปเปิ้ล', label: '🍎 น้ำแอปเปิ้ล' },
+    { name: 'น้ำองุ่น', label: '🍇 น้ำองุ่น' },
+    { name: 'น้ำเก๊กฮวย', label: '🌼 น้ำเก๊กฮวย' },
+    { name: 'น้ำลิ้นจี่', label: '🍒 น้ำลิ้นจี่' }
+  ];
+
+  let customDrinks = JSON.parse(localStorage.getItem('customDrinks_v1')) || [];
+  let items = JSON.parse(localStorage.getItem('stockItems_v1')) || [];
+  
+  let currentLoc = 'f2_pantry';
+  let currentDrink = 'นมเมจิเรย์';
+
+  // ชื่อจุดเก็บที่ใช้ในข้อความสรุป
+  const locNames = {
+    'f2_pantry': 'แพนตี้',
+    'f2_crow': 'Crown (F2)',
+    'f3': 'Store (F3)'
+  };
+
+  // ชื่อจุดเก็บที่ใช้ในรายการที่นับแล้ว
+  const locShortNames = locNames;
+
+  // อีโมจิประจำเครื่องดื่ม (เมนูที่เพิ่มเองใช้ 🍹)
+  const drinkEmoji = {
+    'นมเมจิเรย์': '🥛',
+    'น้ำส้ม': '🍊',
+    'น้ำสับปะรด': '🍍',
+    'น้ำแอปเปิ้ล': '🍎',
+    'น้ำองุ่น': '🍇',
+    'น้ำเก๊กฮวย': '🌼',
+    'น้ำลิ้นจี่': '🍒'
+  };
+  const emojiOf = (name) => drinkEmoji[name] || '🍹';
+
+  window.onload = () => {
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yy = String(now.getFullYear()).slice(-2);
+    document.getElementById('updateDate').value = `${dd}/${mm}/${yy}`;
+    document.getElementById('updateDate').addEventListener('input', renderAll);
+
+    const daySelect = document.getElementById('expDay');
+    const monthSelect = document.getElementById('expMonth');
+    for (let i = 1; i <= 31; i++) {
+      let val = String(i).padStart(2, '0');
+      daySelect.innerHTML += `<option value="${val}">${val}</option>`;
+    }
+    const monthNames = ["01 (ม.ค.)", "02 (ก.พ.)", "03 (มี.ค.)", "04 (เม.ย.)", "05 (พ.ค.)", "06 (มิ.ย.)", "07 (ก.ค.)", "08 (ส.ค.)", "09 (ก.ย.)", "10 (ต.ค.)", "11 (พ.ย.)", "12 (ธ.ค.)"];
+    for (let i = 1; i <= 12; i++) {
+      let val = String(i).padStart(2, '0');
+      monthSelect.innerHTML += `<option value="${val}">${monthNames[i-1]}</option>`;
+    }
+    daySelect.value = dd;
+    monthSelect.value = mm;
+
+    // ปี EXP ตามปฏิทินปัจจุบัน (2 หลักท้าย)
+    document.getElementById('expYear').value = yy;
+    document.getElementById('expLabel').innerText = `3. วันหมดอายุ (EXP วัน/เดือน/${yy})`;
+
+    document.getElementById('customDrinkInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') saveCustomDrink();
+    });
+
+    renderDrinks();
+    renderAll();
+  };
+
+  function renderDrinks() {
+    const group = document.getElementById('drinkGroup');
+    const clearBtn = document.getElementById('clearCustomBtn');
+    
+    clearBtn.style.display = customDrinks.length > 0 ? 'inline-block' : 'none';
+
+    const allDrinks = [
+      ...defaultDrinks,
+      ...customDrinks.map(name => ({ name: name, label: `🍹 ${name}` }))
+    ];
+
+    let html = '';
+    allDrinks.forEach(d => {
+      const isActive = (d.name === currentDrink) ? 'active' : '';
+      html += `<button type="button" class="pill-btn ${isActive}" onclick="selectDrink('${d.name}')">${d.label}</button>`;
+    });
+
+    html += `<button type="button" class="pill-btn add-custom" onclick="toggleCustomBox()">➕ พิมพ์เพิ่มเอง...</button>`;
+    group.innerHTML = html;
+  }
+
+  function selectLoc(loc, btn) {
+    currentLoc = loc;
+    document.querySelectorAll('#locGroup .pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function selectDrink(drinkName) {
+    currentDrink = drinkName;
+    document.getElementById('customDrinkBox').classList.remove('show');
+    renderDrinks();
+  }
+
+  function toggleCustomBox() {
+    const box = document.getElementById('customDrinkBox');
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      document.getElementById('customDrinkInput').focus();
+    }
+  }
+
+  function saveCustomDrink() {
+    const input = document.getElementById('customDrinkInput');
+    const name = input.value.trim();
+    if (!name) return;
+
+    const existsInDefault = defaultDrinks.some(d => d.name === name);
+    if (!existsInDefault && !customDrinks.includes(name)) {
+      customDrinks.push(name);
+      localStorage.setItem('customDrinks_v1', JSON.stringify(customDrinks));
+    }
+
+    currentDrink = name;
+    input.value = '';
+    document.getElementById('customDrinkBox').classList.remove('show');
+    renderDrinks();
+    showToast(`เพิ่มเมนู "${name}" แล้ว`);
+  }
+
+  function clearCustomDrinks() {
+    if (confirm('ต้องการล้างเมนูเครื่องดื่มที่พิมพ์เพิ่มเองทั้งหมดใช่ไหม?')) {
+      customDrinks = [];
+      localStorage.removeItem('customDrinks_v1');
+      currentDrink = 'นมเมจิเรย์';
+      renderDrinks();
+      showToast('ล้างเมนูที่เพิ่มเองเรียบร้อย');
+    }
+  }
+
+  function changeQty(delta) {
+    const input = document.getElementById('qtyInput');
+    let val = parseInt(input.value) || 1;
+    val = Math.max(1, val + delta);
+    input.value = val;
+  }
+
+  function setQty(val) {
+    document.getElementById('qtyInput').value = val;
+  }
+
+  function addItem() {
+    const day = document.getElementById('expDay').value;
+    const month = document.getElementById('expMonth').value;
+    const year = document.getElementById('expYear').value;
+    const exp = `${day}/${month}/${year}`;
+    const sortKey = `${year}${month}${day}`;
+    const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+
+    const existing = items.find(i => i.loc === currentLoc && i.drink === currentDrink && i.exp === exp);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      items.push({
+        id: Date.now(),
+        loc: currentLoc,
+        drink: currentDrink,
+        isMilk: currentDrink === 'นมเมจิเรย์',
+        exp: exp,
+        sortKey: sortKey,
+        qty: qty
+      });
+    }
+
+    document.getElementById('qtyInput').value = 1;
+    saveAndRender();
+    showToast(`เพิ่ม ${currentDrink} (${qty}) แล้ว`);
+  }
+
+  function updateItemQty(id, delta) {
+    const idx = items.findIndex(i => i.id === id);
+    if (idx > -1) {
+      items[idx].qty += delta;
+      if (items[idx].qty <= 0) {
+        items.splice(idx, 1);
+      }
+      saveAndRender();
+    }
+  }
+
+  function clearAll() {
+    if (confirm('ต้องการล้างรายการสต็อกทั้งหมดเพื่อเริ่มนับใหม่ใช่ไหม?')) {
+      items = [];
+      saveAndRender();
+    }
+  }
+
+  function saveAndRender() {
+    localStorage.setItem('stockItems_v1', JSON.stringify(items));
+    renderAll();
+  }
+
+  function renderAll() {
+    renderList();
+    renderOutput();
+  }
+
+  function renderList() {
+    const container = document.getElementById('listContainer');
+    if (items.length === 0) {
+      container.innerHTML = `<p style="text-align:center; color:#94a3b8; margin: 16px 0;">ยังไม่มีรายการ กดเพิ่มด้านบนได้เลย</p>`;
+      return;
+    }
+
+    let html = '<ul class="item-list">';
+    items.forEach(item => {
+      html += `
+        <li class="item-row">
+          <div class="item-info">
+            <strong>${item.drink}</strong> — EXP ${item.exp}
+            <small>📍 ${locShortNames[item.loc]}</small>
+          </div>
+          <div class="item-actions">
+            <button class="mini-btn" onclick="updateItemQty(${item.id}, -1)">-</button>
+            <strong style="min-width: 24px; text-align: center;">${item.qty}</strong>
+            <button class="mini-btn" onclick="updateItemQty(${item.id}, 1)">+</button>
+          </div>
+        </li>
+      `;
+    });
+    html += '</ul>';
+    container.innerHTML = html;
+  }
+
+  function renderOutput() {
+    const updateDate = document.getElementById('updateDate').value;
+    // ลำดับในข้อความสรุป: แพนตี้ > Crown (F2) > Store (F3)
+    const locOrder = ['f2_pantry', 'f2_crow', 'f3'];
+    const baseOrder = ['น้ำส้ม', 'น้ำแอปเปิ้ล', 'น้ำองุ่น', 'น้ำสับปะรด', 'น้ำเก๊กฮวย', 'น้ำลิ้นจี่', ...customDrinks, 'นมเมจิเรย์'];
+    const LINE = '━━━━━━━━━━━━━━';
+
+    let totalJuice = 0;
+    let totalMilk = 0;
+    let sections = [];
+
+    locOrder.forEach(locKey => {
+      const locItems = items.filter(i => i.loc === locKey);
+      if (locItems.length === 0) return;
+
+      locItems.sort((a, b) => {
+        let idxA = baseOrder.indexOf(a.drink);
+        let idxB = baseOrder.indexOf(b.drink);
+        if (idxA === -1) idxA = 999;
+        if (idxB === -1) idxB = 999;
+        if (idxA !== idxB) return idxA - idxB;
+        return a.sortKey.localeCompare(b.sortKey);
+      });
+
+      const juices = locItems.filter(i => !i.isMilk);
+      const milks = locItems.filter(i => i.isMilk);
+      let prevQty = null;
+      const fmt = (i) => {
+        const q = (prevQty === i.qty) ? '"' : `(${i.qty} แกลลอน)`;
+        prevQty = i.qty;
+        return `${emojiOf(i.drink)} ${i.drink} EXP ${i.exp} ${q}`;
+      };
+
+      let secText = `${LINE}\n📍 ${locNames[locKey]}\n${LINE}\n`;
+
+      if (juices.length > 0) {
+        secText += juices.map(fmt).join('\n');
+      }
+      if (juices.length > 0 && milks.length > 0) secText += '\n\n';
+      if (milks.length > 0) {
+        secText += milks.map(fmt).join('\n');
+      }
+
+      sections.push(secText);
+    });
+
+    items.forEach(i => {
+      if (i.isMilk) totalMilk += i.qty;
+      else totalJuice += i.qty;
+    });
+
+    document.getElementById('sumJuice').innerText = totalJuice;
+    document.getElementById('sumMilk').innerText = totalMilk;
+    document.getElementById('sumAll').innerText = totalJuice + totalMilk;
+
+    let finalOutput = `📅 Update นม-น้ำผลไม้ ${updateDate}\n\n`;
+    if (sections.length > 0) {
+      finalOutput += sections.join('\n\n') + '\n\n';
+    }
+    finalOutput += `${LINE}\n📊 สรุปรวม\n${LINE}\n`;
+    finalOutput += `🍉 น้ำผลไม้ ${totalJuice} แกลลอน\n🥛 นมเมจิเรย์ ${totalMilk} แกลลอน\n✅ รวมทั้งหมด ${totalJuice + totalMilk} แกลลอน`;
+
+    document.getElementById('outputText').value = finalOutput;
+  }
+
+  // ระบบคัดลอกข้อความที่รองรับการเปิดไฟล์ HTML ในเครื่องมือถือโดยตรง
+  function copyText() {
+    const textArea = document.getElementById('outputText');
+    const text = textArea.value;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✅ คัดลอกข้อความพร้อมส่งแล้ว!');
+      }).catch(() => {
+        fallbackCopy(textArea);
+      });
+    } else {
+      fallbackCopy(textArea);
+    }
+  }
+
+  function fallbackCopy(textArea) {
+    try {
+      textArea.removeAttribute('readonly');
+      textArea.focus();
+      textArea.select();
+      textArea.setSelectionRange(0, 999999);
+      
+      const successful = document.execCommand('copy');
+      textArea.setAttribute('readonly', true);
+      window.getSelection().removeAllRanges();
+      
+      if (successful) {
+        showToast('✅ คัดลอกข้อความพร้อมส่งแล้ว!');
+      } else {
+        showToast('⚠️ กรุณากดค้างในกล่องข้อความเพื่อคัดลอก');
+      }
+    } catch (err) {
+      textArea.setAttribute('readonly', true);
+      showToast('⚠️ กรุณากดค้างในกล่องข้อความเพื่อคัดลอก');
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+
+</body>
+</html>
