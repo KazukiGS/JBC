@@ -429,12 +429,7 @@
 
       const juices = locItems.filter(i => !i.isMilk);
       const milks = locItems.filter(i => i.isMilk);
-      let prevQty = null;
-      const fmt = (i) => {
-        const q = (prevQty === i.qty) ? '"' : `(${i.qty} แกลลอน)`;
-        prevQty = i.qty;
-        return `${emojiOf(i.drink)} ${i.drink} EXP ${i.exp} ${q}`;
-      };
+      const fmt = (i) => `${emojiOf(i.drink)} ${i.drink} EXP ${i.exp} (${i.qty} แกลลอน)`;
 
       let secText = `${LINE}\n📍 ${locNames[locKey]}\n${LINE}\n`;
 
