@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือและคลังข้อมูลการเรียนภาษาญี่ปุ่นด้วยตัวเอง (Self-Study Japanese Hub)</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-accent-subtle: #eff6ff;
+      --bg-warn-subtle: #fffbeb;
+      --bg-success-subtle: #f0fdf4;
+      --bg-danger-subtle: #fef2f2;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-primary: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-secondary: #dc2626;
+      --success-color: #16a34a;
+      --warn-color: #d97706;
+      --danger-color: #dc2626;
+      --badge-free-bg: #dcfce7;
+      --badge-free-text: #166534;
+      --badge-reg-bg: #dbeafe;
+      --badge-reg-text: #1e40af;
+      --badge-paid-bg: #fef3c7;
+      --badge-paid-text: #92400e;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0b1120;
+        --bg-secondary: #1e293b;
+        --bg-tertiary: #0f172a;
+        --bg-accent-subtle: #172554;
+        --bg-warn-subtle: #451a03;
+        --bg-success-subtle: #052e16;
+        --bg-danger-subtle: #450a0a;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #334155;
+        --accent-primary: #60a5fa;
+        --accent-hover: #93c5fd;
+        --accent-secondary: #f87171;
+        --success-color: #4ade80;
+        --warn-color: #fbbf24;
+        --danger-color: #f87171;
+        --badge-free-bg: #064e3b;
+        --badge-free-text: #a7f3d0;
+        --badge-reg-bg: #1e3a8a;
+        --badge-reg-text: #bfdbfe;
+        --badge-paid-bg: #78350f;
+        --badge-paid-text: #fde68a;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, "Noto Sans JP", "Noto Sans Thai", sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 60px;
+    }
+
+    a {
+      color: var(--accent-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s ease;
+      word-break: break-word;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Header / Hero */
+    .hero {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 32px 0 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      line-height: 1.35;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .hero p.lead {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 840px;
+      margin-bottom: 16px;
+    }
+
+    .jp-term {
+      font-weight: 600;
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      font-size: 0.95em;
+    }
+
+    ruby {
+      ruby-align: center;
+    }
+
+    rt {
+      font-size: 0.68em;
+      color: var(--text-muted);
+      font-weight: normal;
+    }
+
+    /* Table of Contents */
+    .toc-nav {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toc-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      list-style: none;
+    }
+
+    .toc-grid li a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .toc-grid li a:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-accent-subtle);
+      color: var(--accent-primary);
+    }
+
+    .toc-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .toc-num {
+        color: #0f172a;
+      }
+    }
+
+    /* Section Styling */
+    .section-block {
+      margin-bottom: 40px;
+      scroll-margin-top: 20px;
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.3rem, 3vw, 1.65rem);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Info / Callout Box */
+    .callout {
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--accent-primary);
+      background: var(--bg-accent-subtle);
+    }
+
+    .callout.warn {
+      border-left-color: var(--warn-color);
+      background: var(--bg-warn-subtle);
+    }
+
+    .callout.success {
+      border-left-color: var(--success-color);
+      background: var(--bg-success-subtle);
+    }
+
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-primary);
+    }
+
+    /* Accordion & Filter Controls for Grammar */
+    .grammar-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .level-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .btn.active {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn.active {
+        color: #0f172a;
+      }
+    }
+
+    .btn-danger {
+      border-color: var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    .btn-danger:hover {
+      background: var(--bg-danger-subtle);
+      border-color: var(--danger-color);
+    }
+
+    /* Accordion Cards */
+    .accordion-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: inherit;
+      color: var(--text-primary);
+      transition: background 0.15s ease;
+    }
+
+    .accordion-header:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .accordion-header-left {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .jlpt-badge {
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 4px 12px;
+      border-radius: 6px;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .jlpt-n5 { background: #16a34a; }
+    .jlpt-n4 { background: #0284c7; }
+    .jlpt-n3 { background: #d97706; }
+    .jlpt-n2 { background: #ea580c; }
+    .jlpt-n1 { background: #dc2626; }
+
+    .accordion-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .accordion-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .accordion-icon {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-item.open .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .accordion-item.open .accordion-body {
+      display: block;
+    }
+
+    .grammar-overview {
+      background: var(--bg-tertiary);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      margin: 16px 0;
+      font-size: 0.94rem;
+    }
+
+    /* Resource Grid & Cards */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .resource-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .resource-card-top h3, .resource-card-top h4 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .resource-url {
+      display: inline-block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      word-break: break-all;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .resource-desc {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .badge {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .badge-level {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-free {
+      background: var(--badge-free-bg);
+      color: var(--badge-free-text);
+    }
+
+    .badge-reg {
+      background: var(--badge-reg-bg);
+      color: var(--badge-reg-text);
+    }
+
+    .badge-paid {
+      background: var(--badge-paid-bg);
+      color: var(--badge-paid-text);
+    }
+
+    /* Study Techniques Cards */
+    .technique-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .technique-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .technique-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .technique-header h3 {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .tech-subgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .tech-box {
+      background: var(--bg-tertiary);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .tech-box.caution {
+      background: var(--bg-warn-subtle);
+      border-color: var(--warn-color);
+    }
+
+    .tech-box-label {
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--text-primary);
+    }
+
+    .tech-box p, .tech-box ul {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    .tech-box ul {
+      padding-left: 18px;
+    }
+
+    .tech-box li {
+      margin-bottom: 4px;
+    }
+
+    .debate-box {
+      background: var(--bg-accent-subtle);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-primary);
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      font-size: 0.92rem;
+    }
+
+    .debate-box strong {
+      color: var(--text-primary);
+    }
+
+    .tech-refs {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Category Subheaders */
+    .sub-category-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 24px 0 12px;
+      padding-left: 10px;
+      border-left: 4px solid var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    /* Study Plan Timeline / Table */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .roadmap-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--accent-primary);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .roadmap-phase {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .roadmap-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+    }
+
+    .roadmap-list {
+      padding-left: 18px;
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+    }
+
+    .roadmap-list li {
+      margin-bottom: 8px;
+    }
+
+    /* Comparison Table */
+    .table-wrapper {
+      overflow-x: auto;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background: var(--bg-tertiary);
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Checklist Section */
+    .checklist-dashboard {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .overall-progress-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .overall-stats {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .storage-status {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 14px;
+      background: var(--bg-tertiary);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--success-color));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .checklist-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .checklist-group-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .group-header h3 {
+      font-size: 1.05rem;
+    }
+
+    .group-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      background: var(--bg-accent-subtle);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .group-progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .group-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-primary);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .checklist-items {
+      list-style: none;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      transition: background 0.15s ease;
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 3px;
+      cursor: pointer;
+      accent-color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    .checklist-label-wrap {
+      flex: 1;
+      font-size: 0.93rem;
+    }
+
+    .checklist-item.checked .checklist-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .checklist-link {
+      display: inline-block;
+      font-size: 0.82rem;
+      margin-left: 6px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+    }
+
+    .checklist-link:hover {
+      border-color: var(--accent-primary);
+    }
+
+    /* Reset Confirmation Inline Box */
+    .reset-confirm-box {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: var(--bg-danger-subtle);
+      border: 1px solid var(--danger-color);
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .reset-confirm-box.visible {
+      display: flex;
+    }
+
+    /* Footer References */
+    .ref-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px;
+    }
+
+    .ref-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+    }
+
+    .ref-item strong {
+      display: block;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 20px 0 18px;
+      }
+      .accordion-header {
+        padding: 14px 16px;
+      }
+      .accordion-body {
+        padding: 0 16px 16px;
+      }
+      .technique-card {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. หัวเรื่อง + วันที่รีเสิร์ช -->
+  <header class="hero" id="top">
+    <div class="container">
+      <div class="hero-badge-row">
+        <span class="meta-pill">📅 วันที่รีเสิร์ช: 25 ตุลาคม 2026</span>
+        <span class="meta-pill">🇹🇭 สำหรับผู้เรียนคนไทยด้วยตัวเอง (Self-Study)</span>
+        <span class="meta-pill">🎯 เป้าหมาย: <ruby>日本語能力試験<rt>にほんごのうりょくしけん</rt></ruby> (JLPT N5–N1) &amp; การใช้งานจริง</span>
+      </div>
+      <h1>คู่มือและคลังข้อมูลการเรียนภาษาญี่ปุ่นด้วยตัวเองฉบับสมบูรณ์</h1>
+      <p class="lead">
+        รวบรวมและเปรียบเทียบแหล่งเรียนไวยากรณ์ฟรีแยกตามระดับ <span class="jp-term">JLPT N5–N1</span> เทคนิคการเรียนที่ได้ผลจริงจากงานวิจัยและชุมชนผู้เรียนระดับสูง (<ruby>間隔反復<rt>かんかくはんぷく</rt></ruby> / Spaced Repetition, Immersion, <ruby>シャドーイング<rt>しゃどーいんぐ</rt></ruby>) พจนานุกรม สื่ออ่าน-ฟัง แผนการเรียน 12 เดือน และเช็คลิสต์ติดตามความคืบหน้าที่บันทึกข้อมูลอัตโนมัติในเบราว์เซอร์ของคุณ
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 2. สารบัญที่กดข้ามไปแต่ละหัวข้อได้ -->
+    <nav class="toc-nav" aria-label="สารบัญ">
+      <div class="toc-title">📌 สารบัญ (กดเพื่อข้ามไปยังหัวข้อที่ต้องการ)</div>
+      <ul class="toc-grid">
+        <li><a href="#section-grammar"><span class="toc-num">1</span> แหล่งเรียนไวยากรณ์ฟรี (N5–N1)</a></li>
+        <li><a href="#section-techniques"><span class="toc-num">2</span> เทคนิคการเรียนที่ได้ผล &amp; ข้อถกเถียง</a></li>
+        <li><a href="#section-resources"><span class="toc-num">3</span> พจนานุกรม สื่ออ่านง่าย YouTube &amp; พอดแคสต์</a></li>
+        <li><a href="#section-roadmap"><span class="toc-num">4</span> แผนเรียนแนะนำ (เดือน 1–12+)</a></li>
+        <li><a href="#section-checklist"><span class="toc-num">5</span> เช็คลิสต์ติดตามความคืบหน้า</a></li>
+        <li><a href="#section-references"><span class="toc-num">6</span> รายการแหล่งอ้างอิงทั้งหมด</a></li>
+      </ul>
+    </nav>
+
+    <!-- 3. ส่วนไวยากรณ์ แยกตามระดับ N5-N1 (Accordion) -->
+    <section class="section-block" id="section-grammar">
+      <div class="section-header">
+        <h2>1. แหล่งเรียนไวยากรณ์ฟรี แยกตามระดับ JLPT (N5 – N1)</h2>
+        <p>คลิกที่แต่ละระดับเพื่อเปิดดูแหล่งเรียนไวยากรณ์ ตัวอย่างโครงสร้างสำคัญ และสถานะการใช้งาน (ฟรีไม่ต้องสมัคร vs ต้องสมัครสมาชิก)</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">💡 ข้อเท็จจริงสำคัญเรื่องรายการไวยากรณ์สอบวัดระดับ (<ruby>文法<rt>ぶんぽう</rt></ruby> - Bunpō)</div>
+        <p>
+          ตั้งแต่การปรับรูปแบบข้อสอบ JLPT ในปี 2010 ทางผู้จัดสอบ (Japan Foundation และ JEES) <strong>ไม่ได้ประกาศบัญชีรายชื่อคำศัพท์ คันจิ หรือไวยากรณ์อย่างเป็นทางการ</strong> การแบ่งระดับ N5–N1 ในเว็บไซต์ต่างๆ เช่น <a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei</a>, <a href="https://bunpro.jp/grammar_points" target="_blank" rel="noopener noreferrer">Bunpro</a> และ <a href="https://imabi.org/" target="_blank" rel="noopener noreferrer">IMABI</a> จึงเกิดจากการรวบรวมสถิติข้อสอบเก่า ทำให้บางหัวข้อ (เช่น <span class="jp-term">〜つもりだ (tsumori da)</span> หรือ <span class="jp-term">〜ないで (naide)</span>) อาจถูกจัดอยู่ใน N5 ในเว็บหนึ่ง แต่อยู่ใน N4 ในอีกเว็บหนึ่ง
+        </p>
+      </div>
+
+      <div class="grammar-controls">
+        <div class="level-tabs" role="group" aria-label="กรองระดับไวยากรณ์">
+          <button type="button" class="btn active" data-level-filter="all">แสดงทุกระดับ (N5–N1)</button>
+          <button type="button" class="btn" data-level-filter="n5">N5</button>
+          <button type="button" class="btn" data-level-filter="n4">N4</button>
+          <button type="button" class="btn" data-level-filter="n3">N3</button>
+          <button type="button" class="btn" data-level-filter="n2">N2</button>
+          <button type="button" class="btn" data-level-filter="n1">N1</button>
+        </div>
+        <div>
+          <button type="button" class="btn" id="btn-expand-all">เปิด/ปิดการ์ดทั้งหมด</button>
+        </div>
+      </div>
+
+      <!-- N5 Accordion -->
+      <div class="accordion-item open" data-level="n5">
+        <button type="button" class="accordion-header" aria-expanded="true">
+          <div class="accordion-header-left">
+            <span class="jlpt-badge jlpt-n5">JLPT N5</span>
+            <div>
+              <div class="accordion-title">ระดับพื้นฐานต้น (<ruby>初級前半<rt>しょきゅうぜんはん</rt></ruby>) — ประมาณ 80 ไวยากรณ์, 100 คันจิ, 800 คำศัพท์</div>
+              <div class="accordion-subtitle">โครงสร้างประโยคพื้นฐาน คำช่วย (<ruby>助詞<rt>じょし</rt></ruby>) การผันกริยารูปสุภาพ (<ruby>ます形<rt>ますけい</rt></ruby>) และรูปเชื่อม (<ruby>て形<rt>てけい</rt></ruby>)</div>
+            </div>
+          </div>
+          <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grammar-overview">
+            <strong>ตัวอย่างไวยากรณ์สำคัญใน N5:</strong>
+            <span class="jp-term">だ / です (da / desu - เป็น/คือ)</span>,
+            <span class="jp-term">は / が / を / に / で (wa / ga / o / ni / de - คำช่วยหลัก)</span>,
+            <span class="jp-term"><ruby>〜ています<rt>〜ています</rt></ruby> (~te imasu - กำลังทำ/สภาพที่คงอยู่)</span>,
+            <span class="jp-term"><ruby>〜てください<rt>〜てください</rt></ruby> (~te kudasai - กรุณาทำ...)</span>,
+            <span class="jp-term"><ruby>〜ないでください<rt>〜ないでください</rt></ruby> (~naide kudasai - กรุณาอย่าทำ...)</span>,
+            <span class="jp-term"><ruby>〜たいです<rt>〜たいです</rt></ruby> (~tai desu - อยากทำ...)</span>,
+            <span class="jp-term"><ruby>〜たことがあります<rt>〜たことがあります</rt></ruby> (~ta koto ga arimasu - เคยทำ...)</span>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer">IRODORI (อิโระโดะริ) ภาษาญี่ปุ่นในการดำรงชีวิต (เจแปนฟาวน์เดชั่น กรุงเทพฯ)</a></h3>
+                <span class="resource-url">https://ba.jpf.go.jp/th/irodori-2/</span>
+                <p class="resource-desc">ตำราเรียนและไฟล์เสียง MP3 ฉบับภาษาไทยจาก The Japan Foundation ปูพื้นฐานไวยากรณ์และบทสนทนาในชีวิตจริงพร้อมคอลัมน์ Grammar Notes (<ruby>文法ノート<rt>ぶんぽうのーと</rt></ruby>) อธิบายละเอียดเป็นภาษาไทย</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N4 (A1–A2)</span>
+                <span class="badge badge-free">ฟรี 100% (ดาวน์โหลด PDF/MP3 ได้เลยไม่ต้องสมัคร)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://www.irodori-online.jpf.go.jp/" target="_blank" rel="noopener noreferrer">IRODORI Japanese Online Course (คอร์สออนไลน์โต้ตอบได้)</a></h3>
+                <span class="resource-url">https://www.irodori-online.jpf.go.jp/</span>
+                <p class="resource-desc">แพลตฟอร์มเรียนภาษาญี่ปุ่นออนไลน์ที่ต่อยอดจากตำราอิโระโดะริ มีวิดีโอจำลองสถานการณ์ แบบฝึกหัดไวยากรณ์ และการฟังที่ตรวจคำตอบได้ทันที รองรับเมนูภาษาไทยเต็มรูปแบบ</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N4 (A1–A2)</span>
+                <span class="badge badge-reg">ฟรี 100% (ต้องสมัครสมาชิกฟรีเพื่อบันทึกผล)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://guidetojapanese.org/learn/" target="_blank" rel="noopener noreferrer">Tae Kim's Guide to Learning Japanese</a></h3>
+                <span class="resource-url">https://guidetojapanese.org/learn/</span>
+                <p class="resource-desc">คู่มือไวยากรณ์ออนไลน์ชื่อดังที่อธิบายโครงสร้างภาษาญี่ปุ่นจากรากฐานจริง (เริ่มจากรูปธรรมดา <ruby>辞書形<rt>じしょけい</rt></ruby> ก่อนรูปสุภาพ) ช่วยให้เข้าใจตรรกะของภาษาโดยไม่ต้องท่องจำแบบนกแก้ว</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N3</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei – JLPT N5 Grammar List</a></h3>
+                <span class="resource-url">https://jlptsensei.com/jlpt-n5-grammar-list/</span>
+                <p class="resource-desc">รวมรายการไวยากรณ์ N5 ทั้งหมด 84 หัวข้อ เรียงตามตัวอักษรโรมันจิ คลิกเข้าไปอ่านวิธีเชื่อมคำ (<ruby>接続<rt>せつぞく</rt></ruby>) ความหมาย และประโยคตัวอย่างพร้อมคำอ่านได้ครบทุกข้อ</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5</span>
+                <span class="badge badge-free">ฟรีบนเว็บ (ไม่ต้องสมัคร / ไฟล์ E-book เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://tsunagarujp.mext.go.jp/link?lang_id=TH" target="_blank" rel="noopener noreferrer">Tsunahiro (สึนะฮิโระ) – กระทรวงศึกษาธิการญี่ปุ่น (MEXT)</a></h3>
+                <span class="resource-url">https://tsunagarujp.mext.go.jp/link?lang_id=TH</span>
+                <p class="resource-desc">เว็บไซต์ทางการของกระทรวงศึกษาธิการญี่ปุ่น (รองรับภาษาไทย) สอนวลีและไวยากรณ์ผ่านคลิปวิดีโอสถานการณ์จริงในญี่ปุ่น เช่น การซื้อของ การขึ้นรถไฟ และการไปโรงพยาบาล</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N4 (A1–B1)</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://nihongo-e-na.com/eng/site/id954.html" target="_blank" rel="noopener noreferrer">NIHONGO eな: แนะนำคอร์ส NHK Easy Japanese (รองรับ 21 ภาษารวมไทย)</a></h3>
+                <span class="resource-url">https://nihongo-e-na.com/eng/site/id954.html</span>
+                <p class="resource-desc">พอร์ทัลของ Japan Foundation ที่รวบรวมและอธิบายวิธีใช้งานบทเรียนสนทนาและไวยากรณ์พื้นฐาน 48 บทของ NHK WORLD-JAPAN ซึ่งมีคำอธิบายและซับไตเติลภาษาไทยให้เรียนรู้ฟรี</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- N4 Accordion -->
+      <div class="accordion-item" data-level="n4">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="accordion-header-left">
+            <span class="jlpt-badge jlpt-n4">JLPT N4</span>
+            <div>
+              <div class="accordion-title">ระดับพื้นฐานปลาย (<ruby>初級後半<rt>しょきゅうこうはん</rt></ruby>) — ประมาณ 130 ไวยากรณ์, 300 คันจิ, 1,500 คำศัพท์</div>
+              <div class="accordion-subtitle">ประโยคเงื่อนไข (<ruby>条件形<rt>じょうけんけい</rt></ruby>) รูปสามารถ (<ruby>可能形<rt>かのうけい</rt></ruby>) รูปถูกกระทำ (<ruby>受身形<rt>うけみけい</rt></ruby>) และภาษาสุภาพ (<ruby>敬語<rt>けいご</rt></ruby>)</div>
+            </div>
+          </div>
+          <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grammar-overview">
+            <strong>ตัวอย่างไวยากรณ์สำคัญใน N4:</strong>
+            <span class="jp-term">〜ば / 〜たら / 〜なら (ba / tara / nara - ถ้า...)</span>,
+            <span class="jp-term"><ruby>〜ことができる<rt>〜ことができる</rt></ruby> (~koto ga dekiru - สามารถทำได้)</span>,
+            <span class="jp-term"><ruby>〜てあげる / 〜てくれる / 〜てもらう<rt>〜てあげる / 〜てくれる / 〜てもらう</rt></ruby> (การให้และรับการกระทำ)</span>,
+            <span class="jp-term"><ruby>〜そうだ / 〜ようだ<rt>〜そうだ / 〜ようだ</rt></ruby> (~sō da / ~yō da - ดูเหมือนว่า/ได้ยินมาว่า)</span>,
+            <span class="jp-term"><ruby>〜てしまう<rt>〜てしまう</rt></ruby> (~te shimau - ทำเสร็จสมบูรณ์/เผลอทำลงไป)</span>,
+            <span class="jp-term"><ruby>受身形<rt>うけみけい</rt></ruby> (~rareru - รูปถูกกระทำ)</span>,
+            <span class="jp-term"><ruby>使役形<rt>しえきけい</rt></ruby> (~saseru - รูปสั่ง/ให้กระทำ)</span>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jlptsensei.com/jlpt-n4-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei – JLPT N4 Grammar List</a></h3>
+                <span class="resource-url">https://jlptsensei.com/jlpt-n4-grammar-list/</span>
+                <p class="resource-desc">รวบรวมไวยากรณ์ N4 ทั้งหมด 132 หัวข้อ พร้อมอธิบายความแตกต่างของไวยากรณ์ที่คล้ายกัน เช่น เงื่อนไขทั้ง 4 แบบ และการใช้กริยาช่วยแสดงการให้-รับ พร้อมประโยคตัวอย่างชัดเจน</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N4</span>
+                <span class="badge badge-free">ฟรีบนเว็บ (ไม่ต้องสมัคร / ไฟล์ E-book เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://www.tofugu.com/japanese-grammar/" target="_blank" rel="noopener noreferrer">Tofugu – The Japanese Grammar Index</a></h3>
+                <span class="resource-url">https://www.tofugu.com/japanese-grammar/</span>
+                <p class="resource-desc">สารานุกรมไวยากรณ์ภาษาญี่ปุ่นที่เจาะลึกความรู้สึกของเจ้าของภาษา (Nuance) เช่น ความต่างของ <span class="jp-term">〜ていく (te iku)</span> กับ <span class="jp-term">〜てくる (te kuru)</span> หรือ <span class="jp-term">〜がる (garu)</span> อย่างละเอียดพร้อมภาพประกอบ</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N3 (โดดเด่นมากใน N4)</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://minato-jf.jp/" target="_blank" rel="noopener noreferrer">JF Japanese e-Learning Minato (มินาโตะ)</a></h3>
+                <span class="resource-url">https://minato-jf.jp/</span>
+                <p class="resource-desc">แพลตฟอร์มเรียนออนไลน์ของ Japan Foundation ที่มีคอร์สเรียนด้วยตัวเอง (Self-Study) ตามหลักสูตร Marugoto ระดับ A1–B1 โดยมีคอร์สคำอธิบายภาษาไทยสำหรับระดับ A1 และ A2 (เทียบเท่า N5–N4)</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N3 (A1–B1)</span>
+                <span class="badge badge-reg">ฟรีสำหรับคอร์สเรียนเอง (ต้องสมัครสมาชิกฟรี)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://marugotoweb.jp/en/index.php" target="_blank" rel="noopener noreferrer">MARUGOTO Plus (มารุโกโตะ พลัส)</a></h3>
+                <span class="resource-url">https://marugotoweb.jp/en/index.php</span>
+                <p class="resource-desc">เว็บไซต์เสริมตำรา Marugoto ของ Japan Foundation ให้ฝึกดูคลิปบทสนทนา เช็คโครงสร้างไวยากรณ์ และค้นหาคำศัพท์ในระดับ Starter (A1) ถึง Elementary 2 (A2/N4) ได้ทันทีโดยไม่ต้องล็อกอิน</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N4 (A1–A2)</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- N3 Accordion -->
+      <div class="accordion-item" data-level="n3">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="accordion-header-left">
+            <span class="jlpt-badge jlpt-n3">JLPT N3</span>
+            <div>
+              <div class="accordion-title">ระดับกลาง (<ruby>中級<rt>ちゅうきゅう</rt></ruby>) — ประมาณ 180 ไวยากรณ์, 650 คันจิ, 3,700 คำศัพท์</div>
+              <div class="accordion-subtitle">จุดเปลี่ยนจาก "ภาษาในห้องเรียน" สู่ "ภาษาในชีวิตจริงและบทความ" แยกแยะภาษาพูดกับภาษาเขียน</div>
+            </div>
+          </div>
+          <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grammar-overview">
+            <strong>ตัวอย่างไวยากรณ์สำคัญใน N3:</strong>
+            <span class="jp-term"><ruby>〜べきだ<rt>〜べきだ</rt></ruby> (~beki da - ควรจะทำ...)</span>,
+            <span class="jp-term"><ruby>〜おかげで / 〜せいで<rt>〜おかげで / 〜せいで</rt></ruby> (~okage de / ~sei de - เป็นเพราะ...ในแง่ดี/แง่ร้าย)</span>,
+            <span class="jp-term"><ruby>〜ば〜ほど<rt>〜ば〜ほど</rt></ruby> (~ba ~hodo - ยิ่ง...ก็ยิ่ง...)</span>,
+            <span class="jp-term"><ruby>〜うちに<rt>〜うちに</rt></ruby> (~uchi ni - ในขณะที่ยัง...)</span>,
+            <span class="jp-term"><ruby>〜に関して / 〜について<rt>〜にかんして / 〜について</rt></ruby> (~ni kanshite / ~ni tsuite - เกี่ยวกับ...)</span>,
+            <span class="jp-term"><ruby>〜っぱなし<rt>〜っぱなし</rt></ruby> (~ppanashi - ทิ้งไว้ในสภาพนั้น)</span>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jlptsensei.com/jlpt-n3-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei – JLPT N3 Grammar List</a></h3>
+                <span class="resource-url">https://jlptsensei.com/jlpt-n3-grammar-list/</span>
+                <p class="resource-desc">รวบรวมไวยากรณ์ N3 ทั้งหมด 182 หัวข้อ พร้อมแยกโครงสร้างการเชื่อมคำนาม กริยา และคำคุณศัพท์อย่างเป็นระบบ เหมาะสำหรับใช้เช็ครายการไวยากรณ์ที่ต้องรู้ก่อนลงสนามสอบระดับกลาง</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N3</span>
+                <span class="badge badge-free">ฟรีบนเว็บ (ไม่ต้องสมัคร / ไฟล์ E-book เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://bunpro.jp/grammar_points" target="_blank" rel="noopener noreferrer">Bunpro Grammar Library (คลังข้อมูลไวยากรณ์ N5–N1)</a></h3>
+                <span class="resource-url">https://bunpro.jp/grammar_points</span>
+                <p class="resource-desc">คลังไวยากรณ์กว่า 900 หัวข้อที่จัดหมวดหมู่ตามระดับ JLPT N5–N1 สามารถเปิดอ่านคำอธิบาย โครงสร้าง ข้อควรระวัง และประโยคตัวอย่างได้ฟรีทั้งหมดโดยไม่ต้องล็อกอิน (จะเสียเงินเฉพาะระบบทบทวน SRS)</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N1 (ครบทุกระดับ)</span>
+                <span class="badge badge-paid">อ่านคลังไวยากรณ์ฟรีไม่ต้องสมัคร (ระบบทบทวน SRS เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://www.youtube.com/@JapaneseAmmowithMisa/playlists" target="_blank" rel="noopener noreferrer">Japanese Ammo with Misa (เพลย์ลิสต์ JLPT N5 / N4 / N3)</a></h3>
+                <span class="resource-url">https://www.youtube.com/@JapaneseAmmowithMisa/playlists</span>
+                <p class="resource-desc">ช่อง YouTube สอนไวยากรณ์ที่อธิบายละเอียดและเข้าใจง่ายมาก มีเพลย์ลิสต์แยกตามระดับ N5, N4, N3 และคลิปเปรียบเทียบไวยากรณ์ที่มักใช้สลับกัน (Differences between A vs B)</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N3</span>
+                <span class="badge badge-free">ฟรี 100% บน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- N2 Accordion -->
+      <div class="accordion-item" data-level="n2">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="accordion-header-left">
+            <span class="jlpt-badge jlpt-n2">JLPT N2</span>
+            <div>
+              <div class="accordion-title">ระดับกลางค่อนสูง (<ruby>中上級<rt>ちゅうじょうきゅう</rt></ruby>) — ประมาณ 195 ไวยากรณ์, 1,000 คันจิ, 6,000 คำศัพท์</div>
+              <div class="accordion-subtitle">ไวยากรณ์สำหรับอ่านข่าว บทความ นวนิยาย และการทำงานในบริษัทญี่ปุ่น</div>
+            </div>
+          </div>
+          <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grammar-overview">
+            <strong>ตัวอย่างไวยากรณ์สำคัญใน N2:</strong>
+            <span class="jp-term"><ruby>〜あげく<rt>〜あげく</rt></ruby> (~ageku - ท้ายที่สุดหลังจาก...ก็นำไปสู่ผลลัพธ์แย่ๆ)</span>,
+            <span class="jp-term"><ruby>〜ばかりか / 〜どころか<rt>〜ばかりか / 〜どころか</rt></ruby> (ไม่เพียงแต่...เท่านั้น / ห่างไกลจาก...)</span>,
+            <span class="jp-term"><ruby>〜に違いない<rt>〜にちがいない</rt></ruby> (~ni chigainai - ไม่ผิดแน่ๆ ว่า...)</span>,
+            <span class="jp-term"><ruby>〜ざるを得ない<rt>〜ざるをえない</rt></ruby> (~zaru o enai - จำใจต้องทำ/หลีกเลี่ยงไม่ได้)</span>,
+            <span class="jp-term"><ruby>〜に際して / 〜にあたって<rt>〜にさいして / 〜にあたって</rt></ruby> (ในโอกาสที่...)</span>,
+            <span class="jp-term"><ruby>〜かねる / 〜かねない<rt>〜かねる / 〜かねない</rt></ruby> (ไม่อาจทำได้ / เกรงว่าอาจจะเกิดเรื่องไม่ดีขึ้น)</span>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jlptsensei.com/jlpt-n2-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei – JLPT N2 Grammar List</a></h3>
+                <span class="resource-url">https://jlptsensei.com/jlpt-n2-grammar-list/</span>
+                <p class="resource-desc">รวบรวมไวยากรณ์ระดับ N2 จำนวน 197 หัวข้อที่ใช้บ่อยในข่าวและภาษาธุรกิจ พร้อมประโยคตัวอย่างและวิธีผันคำเชื่อมอย่างครบถ้วน</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N2</span>
+                <span class="badge badge-free">ฟรีบนเว็บ (ไม่ต้องสมัคร / ไฟล์ E-book เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://www.youtube.com/@nihongonomori2013/playlists" target="_blank" rel="noopener noreferrer">Nihongo no Mori (<ruby>日本語の森<rt>にほんごのもり</rt></ruby>) – YouTube Playlists</a></h3>
+                <span class="resource-url">https://www.youtube.com/@nihongonomori2013/playlists</span>
+                <p class="resource-desc">ช่องติว JLPT ระดับตำนานที่สอนไวยากรณ์ N3, N2, N1 ด้วยภาษาญี่ปุ่นที่ฟังง่ายและสนุก ช่วยให้ผู้เรียนเข้าใจบริบทการใช้ไวยากรณ์คล้ายกัน (เช่น เพลย์ลิสต์ N2文法 grammar VS) พร้อมฝึกฟังไปในตัว</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N3–N1 (เด่นมากใน N2–N1)</span>
+                <span class="badge badge-free">ฟรีบน YouTube (คอร์สเต็มบนเว็บ nihongonomori.com เสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos" target="_blank" rel="noopener noreferrer">Sambon Juku (<ruby>三本塾<rt>さんぼんじゅく</rt></ruby>) – YouTube Channel</a></h3>
+                <span class="resource-url">https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos</span>
+                <p class="resource-desc">สอนไวยากรณ์ระดับ N3–N1 และสำนวนธรรมชาติโดยครูชาวญี่ปุ่นที่อธิบายชัดเจนมาก ยกตัวอย่างสถานการณ์ที่ใช้ได้จริงและสถานการณ์ที่ห้ามใช้ ทำให้ไม่สับสนเวลาเจอข้อสอบแต่งประโยค</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N3–N1</span>
+                <span class="badge badge-free">ฟรี 100% บน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- N1 Accordion -->
+      <div class="accordion-item" data-level="n1">
+        <button type="button" class="accordion-header" aria-expanded="false">
+          <div class="accordion-header-left">
+            <span class="jlpt-badge jlpt-n1">JLPT N1</span>
+            <div>
+              <div class="accordion-title">ระดับสูง (<ruby>上級<rt>じょうきゅう</rt></ruby>) — ประมาณ 250+ ไวยากรณ์, 2,000+ คันจิ, 10,000+ คำศัพท์</div>
+              <div class="accordion-subtitle">สำนวนภาษาเขียนระดับสูง วรรณกรรม บทความวิชาการ และรากไวยากรณ์โบราณ (<ruby>古典文法<rt>こてんぶんぽう</rt></ruby>)</div>
+            </div>
+          </div>
+          <span class="accordion-icon">▼</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grammar-overview">
+            <strong>ตัวอย่างไวยากรณ์สำคัญใน N1:</strong>
+            <span class="jp-term"><ruby>〜あえて<rt>〜あえて</rt></ruby> (aete - กล้าที่จะ/จงใจทำแม้รู้ว่ายาก)</span>,
+            <span class="jp-term"><ruby>〜べからず / 〜べく<rt>〜べからず / 〜べく</rt></ruby> (~bekarazu / ~beku - ห้ามทำโดยเด็ดขาด / เพื่อที่จะ...)</span>,
+            <span class="jp-term"><ruby>〜が早いか / 〜や否や<rt>〜がはやいか / 〜やいなや</rt></ruby> (ทันทีที่...)</span>,
+            <span class="jp-term"><ruby>〜いかんにかかわらず<rt>〜いかんにかかわらず</rt></ruby> (ไม่ว่าจะ...อย่างไรก็ตาม)</span>,
+            <span class="jp-term"><ruby>〜を余儀なくされる<rt>〜をよぎなくされる</rt></ruby> (ถูกบีบให้จำต้อง...)</span>,
+            <span class="jp-term"><ruby>〜たりとも<rt>〜たりとも</rt></ruby> (~taritomo - แม้แต่เพียงน้อยนิดก็...)</span>
+          </div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://imabi.org/" target="_blank" rel="noopener noreferrer">IMABI (<ruby>今日<rt>いまび</rt></ruby> – Guided Japanese Mastery)</a></h3>
+                <span class="resource-url">https://imabi.org/</span>
+                <p class="resource-desc">เว็บไซต์คลังไวยากรณ์ภาษาญี่ปุ่นเชิงภาษาศาสตร์ที่ลึกและครอบคลุมที่สุดบนอินเทอร์เน็ต มีมากกว่า 400 บทเรียน ตั้งแต่ระดับต้นจนถึงระดับสูง (Advanced/Veteran) และภาษาญี่ปุ่นโบราณ (<ruby>古典語<rt>こてんご</rt></ruby>) ซึ่งช่วยอธิบายรากของไวยากรณ์ N1 ได้อย่างทะลุปรุโปร่ง</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N1 และสูงกว่า N1</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jlptsensei.com/jlpt-n1-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei – JLPT N1 Grammar List</a></h3>
+                <span class="resource-url">https://jlptsensei.com/jlpt-n1-grammar-list/</span>
+                <p class="resource-desc">รวมรายการไวยากรณ์ระดับ N1 ทั้งหมด 253 หัวข้อ พร้อมคำอธิบายความหมาย วิธีเชื่อมคำ และประโยคตัวอย่างสำหรับการอ่านบทความซับซ้อนและการสอบวัดระดับสูงสุด</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N1</span>
+                <span class="badge badge-free">ฟรีบนเว็บ (ไม่ต้องสมัคร / ไฟล์การ์ดสรุปเสียเงิน)</span>
+              </div>
+            </article>
+
+            <article class="resource-card">
+              <div class="resource-card-top">
+                <h3><a href="https://jeducation.com/main/education/jlpt/" target="_blank" rel="noopener noreferrer">JEDUCATION – ข้อมูลโครงสร้างข้อสอบและเกณฑ์การสอบ JLPT N5–N1</a></h3>
+                <span class="resource-url">https://jeducation.com/main/education/jlpt/</span>
+                <p class="resource-desc">สรุปข้อมูลการสอบวัดระดับภาษาญี่ปุ่นฉบับภาษาไทย ตั้งแต่ขอบเขตความสามารถการอ่าน-ฟังของแต่ละระดับ เวลาที่ใช้สอบ เกณฑ์การตัดคะแนนแยกพาร์ท และสถานที่สอบในไทย</p>
+              </div>
+              <div class="badge-group">
+                <span class="badge badge-level">ระดับ: N5–N1</span>
+                <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ส่วนเทคนิคการเรียน -->
+    <section class="section-block" id="section-techniques">
+      <div class="section-header">
+        <h2>2. เทคนิคการเรียนภาษาญี่ปุ่นที่ได้ผลจริง (พร้อมเปรียบเทียบแนวคิดที่ขัดแย้งกัน)</h2>
+        <p>สรุปหลักการทำงาน วิธีลงมือทำ ข้อควรระวัง และจุดที่แต่ละสำนักคิดเห็นต่างกัน เพื่อให้คุณเลือกปรับใช้ให้เหมาะกับตัวเอง</p>
+      </div>
+
+      <div class="technique-grid">
+        <!-- Technique 1: SRS & Anki -->
+        <article class="technique-card">
+          <div class="technique-header">
+            <h3>🧠 1. Spaced Repetition System (SRS / <ruby>間隔反復<rt>かんかくはんぷく</rt></ruby>) และการใช้ Anki</h3>
+            <span class="badge badge-free">เครื่องมือหลักฟรี (ยกเว้นแอป iOS)</span>
+          </div>
+          <div class="tech-subgrid">
+            <div class="tech-box">
+              <span class="tech-box-label">📌 คืออะไร</span>
+              <p>ระบบทบทวนความรู้แบบเว้นระยะห่างตามเส้นโค้งการลืม (Forgetting Curve) ร่วมกับการดึงความจำเชิงรุก (Active Recall) โดยโปรแกรมจะคำนวณเวลาทบทวนการ์ดใบนั้นซ้ำ "ก่อนที่คุณจะลืมพอดี" ช่วยประหยัดเวลาทบทวนคำที่จำแม่นแล้ว</p>
+            </div>
+            <div class="tech-box">
+              <span class="tech-box-label">⚙️ ทำอย่างไร</span>
+              <ul>
+                <li>ดาวน์โหลด <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer">Anki</a> และเปิดใช้งานอัลกอริทึม <strong>FSRS</strong> (Free Spaced Repetition Scheduler) ใน Deck Options โดยตั้งค่า Desired Retention ไว้ที่ <strong>0.85–0.90</strong></li>
+                <li>ช่วงเริ่มต้นใช้สำรับการ์ดสำเร็จรูปที่คัดตามความถี่ เช่น <strong>Kaishi 1.5k</strong> (1,500 คำพื้นฐานยุคใหม่) จากนั้นเชื่อมกับส่วนขยาย <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">Yomitan</a> เพื่อสร้างการ์ดคำศัพท์จากสื่อที่อ่านจริงในคลิกเดียว (Sentence Mining)</li>
+                <li>ตั้งค่าการ์ดใหม่ (New cards/day) เพียงวันละ <strong>10–20 ใบ</strong> และไม่จำกัดยอดทบทวนรายวัน (Maximum reviews = 9999)</li>
+              </ul>
+            </div>
+            <div class="tech-box caution">
+              <span class="tech-box-label">⚠️ ข้อควรระวัง (กับดัก Anki Burnout)</span>
+              <p>การเพิ่มการ์ดใหม่วันละ 20 ใบ จะทำให้มียอดทบทวนสะสมราว <strong>150–250 ใบต่อวัน</strong> ภายใน 2 เดือน ผู้เรียนที่ตั้งการ์ดใหม่วันละ 40–50 ใบมักเจอกองการ์ดทบทวน 600–1,500 ใบต่อวันจนหมดไฟและเลิกเรียนใน 3 เดือน หากวันไหนทบทวนไม่ไหว ให้ปรับ New cards เป็น 0 ชั่วคราว</p>
+            </div>
+          </div>
+          <div class="debate-box">
+            <strong>⚖️ ข้อมูลที่ขัดแย้งกันในหมู่ผู้เรียน (Vocab Cards vs Sentence Cards):</strong>
+            ฝ่ายหนึ่ง (เช่น <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer">TheMoeWay</a>) แนะนำให้ใส่เฉพาะ <strong>คำศัพท์เดี่ยวๆ ด้านหน้าการ์ด</strong> แล้วใส่ประโยคตัวอย่างด้านหลัง เพื่อป้องกันสมองจำบริบทประโยคแทนที่จะจำตัวคันจิและทบทวนได้เร็วกว่า ขณะที่อีกฝ่าย (เช่นสาย AJATT ดั้งเดิม) แนะนำ <strong>Sentence Cards</strong> (ใส่ทั้งประโยคด้านหน้า) เพื่อเรียนรู้คำศัพท์ในบริบทจริง แนวทางสายกลางที่ได้รับความนิยมที่สุดในปัจจุบันคือ <strong>Hybrid Card</strong>: วางคำศัพท์เด่นๆ ด้านหน้า โดยมีประโยคตัวอย่างพ่วงอยู่ด้านล่าง และใส่เสียงเจ้าของภาษาพร้อมคำแปลไว้ด้านหลัง
+          </div>
+          <div class="tech-refs">
+            <span>🔗 ลิงก์อ้างอิง:</span>
+            <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer">Anki Official Site</a>
+            <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">Yomitan Popup Dictionary</a>
+            <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer">TheMoeWay Guide</a>
+          </div>
+        </article>
+
+        <!-- Technique 2: Immersion -->
+        <article class="technique-card">
+          <div class="technique-header">
+            <h3>🌊 2. Immersion (<ruby>イマージョン<rt>いまーじょん</rt></ruby>) &amp; Comprehensible Input (<ruby>理解可能なインプット<rt>りかいかのうないんぷっと</rt></ruby>)</h3>
+            <span class="badge badge-free">ประยุกต์ใช้กับสื่อฟรีได้ทุกระดับ</span>
+          </div>
+          <div class="tech-subgrid">
+            <div class="tech-box">
+              <span class="tech-box-label">📌 คืออะไร</span>
+              <p>การพาตัวเองไปสัมผัสสื่อภาษาญี่ปุ่นของจริง (คลิปวิดีโอ อนิเมะ ซีรีส์ พอดแคสต์ นิยาย) ในปริมาณมาก โดยอิงทฤษฎี Input Hypothesis (i+1) ของ Stephen Krashen ที่ชี้ว่าสมองจะซึมซับภาษาเมื่อได้รับสารที่เข้าใจได้และยากกว่าระดับปัจจุบันเล็กน้อย</p>
+            </div>
+            <div class="tech-box">
+              <span class="tech-box-label">⚙️ ทำอย่างไร</span>
+              <ul>
+                <li>รักษาสัดส่วนเวลา <strong>SRS : Immersion ไว้ที่อย่างน้อย 1 : 3</strong> (เช่น ทบทวน Anki 20 นาที ต้องฟังหรืออ่านภาษาญี่ปุ่นจริงอย่างน้อย 60 นาที)</li>
+                <li>แบ่งเป็น <strong>Active Immersion</strong> (ตั้งใจดู/อ่าน เปิดซับไตเติลภาษาญี่ปุ่น ใช้ <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">Yomitan</a> กดดูคำศัพท์ที่ไม่รู้) และ <strong>Passive Immersion</strong> (เปิดพอดแคสต์หรือเสียงอนิเมะที่เคยดูแล้วฟังซ้ำระหว่างเดินทาง)</li>
+                <li>ผู้เริ่มต้นควรเริ่มจากสื่อที่ออกแบบมาให้เข้าใจง่าย เช่น <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">Comprehensible Japanese</a> และ <a href="https://tadoku.org/japanese/en/free-books-en/" target="_blank" rel="noopener noreferrer">Tadoku</a></li>
+              </ul>
+            </div>
+            <div class="tech-box caution">
+              <span class="tech-box-label">⚠️ ข้อควรระวัง (กับดักซับไตเติลภาษาแม่)</span>
+              <p>การดูอนิเมะหรือซีรีส์โดยเปิดซับไตเติลภาษาไทยหรืออังกฤษทิ้งไว้ตลอดเวลา <strong>ไม่นับเป็นชั่วโมงการฝึกฟังภาษาญี่ปุ่น</strong> เพราะสมองจะเลือกอ่านภาษาที่ง่ายกว่าเสมอ ควรเปิดเฉพาะซับไตเติลภาษาญี่ปุ่น (<ruby>日本語字幕<rt>にほんごじまく</rt></ruby>) หรือปิดซับทั้งหมด</p>
+            </div>
+          </div>
+          <div class="debate-box">
+            <strong>⚖️ ข้อมูลที่ขัดแย้งกัน (เรียนตำราก่อน vs Immersion ตั้งแต่วันแรก):</strong>
+            สายตำราเรียนและคอร์สมาตรฐาน (เช่น <a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer">IRODORI</a> / Genki) เน้นสร้างโครงสร้างไวยากรณ์และบทสนทนาตามลำดับขั้น ขณะที่สาย Immersion สุดโต่ง (เช่น AJATT หรือส่วนหนึ่งของ <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">Comprehensible Japanese</a>) มองว่าการท่องตำราทำให้คิดวิเคราะห์ช้าเวลาคุยจริง อย่างไรก็ตาม บทสรุปจากผู้สอบผ่าน N1 ใน <a href="https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en" target="_blank" rel="noopener noreferrer">LabHub 2026 Roadmap</a> และ <a href="https://refold.la/how-to-learn-japanese/" target="_blank" rel="noopener noreferrer">Refold</a> ชี้ตรงกันว่า <strong>การใช้ตำรา/คู่มือไวยากรณ์เป็นนั่งร้าน 20% คู่กับการทำ Immersion 80%</strong> ให้ผลลัพธ์เร็วที่สุด เพราะการโดดลงสื่อดิบโดยไม่รู้ไวยากรณ์พื้นฐานเลยทำให้เสียเวลาเดาโดยใช่เหตุในช่วง 3–6 เดือนแรก
+          </div>
+          <div class="tech-refs">
+            <span>🔗 ลิงก์อ้างอิง:</span>
+            <a href="https://refold.la/how-to-learn-japanese/" target="_blank" rel="noopener noreferrer">Refold Japanese Method</a>
+            <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">Comprehensible Japanese</a>
+            <a href="https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en" target="_blank" rel="noopener noreferrer">LabHub 2026 JLPT Roadmap</a>
+          </div>
+        </article>
+
+        <!-- Technique 3: Shadowing & Pitch Accent -->
+        <article class="technique-card">
+          <div class="technique-header">
+            <h3>🗣️ 3. Shadowing (<ruby>シャドーイング<rt>しゃどーいんぐ</rt></ruby>) &amp; Pitch Accent (<ruby>高低アクセント<rt>こうていあくせんと</rt></ruby>)</h3>
+            <span class="badge badge-free">ฝึกได้เองฟรีด้วย OJAD</span>
+          </div>
+          <div class="tech-subgrid">
+            <div class="tech-box">
+              <span class="tech-box-label">📌 คืออะไร</span>
+              <p>เทคนิคการฝึกพูดตามเสียงเจ้าของภาษาแบบติดๆ กัน (ดีเลย์ตามหลังต้นฉบับประมาณ 0.5–1 วินาที เหมือนเงาตามตัว) เดิมใช้ในการฝึกล่าม ช่วยพัฒนากล้ามเนื้อปาก จังหวะการเว้นวรรค และระดับเสียงสูง-ต่ำ (Pitch Accent) ไปพร้อมกัน</p>
+            </div>
+            <div class="tech-box">
+              <span class="tech-box-label">⚙️ ทำอย่างไร (6 ขั้นตอน วันละ 15 นาที)</span>
+              <ul>
+                <li>1) เลือกคลิปเสียงสั้นๆ 30–60 วินาทีที่มีสคริปต์และง่ายกว่าระดับการอ่านของคุณเล็กน้อย</li>
+                <li>2) ฟังเปล่าๆ 3 รอบโดยไม่ดูบท เพื่อเช็คว่าจุดไหนฟังไม่ออก</li>
+                <li>3) เปิดสคริปต์เช็คคำศัพท์ และวางประโยคใน Suzuki-kun ของ <a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer">OJAD</a> เพื่อดูกราฟเสียงสูง-ต่ำ</li>
+                <li>4) กดหยุดพูดตามทีละประโยค 5–10 รอบจนลิ้นไม่พันกัน</li>
+                <li>5) เปิดเสียงพูดตามรวดเดียว (Shadowing) 3 รอบ</li>
+                <li>6) อัดเสียงตัวเองในมือถือมาเทียบกับต้นฉบับ</li>
+              </ul>
+            </div>
+            <div class="tech-box caution">
+              <span class="tech-box-label">⚠️ ข้อควรระวังสำหรับคนไทย</span>
+              <p>ภาษาญี่ปุ่นใช้ระบบ Pitch Accent (เช่น <span class="jp-term"><ruby>雨<rt>あめ</rt></ruby> (ame - ฝน เสียงสูง-ต่ำ)</span> ต่างจาก <span class="jp-term"><ruby>飴<rt>あめ</rt></ruby> (ame - ลูกอม เสียงต่ำ-สูง)</span>) และให้ความสำคัญกับเสียงสั้น-ยาว (<span class="jp-term">おばさん (น้าสาว)</span> vs <span class="jp-term">おばあさん (คุณยาย)</span>) รวมถึงเสียงกัก <span class="jp-term">っ</span> ห้ามเลือกไฟล์เสียงข่าวที่เร็วเกินระดับตัวเองมาฝึกตั้งแต่แรกเพราะจะกลายเป็นพูดมั่วตามไม่ทัน</p>
+            </div>
+          </div>
+          <div class="tech-refs">
+            <span>🔗 ลิงก์อ้างอิง:</span>
+            <a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer">OJAD (Online Japanese Accent Dictionary - ม.โตเกียว)</a>
+            <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">YUYUの日本語Podcast</a>
+          </div>
+        </article>
+
+        <!-- Technique 4: Kanji Memorization -->
+        <article class="technique-card">
+          <div class="technique-header">
+            <h3>🈯 4. เทคนิคการจำคันจิ (<ruby>漢字<rt>かんじ</rt></ruby> - Kanji) 2,000+ ตัว</h3>
+            <span class="badge badge-level">เปรียบเทียบ 3 สำนักหลัก</span>
+          </div>
+          <div class="tech-subgrid">
+            <div class="tech-box">
+              <span class="tech-box-label">📌 คืออะไร</span>
+              <p>การเรียนรู้ตัวอักษรคันจิในหมวดใช้ประจำ (<ruby>常用漢字<rt>じょうようかんじ</rt></ruby> 2,136 ตัว) โดยใช้ชิ้นส่วนประกอบหรือรากอักษร (<ruby>部首<rt>ぶしゅ</rt></ruby> - Radicals) และเรื่องเล่าช่วยจำ (Mnemonics) แทนการคัดซ้ำๆ เป็นร้อยรอบ</p>
+            </div>
+            <div class="tech-box">
+              <span class="tech-box-label">⚙️ ทำอย่างไร</span>
+              <ul>
+                <li>ทำความเข้าใจระบบเสียงอ่านแบบจีน (<ruby>音読み<rt>おんよみ</rt></ruby> - On'yomi มักใช้เมื่อคันจิประสมกัน เช่น <span class="jp-term"><ruby>学生<rt>がくせい</rt></ruby></span>) และเสียงอ่านแบบญี่ปุ่น (<ruby>訓読み<rt>くんよみ</rt></ruby> - Kun'yomi มักใช้เมื่ออยู่เดี่ยวหรือมีฮิรางานะตามหลัง เช่น <span class="jp-term"><ruby>学ぶ<rt>まなぶ</rt></ruby></span>)</li>
+                <li>แยกองค์ประกอบย่อยของคันจิแล้วผูกเป็นภาพหรือเรื่องราวผ่าน <a href="https://kanji.koohii.com/" target="_blank" rel="noopener noreferrer">Kanji Koohii</a> หรือจำพร้อมคำศัพท์ที่พบบ่อยใน <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer">Anki</a></li>
+              </ul>
+            </div>
+            <div class="tech-box caution">
+              <span class="tech-box-label">⚠️ ข้อควรระวัง</span>
+              <p>ห้ามท่องตารางเสียงอ่าน On'yomi / Kun'yomi ของคันจิแต่ละตัวแยกกันแบบแห้งๆ เพราะคันจิหนึ่งตัวอาจมีได้ถึง 5–10 เสียงอ่าน ให้จำเสียงอ่านผ่าน <strong>คำศัพท์ที่ใช้จริง (<ruby>語彙<rt>ごい</rt></ruby> - Goi)</strong> เสมอ</p>
+            </div>
+          </div>
+          <div class="debate-box">
+            <strong>⚖️ ข้อมูลที่ขัดแย้งกัน (3 สำนักการเรียนคันจิ):</strong><br>
+            1) <strong>สาย RTK (Remembering the Kanji โดย Heisig / <a href="https://kanji.koohii.com/" target="_blank" rel="noopener noreferrer">Kanji Koohii</a>):</strong> เสนอให้จำ "รูปร่าง + ความหมาย" ของคันจิทั้ง 2,200 ตัวให้จบใน 3–4 เดือนก่อนโดยยังไม่เรียนเสียงอ่าน ข้อดีคือแยกแยะตัวคล้ายกันเก่งมาก แต่ข้อเสียคือระหว่างนั้นยังอ่านภาษาญี่ปุ่นไม่ออกเลย ทำให้คนเลิกกลางคันสูง<br>
+            2) <strong>สาย Radical +SRS แบบจัดการให้ (<a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer">Tofugu</a> / <a href="https://www.wanikani.com/" target="_blank" rel="noopener noreferrer">WaniKani</a>):</strong> เรียนชิ้นส่วน (Radicals) → คันจิ → คำศัพท์ ไปพร้อมกันในระบบเดียว ข้อดีคือมีเรื่องเล่าช่วยจำพร้อมและไม่ต้องจัดตารางเอง แต่มีค่าใช้จ่ายหลังเลเวล 3 และล็อกความเร็วไว้ (ใช้เวลาราว 1–1.5 ปี)<br>
+            3) <strong>สายจำผ่านคำศัพท์ในบริบทจริง (Context/Mining – <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer">TheMoeWay</a>):</strong> เรียนรู้แค่แนวคิดรากอักษรพื้นฐานใน 1–2 สัปดาห์แรก แล้วไปจำคันจิพร้อมคำศัพท์จริงใน Anki เลย ข้อดีคือไม่ต้องเสียเวลาแยกเรียนคันจิเดี่ยวๆ และอ่านสื่อจริงได้เร็วที่สุด แต่ช่วงแรกอาจสับสนคันจิที่หน้าตาคล้ายกัน (เช่น <span class="jp-term">待 / 持 / 時</span>)
+          </div>
+          <div class="tech-refs">
+            <span>🔗 ลิงก์อ้างอิง:</span>
+            <a href="https://kanji.koohii.com/" target="_blank" rel="noopener noreferrer">Kanji Koohii (ฟรี ต้องสมัครสมาชิก)</a>
+            <a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer">Tofugu Learn Japanese Guide</a>
+            <a href="https://www.wanikani.com/" target="_blank" rel="noopener noreferrer">WaniKani (ฟรี 3 เลเวลแรก)</a>
+          </div>
+        </article>
+
+        <!-- Technique 5: Listening & Speaking -->
+        <article class="technique-card">
+          <div class="technique-header">
+            <h3>🎧 5. เทคนิคการฝึกฟังและพูด (<ruby>聴解<rt>ちょうかい</rt></ruby> &amp; <ruby>会話<rt>かいわ</rt></ruby>)</h3>
+            <span class="badge badge-free">ฝึกเดี่ยวและฝึกคู่ได้</span>
+          </div>
+          <div class="tech-subgrid">
+            <div class="tech-box">
+              <span class="tech-box-label">📌 คืออะไร</span>
+              <p>การเปลี่ยนความรู้คำศัพท์และไวยากรณ์ที่จำได้ (Passive Knowledge) ให้กลายเป็นความสามารถในการประมวลผลเสียงแบบเรียลไทม์และการโต้ตอบอย่างเป็นธรรมชาติ (Active Output)</p>
+            </div>
+            <div class="tech-box">
+              <span class="tech-box-label">⚙️ ทำอย่างไร</span>
+              <ul>
+                <li><strong>การฟังซ้ำ (Repeat Listening):</strong> สำหรับผู้เริ่มต้น การฟังพอดแคสต์สั้นๆ 3 ตอน ตอนละ 3 รอบ ได้ผลดีกว่าฟัง 10 ตอนรวดเดียวแล้วผ่านไป</li>
+                <li><strong>ฝึกพูดคนเดียว (<ruby>一人会話<rt>ひとりかいわ</rt></ruby> - Hitori Kaiwa):</strong> พูดบรรยายสิ่งที่กำลังทำในชีวิตประจำวันเป็นภาษาญี่ปุ่นเบาๆ กับตัวเอง หรือตั้งหัวข้อพูด 2 นาทีแล้วอัดเสียงเช็คคำที่ติดขัด (แนะนำในช่อง <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">YUYUの日本語Podcast</a>)</li>
+                <li>เมื่อถึงระดับ N4–N3 จึงค่อยเริ่มแลกเปลี่ยนภาษาหรือซ้อมสนทนาจริงสัปดาห์ละ 1 ครั้ง</li>
+              </ul>
+            </div>
+            <div class="tech-box caution">
+              <span class="tech-box-label">⚠️ ข้อควรระวัง</span>
+              <p>เพดานของการพูดถูกกำหนดด้วยปริมาณการฟังและการอ่านเสมอ การพยายามฝืนพูดประโยคซับซ้อนโดยที่คลัง Input ในหัวยังว่างเปล่า จะทำให้เผลอแปลตรงตัวจากภาษาไทยเป็นภาษาญี่ปุ่นที่ผิดธรรมชาติ</p>
+            </div>
+          </div>
+          <div class="debate-box">
+            <strong>⚖️ ข้อมูลที่ขัดแย้งกัน (ฝึกพูดตั้งแต่วันแรก vs รอให้ฟังเข้าใจก่อนค่อยพูด):</strong>
+            แนวทางดั้งเดิมและคอร์สสนทนา (เช่น <a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer">IRODORI</a>) สนับสนุนให้ฝึกพูดบทสนทนาที่ใช้บ่อยตั้งแต่วันแรกเพื่อสร้างความมั่นใจ ขณะที่สาย <a href="https://refold.la/how-to-learn-japanese/" target="_blank" rel="noopener noreferrer">Refold</a> แนะนำให้ชะลอการพูดแบบด้นสด (Delay Output) ไปจนกว่าจะฟังเข้าใจดีเสียก่อน เพื่อป้องกันการจำไวยากรณ์หรือสำเนียงผิดๆ จนติดเป็นนิสัย (Fossilization) แนวทางที่สมดุลสำหรับคนเรียนเองคือ <strong>ช่วง N5 ให้เน้นออกเสียงตามต้นฉบับ (Shadowing)</strong> เพื่อให้ลิ้นชินกับเสียงที่ถูกต้อง แล้ว <strong>เริ่มฝึกแต่งประโยคพูดเองเมื่อเข้าสู่ช่วง N4–N3</strong>
+          </div>
+          <div class="tech-refs">
+            <span>🔗 ลิงก์อ้างอิง:</span>
+            <a href="https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd" target="_blank" rel="noopener noreferrer">Nihongo con Teppei (Beginner)</a>
+            <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">YUYUの日本語Podcast</a>
+            <a href="https://refold.la/how-to-learn-japanese/" target="_blank" rel="noopener noreferrer">Refold Input-First Guide</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. ส่วนแหล่งฝึกอื่นๆ -->
+    <section class="section-block" id="section-resources">
+      <div class="section-header">
+        <h2>3. แหล่งฝึกอื่นๆ (พจนานุกรม, สื่ออ่านง่าย, ช่อง YouTube, พอดแคสต์)</h2>
+        <p>ทุกลิงก์ได้รับการตรวจสอบการเข้าถึงแล้ว พร้อมระบุระดับที่เหมาะสมและเงื่อนไขการใช้งานอย่างชัดเจน</p>
+      </div>
+
+      <!-- 3.1 พจนานุกรม -->
+      <h3 class="sub-category-title">📖 พจนานุกรมและเครื่องมือค้นคำศัพท์ (<ruby>辞書<rt>じしょ</rt></ruby> - Dictionaries)</h3>
+      <div class="resource-grid">
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://jisho.org/" target="_blank" rel="noopener noreferrer">Jisho.org (พจนานุกรมญี่ปุ่น–อังกฤษอันดับ 1)</a></h4>
+            <span class="resource-url">https://jisho.org/</span>
+            <p class="resource-desc">ค้นหาคำศัพท์ได้ทั้งจากคันจิ ฮิรางานะ โรมันจิ วาดเส้น หรือแยกตามชิ้นส่วน (Radicals) รองรับแท็กค้นหาเฉพาะเจาะจง เช่น <code>#jlpt-n3 #verb</code> พร้อมแสดงลำดับขีดและคำผันครบถ้วน</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N1</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://dict.longdo.com/" target="_blank" rel="noopener noreferrer">Longdo Dict (พจนานุกรมญี่ปุ่น–ไทย–อังกฤษ)</a></h4>
+            <span class="resource-url">https://dict.longdo.com/</span>
+            <p class="resource-desc">พจนานุกรมออนไลน์ยอดนิยมของไทยที่รวมฐานข้อมูลคำศัพท์ภาษาญี่ปุ่นแปลเป็นภาษาไทย พร้อมตัวอย่างประโยคและคำอ่าน เหมาะมากสำหรับผู้เริ่มต้นที่ยังไม่ถนัดอ่านคำแปลภาษาอังกฤษ</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N2</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://takoboto.jp/" target="_blank" rel="noopener noreferrer">Takoboto Japanese Dictionary (รองรับคำแปลภาษาไทย)</a></h4>
+            <span class="resource-url">https://takoboto.jp/</span>
+            <p class="resource-desc">พจนานุกรมญี่ปุ่นที่แสดงตารางการผันกริยาและคุณศัพท์ทุกรูปอย่างละเอียด มีระบบเลือกแสดงคำแปลภาษาไทยได้บนหน้าเว็บ และมีแอป Android ที่ใช้งานแบบออฟไลน์และส่งการ์ดเข้า Anki ได้</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N1</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">Yomitan (ส่วนขยายพจนานุกรมป๊อปอัปบนเบราว์เซอร์)</a></h4>
+            <span class="resource-url">https://yomitan.wiki/</span>
+            <p class="resource-desc">ส่วนขยายโอเพนซอร์สสำหรับ Chrome, Firefox และ Edge (พัฒนาต่อจาก Yomichan) เพียงชี้เมาส์บนคำศัพท์ในหน้าเว็บภาษาญี่ปุ่นก็จะแสดงคำอ่าน ความหมาย เสียงอ่าน และส่งเข้า Anki ได้ในคลิกเดียว</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N1</span>
+            <span class="badge badge-free">ฟรี 100% (Open-source ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.weblio.jp/" target="_blank" rel="noopener noreferrer">Weblio Kokugo Jiten (<ruby>Weblio辞書<rt>うぇぶりおじしょ</rt></ruby> – พจนานุกรมญี่ปุ่น–ญี่ปุ่น)</a></h4>
+            <span class="resource-url">https://www.weblio.jp/</span>
+            <p class="resource-desc">พจนานุกรมภาษาญี่ปุ่นเป็นภาษาญี่ปุ่น (<ruby>国語辞典<rt>こくごじてん</rt></ruby>) และคลังคำพ้องความหมาย (<ruby>類語辞典<rt>るいごじてん</rt></ruby>) กว่า 500 เล่ม จำเป็นมากเมื่อก้าวสู่ระดับ N2–N1 เพื่อเข้าใจนิยามที่แท้จริงของคำ</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N3–N1</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer">OJAD (Online Japanese Accent Dictionary – มหาวิทยาลัยโตเกียว)</a></h4>
+            <span class="resource-url">https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook</span>
+            <p class="resource-desc">พจนานุกรมระดับเสียงสูง-ต่ำ (Pitch Accent) ที่แสดงการเปลี่ยนระดับเสียงเมื่อผันกริยาทั้ง 12 รูป พร้อมเครื่องมือ Suzuki-kun สำหรับวางข้อความภาษาญี่ปุ่นแล้วดูเส้นระดับเสียงพูดทั้งประโยค (รองรับเมนูภาษาไทย)</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N1</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- 3.2 สื่ออ่านง่าย -->
+      <h3 class="sub-category-title">📚 สื่ออ่านง่ายและนิทานฝึกอ่าน (<ruby>多読<rt>たどく</rt></ruby>・<ruby>読解<rt>どっかい</rt></ruby> - Reading Materials)</h3>
+      <div class="resource-grid">
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://tadoku.org/japanese/en/free-books-en/" target="_blank" rel="noopener noreferrer">Free Tadoku Books (<ruby>にほんごたどく<rt>にほんごたどく</rt></ruby> – NPO 多言語多読)</a></h4>
+            <span class="resource-url">https://tadoku.org/japanese/en/free-books-en/</span>
+            <p class="resource-desc">คลังหนังสือนิทานและเรื่องสั้นภาพประกอบแบ่งตามระดับความยาก (Level Start ถึง Level 3) มีฟุริงานะ (<ruby>ふりがな<rt>ふりがな</rt></ruby>) กำกับทุกตัว และหลายเล่มมีไฟล์เสียงอ่านให้ฟังควบคู่กัน</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N3</span>
+            <span class="badge badge-free">ฟรี 100% (เปิดอ่านและโหลด PDF ได้โดยไม่ต้องสมัคร)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://watanoc.com/" target="_blank" rel="noopener noreferrer">Watanoc (<ruby>和タのC<rt>わたのしー</rt></ruby> – Web Magazine in Easy Japanese)</a></h4>
+            <span class="resource-url">https://watanoc.com/</span>
+            <p class="resource-desc">นิตยสารออนไลน์เขียนด้วยภาษาญี่ปุ่นแบบง่ายเกี่ยวกับอาหาร การท่องเที่ยว และวัฒนธรรมญี่ปุ่น แบ่งบทความตามป้ายกำกับ N5, N4 และ N3 ชัดเจน พร้อมป๊อปอัปอธิบายคำศัพท์และไฟล์เสียง</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N3</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://nihongo-e-na.com/eng/site/id1035.html" target="_blank" rel="noopener noreferrer">NHK Learn Japanese from the News &amp; NEWS WEB EASY (ผ่านพอร์ทัล NIHONGO eな)</a></h4>
+            <span class="resource-url">https://nihongo-e-na.com/eng/site/id1035.html</span>
+            <p class="resource-desc">คู่มือและทางเข้าสู่ระบบข่าวภาษาญี่ปุ่นแบบง่ายของ NHK (<ruby>やさしい日本語ニュース<rt>やさしいにほんごにゅーす</rt></ruby>) ที่มีฟุริงานะกำกับคันจิทุกตัว พร้อมคลิปเสียงอ่านข่าวช้าๆ และบทสนทนาในที่ทำงาน</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N4–N3</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://hirogaru-nihongo.jp/" target="_blank" rel="noopener noreferrer">Hirogaru (<ruby>ひろがる<rt>ひろがる</rt></ruby> – Japan Foundation)</a></h4>
+            <span class="resource-url">https://hirogaru-nihongo.jp/</span>
+            <p class="resource-desc">เว็บไซต์ฝึกอ่านบทความและดูวิดีโอสั้นใน 12 หมวดความสนใจ (เช่น ขนมหวาน ดนตรี ศาลเจ้า อนิเมะ) มีปุ่มเปิด-ปิดฟุริงานะ (RUBY ON/OFF) ให้ฝึกอ่านคันจิได้ตามระดับของตัวเอง</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N4 (A1–A2)</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://hukumusume.com/" target="_blank" rel="noopener noreferrer">Hukumusume Fairy Tale Collection (<ruby>福娘童話集<rt>ふくむすめどうわしゅう</rt></ruby>)</a></h4>
+            <span class="resource-url">https://hukumusume.com/</span>
+            <p class="resource-desc">คลังนิทานพื้นบ้านญี่ปุ่นและนิทานอีสปขนาดใหญ่สำหรับเด็กญี่ปุ่น มีทั้งบทอ่านและเสียงพากย์โดยนักพากย์ เหมาะสำหรับใช้ฝึกอ่านคู่กับส่วนขยาย Yomitan เพื่อก้าวสู่สื่อของเจ้าของภาษา</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N4–N2</span>
+            <span class="badge badge-free">ฟรี 100% (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.satorireader.com/" target="_blank" rel="noopener noreferrer">Satori Reader (นิยายและเรื่องสั้นพร้อมคำอธิบายไวยากรณ์รายประโยค)</a></h4>
+            <span class="resource-url">https://www.satorireader.com/</span>
+            <p class="resource-desc">แพลตฟอร์มฝึกอ่านระดับกลางที่มีเรื่องสั้นกว่า 1,650 ตอน จุดเด่นคือมีเสียงพากย์คนจริงและคำอธิบายเจาะลึกว่าทำไมประโยคนี้ถึงใช้ไวยากรณ์หรือสำนวนนี้ ช่วยเชื่อมรอยต่อจาก N4 ไปสู่การอ่านนิยายจริง</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N4–N2</span>
+            <span class="badge badge-paid">อ่านฟรีตอนต้นของแต่ละเรื่อง (ต้องสมัครสมาชิก / ปลดล็อกทั้งหมดเสียเงินรายเดือน)</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- 3.3 ช่อง YouTube และพอดแคสต์ -->
+      <h3 class="sub-category-title">🎬 ช่อง YouTube และพอดแคสต์ฝึกฟัง (<ruby>動画<rt>どうが</rt></ruby>・<ruby>ポッドキャスト<rt>ぽっどきゃすと</rt></ruby>)</h3>
+      <div class="resource-grid">
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">Comprehensible Japanese (Natural Japanese – เว็บไซต์และ YouTube)</a></h4>
+            <span class="resource-url">https://cijapanese.com/</span>
+            <p class="resource-desc">วิดีโอสอนภาษาญี่ปุ่นด้วยภาษาญี่ปุ่นล้วน 100% โดยใช้ภาพวาด ท่าทาง และการพูดช้าๆ ชัดๆ แบ่งเป็น 4 ระดับตั้งแต่ Complete Beginner (N5) จนถึง Advanced (N2+) ช่วยให้สมองคิดเป็นภาษาญี่ปุ่นโดยไม่ต้องแปล</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N2</span>
+            <span class="badge badge-paid">มีวิดีโอฟรีหลายร้อยคลิป (ฟีเจอร์สคริปต์และคลังพิเศษต้องสมัครสมาชิกเสียเงิน)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd" target="_blank" rel="noopener noreferrer">Nihongo con Teppei for Beginners (พอดแคสต์สำหรับผู้เริ่มต้น)</a></h4>
+            <span class="resource-url">https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd</span>
+            <p class="resource-desc">พอดแคสต์ฝึกฟังยอดฮิตที่มีมากกว่า 1,500 ตอน ตอนละประมาณ 4 นาที พูดคุยเรื่องชีวิตประจำวันด้วยคำศัพท์และโครงสร้างพื้นฐานที่วนซ้ำอย่างเป็นธรรมชาติ เหมาะที่สุดสำหรับเปิดฟังทุกวัน</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N4</span>
+            <span class="badge badge-free">ฟรี 100% บน YouTube / Podcast (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">YUYUの日本語Podcast (พอดแคสต์พร้อมซับไตเติลญี่ปุ่น)</a></h4>
+            <span class="resource-url">https://www.youtube.com/@yuyunihongopodcast/videos</span>
+            <p class="resource-desc">พอดแคสต์ภาษาญี่ปุ่นระดับกลางที่พูดด้วยน้ำเสียงชัดเจนเป็นธรรมชาติ มีซับไตเติลภาษาญี่ปุ่นในคลิป เล่าเรื่องวัฒนธรรม ประวัติศาสตร์แต่ละจังหวัดในญี่ปุ่น และเทคนิคการฝึกพูดด้วยตัวเอง</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N4–N1 (เหมาะมากสำหรับ N3–N2)</span>
+            <span class="badge badge-free">ฟรี 100% บน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.youtube.com/@JapaneseAmmowithMisa/playlists" target="_blank" rel="noopener noreferrer">Japanese Ammo with Misa</a></h4>
+            <span class="resource-url">https://www.youtube.com/@JapaneseAmmowithMisa/playlists</span>
+            <p class="resource-desc">รวมบทเรียนตั้งแต่ระดับเริ่มต้น (Absolute Beginner) ไปจนถึงระดับกลาง มีเพลย์ลิสต์ฝึกฟัง ฝึกอ่านมังงะ และอธิบายความแตกต่างของคำศัพท์ที่คนต่างชาติมักใช้ผิด</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N5–N3</span>
+            <span class="badge badge-free">ฟรี 100% บน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.youtube.com/@nihongonomori2013/playlists" target="_blank" rel="noopener noreferrer">Nihongo no Mori (<ruby>日本語の森<rt>にほんごのもり</rt></ruby>)</a></h4>
+            <span class="resource-url">https://www.youtube.com/@nihongonomori2013/playlists</span>
+            <p class="resource-desc">คลังวิดีโอติวสอบ JLPT N3, N2 และ N1 ทั้งไวยากรณ์ คำศัพท์ คันจิ และสำนวน (<ruby>慣用句<rt>かんようく</rt></ruby>) รวมถึงคลิปเลียนเสียง (<ruby>オノマトペ<rt>おのまとぺ</rt></ruby> - Onomatopoeia) ที่ออกสอบบ่อยมาก</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N3–N1</span>
+            <span class="badge badge-free">ฟรีบน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+
+        <article class="resource-card">
+          <div class="resource-card-top">
+            <h4><a href="https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos" target="_blank" rel="noopener noreferrer">Sambon Juku (<ruby>三本塾<rt>さんぼんじゅく</rt></ruby>)</a></h4>
+            <span class="resource-url">https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos</span>
+            <p class="resource-desc">ช่องสอนไวยากรณ์และมีรายการพอดแคสต์ (Sambon Radio) ที่พูดด้วยความเร็วปกติแต่ใช้คำชัดเจน เหมาะสำหรับผู้เรียนระดับ N3–N1 ที่ต้องการยกระดับภาษาญี่ปุ่นให้เหมือนเจ้าของภาษามากขึ้น</p>
+          </div>
+          <div class="badge-group">
+            <span class="badge badge-level">ระดับ: N3–N1</span>
+            <span class="badge badge-free">ฟรี 100% บน YouTube (ไม่ต้องสมัครสมาชิก)</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. แผนเรียนแนะนำ -->
+    <section class="section-block" id="section-roadmap">
+      <div class="section-header">
+        <h2>4. แผนการเรียนแนะนำ (แบ่งตามช่วงเดือนและชั่วโมงสะสม)</h2>
+        <p>ออกแบบสำหรับผู้เรียนด้วยตัวเองที่จัดเวลาได้วันละประมาณ 1.5 – 2 ชั่วโมง (รวมเวลาฟังพอดแคสต์ระหว่างเดินทาง)</p>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <span class="roadmap-phase">ช่วงที่ 1: เดือนที่ 1 – 3 (เป้าหมาย N5)</span>
+          <h3>ปูรากฐานตัวอักษร ไวยากรณ์หลัก และคำศัพท์ 800–1,000 คำ</h3>
+          <ul class="roadmap-list">
+            <li><strong>สัปดาห์ที่ 1–2:</strong> จำตัวอักษร <ruby>ひらがな<rt>ひらがな</rt></ruby> (Hiragana) และ <ruby>カタカナ<rt>かたかな</rt></ruby> (Katakana) ให้จบภายใน 14 วันด้วยภาพช่วยจำ (Mnemonics) ใน <a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer">Tofugu</a> หัดพิมพ์แป้นญี่ปุ่นและเลิกอ่านโรมันจิเด็ดขาด</li>
+            <li><strong>สัปดาห์ที่ 3–12:</strong> เรียนไวยากรณ์และบทสนทนาพื้นฐานผ่าน <a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer">IRODORI ฉบับภาษาไทย</a> ควบคู่กับการอ่าน <a href="https://guidetojapanese.org/learn/" target="_blank" rel="noopener noreferrer">Tae Kim's Guide</a> และเช็ครายการใน <a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei N5</a></li>
+            <li><strong>คำศัพท์ &amp; คันจิ:</strong> ตั้งค่า <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer">Anki</a> (เปิด FSRS) ท่องคำศัพท์ใหม่วันละ 10–15 คำ (สะสมครบ ~1,000 คำ และคันจิ ~100–150 ตัว)</li>
+            <li><strong>ฝึกฟัง &amp; อ่าน:</strong> ดูคลิป <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">Comprehensible Japanese (Complete Beginner)</a> และอ่านนิทาน <a href="https://tadoku.org/japanese/en/free-books-en/" target="_blank" rel="noopener noreferrer">Tadoku (Level Start – Level 1)</a></li>
+          </ul>
+        </div>
+
+        <div class="roadmap-card">
+          <span class="roadmap-phase">ช่วงที่ 2: เดือนที่ 4 – 6 (เป้าหมาย N4)</span>
+          <h3>ก้าวข้ามประโยคซับซ้อน เริ่มอ่านข่าว และฝึก Shadowing</h3>
+          <ul class="roadmap-list">
+            <li><strong>ไวยากรณ์ N4:</strong> เรียนรูปเงื่อนไข รูปสามารถ รูปถูกกระทำ และรูปให้กระทำผ่าน <a href="https://jlptsensei.com/jlpt-n4-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei N4</a>, <a href="https://www.tofugu.com/japanese-grammar/" target="_blank" rel="noopener noreferrer">Tofugu Grammar</a> และ <a href="https://www.youtube.com/@JapaneseAmmowithMisa/playlists" target="_blank" rel="noopener noreferrer">Japanese Ammo with Misa</a></li>
+            <li><strong>คำศัพท์ &amp; Sentence Mining:</strong> ติดตั้ง <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">Yomitan</a> บนเบราว์เซอร์เพื่อเก็บคำศัพท์จากบทความที่อ่านจริงเข้า Anki วันละ 10–15 คำ (สะสมรวม 1,500–2,000 คำ, คันจิ 300+ ตัว)</li>
+            <li><strong>ฝึกอ่าน:</strong> อ่านบทความใน <a href="https://watanoc.com/" target="_blank" rel="noopener noreferrer">Watanoc</a> และข่าวง่าย <a href="https://nihongo-e-na.com/eng/site/id1035.html" target="_blank" rel="noopener noreferrer">NHK Easy News</a> วันละ 2–3 บทความ</li>
+            <li><strong>ฝึกฟัง &amp; พูด:</strong> ฟัง <a href="https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd" target="_blank" rel="noopener noreferrer">Nihongo con Teppei (Beginner)</a> ทุกวัน และเริ่มฝึก Shadowing วันละ 15 นาทีโดยเช็คระดับเสียงจาก <a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer">OJAD</a></li>
+          </ul>
+        </div>
+
+        <div class="roadmap-card">
+          <span class="roadmap-phase">ช่วงที่ 3: เดือนที่ 7 – 12 (เป้าหมาย N3 มุ่งสู่ N2)</span>
+          <h3>เข้าสู่โหมด Immersion เต็มตัว อ่าน-ฟังสื่อเจ้าของภาษา</h3>
+          <ul class="roadmap-list">
+            <li><strong>ไวยากรณ์ N3–N2:</strong> ศึกษาไวยากรณ์ระดับกลาง-สูงจาก <a href="https://jlptsensei.com/jlpt-n3-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei N3</a> / <a href="https://jlptsensei.com/jlpt-n2-grammar-list/" target="_blank" rel="noopener noreferrer">N2</a>, <a href="https://bunpro.jp/grammar_points" target="_blank" rel="noopener noreferrer">Bunpro</a> และดูคลิปอธิบายภาษาญี่ปุ่นล้วนของ <a href="https://www.youtube.com/@nihongonomori2013/playlists" target="_blank" rel="noopener noreferrer">Nihongo no Mori</a> กับ <a href="https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos" target="_blank" rel="noopener noreferrer">Sambon Juku</a></li>
+            <li><strong>การอ่านเชิงลึก:</strong> อ่านนิทานพื้นบ้านใน <a href="https://hukumusume.com/" target="_blank" rel="noopener noreferrer">Hukumusume</a>, มังงะ หรือไลท์โนเวลเรื่องแรกโดยใช้ Yomitan + <a href="https://www.weblio.jp/" target="_blank" rel="noopener noreferrer">Weblio</a> (เริ่มหัดอ่านคำนิยามญี่ปุ่น-ญี่ปุ่น)</li>
+            <li><strong>การฟัง &amp; สนทนา:</strong> ขยับไปฟัง <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">YUYUの日本語Podcast</a> และดูอนิเมะ/ซีรีส์ด้วยซับญี่ปุ่นล้วน พร้อมฝึกพูดคนเดียว (<ruby>一人会話<rt>ひとりかいわ</rt></ruby>) หรือคุยกับเจ้าของภาษาสัปดาห์ละ 1 ครั้ง</li>
+            <li><strong>หลังเดือนที่ 12 (มุ่งสู่ N2–N1):</strong> ใช้ <a href="https://imabi.org/" target="_blank" rel="noopener noreferrer">IMABI</a> และ <a href="https://jlptsensei.com/jlpt-n1-grammar-list/" target="_blank" rel="noopener noreferrer">JLPT Sensei N1</a> อ้างอิงไวยากรณ์ระดับสูง และเน้นการอ่านบทความข่าว/วรรณกรรมจริงให้สะสมคำศัพท์แตะ 6,000–10,000+ คำ</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ตารางเปรียบเทียบชั่วโมงเรียนและโครงสร้างข้อสอบ -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ระดับ JLPT</th>
+              <th>คำศัพท์สะสม (โดยประมาณ)</th>
+              <th>คันจิสะสม (โดยประมาณ)</th>
+              <th>ชั่วโมงเรียนสะสม (ผู้ไม่มีพื้นฐานคันจิ เช่น คนไทย)</th>
+              <th>เวลาสอบรวม &amp; เกณฑ์ผ่าน (เต็ม 180 คะแนน)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>JLPT N5</strong></td>
+              <td>~800 คำ</td>
+              <td>~100 ตัว</td>
+              <td>325 – 600 ชั่วโมง</td>
+              <td>90 นาที | ผ่านที่ 80 คะแนน (ต้องผ่านเกณฑ์ขั้นต่ำทุกพาร์ท)</td>
+            </tr>
+            <tr>
+              <td><strong>JLPT N4</strong></td>
+              <td>~1,500 คำ</td>
+              <td>~300 ตัว</td>
+              <td>575 – 1,000 ชั่วโมง</td>
+              <td>115 นาที | ผ่านที่ 90 คะแนน (ต้องผ่านเกณฑ์ขั้นต่ำทุกพาร์ท)</td>
+            </tr>
+            <tr>
+              <td><strong>JLPT N3</strong></td>
+              <td>~3,700 คำ</td>
+              <td>~650 ตัว</td>
+              <td>950 – 1,700 ชั่วโมง</td>
+              <td>140 นาที | ผ่านที่ 95 คะแนน (ขั้นต่ำพาร์ทละ 19/60 คะแนน)</td>
+            </tr>
+            <tr>
+              <td><strong>JLPT N2</strong></td>
+              <td>~6,000 คำ</td>
+              <td>~1,000 ตัว</td>
+              <td>1,600 – 2,800 ชั่วโมง</td>
+              <td>155 นาที | ผ่านที่ 90 คะแนน (ขั้นต่ำพาร์ทละ 19/60 คะแนน)</td>
+            </tr>
+            <tr>
+              <td><strong>JLPT N1</strong></td>
+              <td>10,000+ คำ</td>
+              <td>2,000+ ตัว</td>
+              <td>3,000 – 4,800 ชั่วโมง</td>
+              <td>170 นาที | ผ่านที่ 100 คะแนน (ขั้นต่ำพาร์ทละ 19/60 คะแนน)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        *ข้อมูลชั่วโมงเรียนสะสมอ้างอิงจากสถิติโรงเรียนสอนภาษาญี่ปุ่นใน <a href="https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en" target="_blank" rel="noopener noreferrer">LabHub 2026 JLPT Roadmap</a> และข้อมูลเวลาสอบจาก <a href="https://jeducation.com/main/education/jlpt/" target="_blank" rel="noopener noreferrer">JEDUCATION</a>
+      </p>
+    </section>
+
+    <!-- 7. เช็คลิสต์ติดตามความคืบหน้า -->
+    <section class="section-block" id="section-checklist">
+      <div class="section-header">
+        <h2>5. เช็คลิสต์ติดตามความคืบหน้า (Interactive Progress Checklist)</h2>
+        <p>ติ๊กถูกเมื่อทำสำเร็จในแต่ละข้อ ระบบจะคำนวณความคืบหน้าและบันทึกไว้ในเครื่องของคุณอัตโนมัติ (เปิดใหม่ไม่หาย)</p>
+      </div>
+
+      <div class="checklist-dashboard">
+        <div class="overall-progress-header">
+          <div>
+            <div class="overall-stats" id="overall-progress-text">ความคืบหน้ารวมทั้งหมด: 0 / 28 ข้อ (0%)</div>
+            <div class="storage-status" id="storage-status-text">💾 สถานะการบันทึก: พร้อมบันทึกอัตโนมัติด้วย localStorage</div>
+          </div>
+          <div>
+            <button type="button" class="btn btn-danger" id="btn-reset-prompt">🗑️ รีเซ็ตทั้งหมด</button>
+          </div>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="overall-progress-bar-wrap">
+          <div class="progress-fill" id="overall-progress-fill"></div>
+        </div>
+
+        <div class="reset-confirm-box" id="reset-confirm-box">
+          <span><strong>ยืนยันการล้างข้อมูล:</strong> คุณต้องการล้างสถานะเช็คลิสต์ทั้งหมดกลับเป็นเริ่มต้นใช่หรือไม่?</span>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-danger" id="btn-confirm-reset">ยืนยันรีเซ็ตทั้งหมด</button>
+            <button type="button" class="btn" id="btn-cancel-reset">ยกเลิก</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="checklist-groups" id="checklist-container">
+        <!-- Group 1: ตั้งต้น -->
+        <div class="checklist-group-card" data-group="setup">
+          <div class="group-header">
+            <h3>1. ตั้งต้น (Getting Started)</h3>
+            <span class="group-count" id="count-setup">0 / 5 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-setup"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-setup-1" data-group="setup">
+              <div class="checklist-label-wrap">
+                <label for="chk-setup-1" class="checklist-text">จำตัวอักษร <ruby>ひらがな<rt>ひらがな</rt></ruby> (Hiragana) 46 ตัว + เสียงขุ่น/เสียงควบให้ครบภายในสัปดาห์แรก</label>
+                <a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tofugu Guide ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-setup-2" data-group="setup">
+              <div class="checklist-label-wrap">
+                <label for="chk-setup-2" class="checklist-text">จำตัวอักษร <ruby>カタカナ<rt>かたかな</rt></ruby> (Katakana) 46 ตัวต่อทันทีและเลิกพึ่งพาตัวโรมันจิ</label>
+                <a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tofugu Guide ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-setup-3" data-group="setup">
+              <div class="checklist-label-wrap">
+                <label for="chk-setup-3" class="checklist-text">ตั้งค่าแป้นพิมพ์ภาษาญี่ปุ่น (Japanese IME) บนคอมพิวเตอร์และสมาร์ทโฟน</label>
+                <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer" class="checklist-link">TheMoeWay ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-setup-4" data-group="setup">
+              <div class="checklist-label-wrap">
+                <label for="chk-setup-4" class="checklist-text">บุ๊กมาร์กพจนานุกรมหลัก (Jisho.org และ Longdo Dict) ไว้ใช้งานประจำ</label>
+                <a href="https://jisho.org/" target="_blank" rel="noopener noreferrer" class="checklist-link">Jisho.org ↗</a>
+                <a href="https://dict.longdo.com/" target="_blank" rel="noopener noreferrer" class="checklist-link">Longdo ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-setup-5" data-group="setup">
+              <div class="checklist-label-wrap">
+                <label for="chk-setup-5" class="checklist-text">ทำความเข้าใจโครงสร้างการสอบวัดระดับ <ruby>日本語能力試験<rt>にほんごのうりょくしけん</rt></ruby> (JLPT) และเป้าหมายของตัวเอง</label>
+                <a href="https://jeducation.com/main/education/jlpt/" target="_blank" rel="noopener noreferrer" class="checklist-link">JEDUCATION ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 2: ตั้งค่า Anki & เครื่องมือ -->
+        <div class="checklist-group-card" data-group="anki">
+          <div class="group-header">
+            <h3>2. ตั้งค่า Anki &amp; เครื่องมือช่วยเรียน</h3>
+            <span class="group-count" id="count-anki">0 / 5 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-anki"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-anki-1" data-group="anki">
+              <div class="checklist-label-wrap">
+                <label for="chk-anki-1" class="checklist-text">ดาวน์โหลดและติดตั้งโปรแกรม Anki พร้อมสมัครบัญชี AnkiWeb เพื่อซิงค์ข้อมูล</label>
+                <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" class="checklist-link">AnkiWeb ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-anki-2" data-group="anki">
+              <div class="checklist-label-wrap">
+                <label for="chk-anki-2" class="checklist-text">เปิดใช้งานโหมด FSRS ใน Deck Options และตั้ง Desired Retention ที่ 0.85–0.90</label>
+                <a href="https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en" target="_blank" rel="noopener noreferrer" class="checklist-link">คู่มือตั้งค่า FSRS ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-anki-3" data-group="anki">
+              <div class="checklist-label-wrap">
+                <label for="chk-anki-3" class="checklist-text">ตั้งค่า New cards/day ที่ 10–20 ใบ และตั้ง Maximum reviews/day เป็น 9999</label>
+                <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer" class="checklist-link">TheMoeWay ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-anki-4" data-group="anki">
+              <div class="checklist-label-wrap">
+                <label for="chk-anki-4" class="checklist-text">ติดตั้งส่วนขยาย Yomitan บนเบราว์เซอร์เพื่อเปิดดิกชันนารีป๊อปอัปเวลาอ่านเว็บ</label>
+                <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer" class="checklist-link">Yomitan ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-anki-5" data-group="anki">
+              <div class="checklist-label-wrap">
+                <label for="chk-anki-5" class="checklist-text">เลือกแนวทางจำคันจิหลักของตัวเอง (Kanji Koohii / WaniKani / จำผ่านคำศัพท์ใน Anki)</label>
+                <a href="https://kanji.koohii.com/" target="_blank" rel="noopener noreferrer" class="checklist-link">Kanji Koohii ↗</a>
+                <a href="https://www.wanikani.com/" target="_blank" rel="noopener noreferrer" class="checklist-link">WaniKani ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 3: ไวยากรณ์ N5 -->
+        <div class="checklist-group-card" data-group="n5">
+          <div class="group-header">
+            <h3>3. ไวยากรณ์ N5 (ปูพื้นฐานต้น)</h3>
+            <span class="group-count" id="count-n5">0 / 5 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-n5"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n5-1" data-group="n5">
+              <div class="checklist-label-wrap">
+                <label for="chk-n5-1" class="checklist-text">เข้าใจโครงสร้างประโยคพื้นฐาน <span class="jp-term">だ / です</span> และการใช้คำช่วยหลัก (<span class="jp-term">は, が, を, に, で, へ, と, から, まで</span>)</label>
+                <a href="https://guidetojapanese.org/learn/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tae Kim ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n5-2" data-group="n5">
+              <div class="checklist-label-wrap">
+                <label for="chk-n5-2" class="checklist-text">ผันคำคุณศัพท์ <span class="jp-term">い-adjective</span> และ <span class="jp-term">な-adjective</span> ทั้งรูปปัจจุบัน อดีต และปฏิเสธได้คล่อง</label>
+                <a href="https://www.tofugu.com/japanese-grammar/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tofugu Grammar ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n5-3" data-group="n5">
+              <div class="checklist-label-wrap">
+                <label for="chk-n5-3" class="checklist-text">ผันกริยา 3 กลุ่มในรูปสุภาพ (<span class="jp-term">〜ます</span>), รูปธรรมดา, รูปปฏิเสธ (<span class="jp-term">〜ない</span>) และรูปอดีต (<span class="jp-term">〜た</span>) ได้แม่นยำ</label>
+                <a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N5 ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n5-4" data-group="n5">
+              <div class="checklist-label-wrap">
+                <label for="chk-n5-4" class="checklist-text">ผันกริยารูป <span class="jp-term">〜て (te-form)</span> และใช้โครงสร้าง <span class="jp-term">〜ている, 〜てください, 〜てもいい, 〜てはいけない</span> ได้</label>
+                <a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer" class="checklist-link">IRODORI ไทย ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n5-5" data-group="n5">
+              <div class="checklist-label-wrap">
+                <label for="chk-n5-5" class="checklist-text">เรียนจบคอร์ส IRODORI ระดับเบื้องต้น (A1) หรือเก็บไวยากรณ์ N5 ครบทั้ง 84 หัวข้อ</label>
+                <a href="https://www.irodori-online.jpf.go.jp/" target="_blank" rel="noopener noreferrer" class="checklist-link">IRODORI Online ↗</a>
+                <a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">N5 List ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 4: ไวยากรณ์ N4 -->
+        <div class="checklist-group-card" data-group="n4">
+          <div class="group-header">
+            <h3>4. ไวยากรณ์ N4 (ต่อยอดพื้นฐานปลาย)</h3>
+            <span class="group-count" id="count-n4">0 / 4 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-n4"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n4-1" data-group="n4">
+              <div class="checklist-label-wrap">
+                <label for="chk-n4-1" class="checklist-text">แยกแยะและใช้ประโยคเงื่อนไขทั้ง 4 รูป (<span class="jp-term">〜と, 〜ば, 〜たら, 〜なら</span>) ได้ถูกต้องตามบริบท</label>
+                <a href="https://jlptsensei.com/jlpt-n4-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N4 ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n4-2" data-group="n4">
+              <div class="checklist-label-wrap">
+                <label for="chk-n4-2" class="checklist-text">เข้าใจกริยารูปสามารถ (<span class="jp-term">可能形</span>) และการให้-รับการกระทำ (<span class="jp-term">〜てあげる, 〜てくれる, 〜てもらう</span>)</label>
+                <a href="https://www.tofugu.com/japanese-grammar/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tofugu Grammar ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n4-3" data-group="n4">
+              <div class="checklist-label-wrap">
+                <label for="chk-n4-3" class="checklist-text">ผันและเข้าใจกริยารูปถูกกระทำ (<span class="jp-term">受身形</span>), รูปสั่ง/ให้กระทำ (<span class="jp-term">使役形</span>) และภาษาสุภาพ (<span class="jp-term">敬語</span>) พื้นฐาน</label>
+                <a href="https://bunpro.jp/grammar_points" target="_blank" rel="noopener noreferrer" class="checklist-link">Bunpro N4 ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-n4-4" data-group="n4">
+              <div class="checklist-label-wrap">
+                <label for="chk-n4-4" class="checklist-text">ทบทวนรายการไวยากรณ์ N4 ครบทั้ง 132 หัวข้อและเรียนจบหลักสูตรระดับ A2</label>
+                <a href="https://jlptsensei.com/jlpt-n4-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N4 ↗</a>
+                <a href="https://minato-jf.jp/" target="_blank" rel="noopener noreferrer" class="checklist-link">Minato A2 ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 5: ไวยากรณ์ระดับกลาง-สูง (N3–N1) -->
+        <div class="checklist-group-card" data-group="upper">
+          <div class="group-header">
+            <h3>5. ไวยากรณ์ระดับกลาง–สูง (N3 – N1)</h3>
+            <span class="group-count" id="count-upper">0 / 4 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-upper"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-upper-1" data-group="upper">
+              <div class="checklist-label-wrap">
+                <label for="chk-upper-1" class="checklist-text">ศึกษาไวยากรณ์ระดับ N3 ทั้ง 182 หัวข้อ เพื่อเชื่อมภาษาระดับต้นเข้าสู่การอ่านบทความจริง</label>
+                <a href="https://jlptsensei.com/jlpt-n3-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N3 ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-upper-2" data-group="upper">
+              <div class="checklist-label-wrap">
+                <label for="chk-upper-2" class="checklist-text">ดูเพลย์ลิสต์ติวไวยากรณ์ N3–N2 เป็นภาษาญี่ปุ่นในช่อง Nihongo no Mori และ Sambon Juku</label>
+                <a href="https://www.youtube.com/@nihongonomori2013/playlists" target="_blank" rel="noopener noreferrer" class="checklist-link">Nihongo no Mori ↗</a>
+                <a href="https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos" target="_blank" rel="noopener noreferrer" class="checklist-link">Sambon Juku ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-upper-3" data-group="upper">
+              <div class="checklist-label-wrap">
+                <label for="chk-upper-3" class="checklist-text">เก็บไวยากรณ์ระดับ N2 (197 หัวข้อ) พร้อมฝึกอ่านนิยามคำศัพท์จากพจนานุกรมญี่ปุ่น–ญี่ปุ่น</label>
+                <a href="https://jlptsensei.com/jlpt-n2-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N2 ↗</a>
+                <a href="https://www.weblio.jp/" target="_blank" rel="noopener noreferrer" class="checklist-link">Weblio ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-upper-4" data-group="upper">
+              <div class="checklist-label-wrap">
+                <label for="chk-upper-4" class="checklist-text">ค้นคว้าไวยากรณ์ระดับ N1 (253 หัวข้อ) และศึกษารากไวยากรณ์เชิงลึกใน IMABI</label>
+                <a href="https://jlptsensei.com/jlpt-n1-grammar-list/" target="_blank" rel="noopener noreferrer" class="checklist-link">JLPT Sensei N1 ↗</a>
+                <a href="https://imabi.org/" target="_blank" rel="noopener noreferrer" class="checklist-link">IMABI ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Group 6: นิสัยประจำวัน (Daily Habits) -->
+        <div class="checklist-group-card" data-group="habit">
+          <div class="group-header">
+            <h3>6. นิสัยประจำวัน (Daily Study Routine)</h3>
+            <span class="group-count" id="count-habit">0 / 5 (0%)</span>
+          </div>
+          <div class="group-progress-track">
+            <div class="group-progress-fill" id="fill-habit"></div>
+          </div>
+          <ul class="checklist-items">
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-habit-1" data-group="habit">
+              <div class="checklist-label-wrap">
+                <label for="chk-habit-1" class="checklist-text">ทบทวนการ์ดใน Anki ให้ครบทุกวัน และเพิ่มการ์ดคำศัพท์ใหม่จากสื่อที่อ่านวันละ 10–20 ใบ</label>
+                <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" class="checklist-link">Anki ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-habit-2" data-group="habit">
+              <div class="checklist-label-wrap">
+                <label for="chk-habit-2" class="checklist-text">อ่านหนังสืออ่านนอกเวลา Tadoku, บทความ Watanoc หรือข่าว NHK Easy อย่างน้อยวันละ 1–2 เรื่อง</label>
+                <a href="https://tadoku.org/japanese/en/free-books-en/" target="_blank" rel="noopener noreferrer" class="checklist-link">Tadoku ↗</a>
+                <a href="https://watanoc.com/" target="_blank" rel="noopener noreferrer" class="checklist-link">Watanoc ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-habit-3" data-group="habit">
+              <div class="checklist-label-wrap">
+                <label for="chk-habit-3" class="checklist-text">ฟังพอดแคสต์ภาษาญี่ปุ่น (Nihongo con Teppei หรือ YUYU Podcast) อย่างน้อยวันละ 15–30 นาที</label>
+                <a href="https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd" target="_blank" rel="noopener noreferrer" class="checklist-link">Teppei ↗</a>
+                <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer" class="checklist-link">YUYU ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-habit-4" data-group="habit">
+              <div class="checklist-label-wrap">
+                <label for="chk-habit-4" class="checklist-text">ฝึกพูดตามเสียงต้นฉบับ (Shadowing) วันละ 10–15 นาที พร้อมเช็คกราฟเสียงสูง-ต่ำใน OJAD</label>
+                <a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer" class="checklist-link">OJAD ↗</a>
+              </div>
+            </li>
+            <li class="checklist-item">
+              <input type="checkbox" id="chk-habit-5" data-group="habit">
+              <div class="checklist-label-wrap">
+                <label for="chk-habit-5" class="checklist-text">ดูหรือฟังสื่อภาษาญี่ปุ่นโดยเปิดเฉพาะซับไตเติลภาษาญี่ปุ่น (หรือปิดซับ) อย่างน้อยวันละ 30 นาที</label>
+                <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer" class="checklist-link">CI Japanese ↗</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. ส่วนท้าย: รายการแหล่งอ้างอิงทั้งหมด -->
+    <footer class="section-block" id="section-references">
+      <div class="section-header">
+        <h2>6. รายการแหล่งอ้างอิงทั้งหมด (Verified Reference Directory)</h2>
+        <p>รวบรวม URL ทั้งหมดที่ผ่านการตรวจสอบการเข้าถึงในการรีเสิร์ชครั้งนี้ (วันที่ตรวจสอบ: 25 ตุลาคม 2026)</p>
+      </div>
+
+      <ul class="ref-list">
+        <li class="ref-item">
+          <strong>1. IRODORI (อิโระโดะริ) – เจแปนฟาวน์เดชั่น กรุงเทพฯ</strong>
+          <a href="https://ba.jpf.go.jp/th/irodori-2/" target="_blank" rel="noopener noreferrer">https://ba.jpf.go.jp/th/irodori-2/</a>
+        </li>
+        <li class="ref-item">
+          <strong>2. IRODORI Japanese Online Course</strong>
+          <a href="https://www.irodori-online.jpf.go.jp/" target="_blank" rel="noopener noreferrer">https://www.irodori-online.jpf.go.jp/</a>
+        </li>
+        <li class="ref-item">
+          <strong>3. Tae Kim's Guide to Learning Japanese</strong>
+          <a href="https://guidetojapanese.org/learn/" target="_blank" rel="noopener noreferrer">https://guidetojapanese.org/learn/</a>
+        </li>
+        <li class="ref-item">
+          <strong>4. JLPT Sensei – N5 Grammar List</strong>
+          <a href="https://jlptsensei.com/jlpt-n5-grammar-list/" target="_blank" rel="noopener noreferrer">https://jlptsensei.com/jlpt-n5-grammar-list/</a>
+        </li>
+        <li class="ref-item">
+          <strong>5. JLPT Sensei – N4 Grammar List</strong>
+          <a href="https://jlptsensei.com/jlpt-n4-grammar-list/" target="_blank" rel="noopener noreferrer">https://jlptsensei.com/jlpt-n4-grammar-list/</a>
+        </li>
+        <li class="ref-item">
+          <strong>6. JLPT Sensei – N3 Grammar List</strong>
+          <a href="https://jlptsensei.com/jlpt-n3-grammar-list/" target="_blank" rel="noopener noreferrer">https://jlptsensei.com/jlpt-n3-grammar-list/</a>
+        </li>
+        <li class="ref-item">
+          <strong>7. JLPT Sensei – N2 Grammar List</strong>
+          <a href="https://jlptsensei.com/jlpt-n2-grammar-list/" target="_blank" rel="noopener noreferrer">https://jlptsensei.com/jlpt-n2-grammar-list/</a>
+        </li>
+        <li class="ref-item">
+          <strong>8. JLPT Sensei – N1 Grammar List</strong>
+          <a href="https://jlptsensei.com/jlpt-n1-grammar-list/" target="_blank" rel="noopener noreferrer">https://jlptsensei.com/jlpt-n1-grammar-list/</a>
+        </li>
+        <li class="ref-item">
+          <strong>9. IMABI (今日 – Guided Japanese Mastery)</strong>
+          <a href="https://imabi.org/" target="_blank" rel="noopener noreferrer">https://imabi.org/</a>
+        </li>
+        <li class="ref-item">
+          <strong>10. Bunpro Grammar Points Library</strong>
+          <a href="https://bunpro.jp/grammar_points" target="_blank" rel="noopener noreferrer">https://bunpro.jp/grammar_points</a>
+        </li>
+        <li class="ref-item">
+          <strong>11. Tofugu – The Japanese Grammar Index</strong>
+          <a href="https://www.tofugu.com/japanese-grammar/" target="_blank" rel="noopener noreferrer">https://www.tofugu.com/japanese-grammar/</a>
+        </li>
+        <li class="ref-item">
+          <strong>12. Tofugu – Learn Japanese: A Ridiculously Detailed Guide</strong>
+          <a href="https://www.tofugu.com/learn-japanese/" target="_blank" rel="noopener noreferrer">https://www.tofugu.com/learn-japanese/</a>
+        </li>
+        <li class="ref-item">
+          <strong>13. JF Japanese e-Learning Minato</strong>
+          <a href="https://minato-jf.jp/" target="_blank" rel="noopener noreferrer">https://minato-jf.jp/</a>
+        </li>
+        <li class="ref-item">
+          <strong>14. MARUGOTO Plus (Japan Foundation)</strong>
+          <a href="https://marugotoweb.jp/en/index.php" target="_blank" rel="noopener noreferrer">https://marugotoweb.jp/en/index.php</a>
+        </li>
+        <li class="ref-item">
+          <strong>15. Tsunahiro (สึนะฮิโระ) – กระทรวงศึกษาธิการญี่ปุ่น (MEXT)</strong>
+          <a href="https://tsunagarujp.mext.go.jp/link?lang_id=TH" target="_blank" rel="noopener noreferrer">https://tsunagarujp.mext.go.jp/link?lang_id=TH</a>
+        </li>
+        <li class="ref-item">
+          <strong>16. NIHONGO eな – Portal for Learning Japanese</strong>
+          <a href="https://nihongo-e-na.com/" target="_blank" rel="noopener noreferrer">https://nihongo-e-na.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>17. NIHONGO eな – แนะนำ NHK WORLD-JAPAN Easy Japanese</strong>
+          <a href="https://nihongo-e-na.com/eng/site/id954.html" target="_blank" rel="noopener noreferrer">https://nihongo-e-na.com/eng/site/id954.html</a>
+        </li>
+        <li class="ref-item">
+          <strong>18. NIHONGO eな – แนะนำ NHK Learn Japanese from the News &amp; NEWS WEB EASY</strong>
+          <a href="https://nihongo-e-na.com/eng/site/id1035.html" target="_blank" rel="noopener noreferrer">https://nihongo-e-na.com/eng/site/id1035.html</a>
+        </li>
+        <li class="ref-item">
+          <strong>19. Jisho.org Japanese Dictionary</strong>
+          <a href="https://jisho.org/" target="_blank" rel="noopener noreferrer">https://jisho.org/</a>
+        </li>
+        <li class="ref-item">
+          <strong>20. Longdo Dictionary (พจนานุกรมแปลภาษา)</strong>
+          <a href="https://dict.longdo.com/" target="_blank" rel="noopener noreferrer">https://dict.longdo.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>21. Takoboto Japanese Dictionary</strong>
+          <a href="https://takoboto.jp/" target="_blank" rel="noopener noreferrer">https://takoboto.jp/</a>
+        </li>
+        <li class="ref-item">
+          <strong>22. Weblio Kokugo Dictionary (Weblio辞書)</strong>
+          <a href="https://www.weblio.jp/" target="_blank" rel="noopener noreferrer">https://www.weblio.jp/</a>
+        </li>
+        <li class="ref-item">
+          <strong>23. Yomitan Pop-up Dictionary Extension</strong>
+          <a href="https://yomitan.wiki/" target="_blank" rel="noopener noreferrer">https://yomitan.wiki/</a>
+        </li>
+        <li class="ref-item">
+          <strong>24. OJAD (Online Japanese Accent Dictionary – ม.โตเกียว)</strong>
+          <a href="https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook" target="_blank" rel="noopener noreferrer">https://www.gavo.t.u-tokyo.ac.jp/ojad/eng/pages/textbook</a>
+        </li>
+        <li class="ref-item">
+          <strong>25. Free Tadoku Books (NPO 多言語多読)</strong>
+          <a href="https://tadoku.org/japanese/en/free-books-en/" target="_blank" rel="noopener noreferrer">https://tadoku.org/japanese/en/free-books-en/</a>
+        </li>
+        <li class="ref-item">
+          <strong>26. Watanoc (和タのC – Free Web Magazine)</strong>
+          <a href="https://watanoc.com/" target="_blank" rel="noopener noreferrer">https://watanoc.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>27. Hirogaru (ひろがる – Japan Foundation)</strong>
+          <a href="https://hirogaru-nihongo.jp/" target="_blank" rel="noopener noreferrer">https://hirogaru-nihongo.jp/</a>
+        </li>
+        <li class="ref-item">
+          <strong>28. Hukumusume Fairy Tale Collection (福娘童話集)</strong>
+          <a href="https://hukumusume.com/" target="_blank" rel="noopener noreferrer">https://hukumusume.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>29. Satori Reader</strong>
+          <a href="https://www.satorireader.com/" target="_blank" rel="noopener noreferrer">https://www.satorireader.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>30. Comprehensible Japanese (Natural Japanese)</strong>
+          <a href="https://cijapanese.com/" target="_blank" rel="noopener noreferrer">https://cijapanese.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>31. Nihongo con Teppei for Beginners (YouTube Playlist)</strong>
+          <a href="https://www.youtube.com/playlist?app=desktop&list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd" target="_blank" rel="noopener noreferrer">https://www.youtube.com/playlist?app=desktop&amp;list=PLbsmSVzhiwvA8VNMAW_cuDqujRQULBjFd</a>
+        </li>
+        <li class="ref-item">
+          <strong>32. YUYUの日本語Podcast (YouTube Channel)</strong>
+          <a href="https://www.youtube.com/@yuyunihongopodcast/videos" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@yuyunihongopodcast/videos</a>
+        </li>
+        <li class="ref-item">
+          <strong>33. Japanese Ammo with Misa (YouTube Playlists)</strong>
+          <a href="https://www.youtube.com/@JapaneseAmmowithMisa/playlists" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@JapaneseAmmowithMisa/playlists</a>
+        </li>
+        <li class="ref-item">
+          <strong>34. Nihongo no Mori / 日本語の森 (YouTube Playlists)</strong>
+          <a href="https://www.youtube.com/@nihongonomori2013/playlists" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@nihongonomori2013/playlists</a>
+        </li>
+        <li class="ref-item">
+          <strong>35. Sambon Juku / 三本塾 (YouTube Channel)</strong>
+          <a href="https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos" target="_blank" rel="noopener noreferrer">https://www.youtube.com/channel/UC0ujXryUUwILURRKt9Eh7Nw/videos</a>
+        </li>
+        <li class="ref-item">
+          <strong>36. Anki – Powerful, Intelligent Flashcards</strong>
+          <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer">https://apps.ankiweb.net/</a>
+        </li>
+        <li class="ref-item">
+          <strong>37. TheMoeWay – Immersion Japanese Guide</strong>
+          <a href="https://learnjapanese.moe/" target="_blank" rel="noopener noreferrer">https://learnjapanese.moe/</a>
+        </li>
+        <li class="ref-item">
+          <strong>38. Refold – How to Learn Japanese Immersion Method</strong>
+          <a href="https://refold.la/how-to-learn-japanese/" target="_blank" rel="noopener noreferrer">https://refold.la/how-to-learn-japanese/</a>
+        </li>
+        <li class="ref-item">
+          <strong>39. WaniKani Kanji Learning Application</strong>
+          <a href="https://www.wanikani.com/" target="_blank" rel="noopener noreferrer">https://www.wanikani.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>40. Kanji Koohii (Heisig RTK Flashcards &amp; Mnemonics)</strong>
+          <a href="https://kanji.koohii.com/" target="_blank" rel="noopener noreferrer">https://kanji.koohii.com/</a>
+        </li>
+        <li class="ref-item">
+          <strong>41. JEDUCATION – ข้อมูลการสอบวัดระดับภาษาญี่ปุ่น JLPT</strong>
+          <a href="https://jeducation.com/main/education/jlpt/" target="_blank" rel="noopener noreferrer">https://jeducation.com/main/education/jlpt/</a>
+        </li>
+        <li class="ref-item">
+          <strong>42. LabHub Blog – Zero to JLPT N1 with Immersion, Anki, Kanji, and Shadowing (2026)</strong>
+          <a href="https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en" target="_blank" rel="noopener noreferrer">https://labhub.hopto.org/blog/culture/2026-07-02-how-to-learn-japanese-2026-jlpt-roadmap-immersion-anki-wanikani-shadowing-deep-dive?lang=en</a>
+        </li>
+      </ul>
+    </footer>
+
+  </main>
+
+  <script>
+    (function() {
+      var STORAGE_KEY = 'jp_self_study_checklist_v1';
+      var memoryState = {};
+      var storageAvailable = true;
+
+      // Safe localStorage read wrapped in try/catch
+      function loadChecklistState() {
+        try {
+          var raw = window.localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              memoryState = parsed;
+            }
+          }
+        } catch (err) {
+          storageAvailable = false;
+          var statusEl = document.getElementById('storage-status-text');
+          if (statusEl) {
+            statusEl.textContent = '⚠️ เบราว์เซอร์ของคุณจำกัดการใช้งาน localStorage (ระบบจะจำสถานะเฉพาะขณะเปิดหน้านี้)';
+          }
+        }
+      }
+
+      // Safe localStorage write wrapped in try/catch
+      function saveChecklistState() {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryState));
+        } catch (err) {
+          storageAvailable = false;
+        }
+      }
+
+      // Update progress bars (overall and per-group)
+      function updateAllProgress() {
+        var checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+        var total = checkboxes.length;
+        var checkedTotal = 0;
+        var groups = ['setup', 'anki', 'n5', 'n4', 'upper', 'habit'];
+        var groupStats = {};
+
+        for (var g = 0; g < groups.length; g++) {
+          groupStats[groups[g]] = { total: 0, checked: 0 };
+        }
+
+        for (var i = 0; i < checkboxes.length; i++) {
+          var cb = checkboxes[i];
+          var grp = cb.getAttribute('data-group');
+          var itemLi = cb.closest('.checklist-item');
+
+          if (groupStats[grp]) {
+            groupStats[grp].total += 1;
+          }
+
+          if (cb.checked) {
+            checkedTotal += 1;
+            if (groupStats[grp]) {
+              groupStats[grp].checked += 1;
+            }
+            if (itemLi) {
+              itemLi.classList.add('checked');
+            }
+          } else {
+            if (itemLi) {
+              itemLi.classList.remove('checked');
+            }
+          }
+        }
+
+        var overallPct = total > 0 ? Math.round((checkedTotal / total) * 100) : 0;
+        var overallText = document.getElementById('overall-progress-text');
+        var overallFill = document.getElementById('overall-progress-fill');
+        var overallWrap = document.getElementById('overall-progress-bar-wrap');
+
+        if (overallText) {
+          overallText.textContent = 'ความคืบหน้ารวมทั้งหมด: ' + checkedTotal + ' / ' + total + ' ข้อ (' + overallPct + '%)';
+        }
+        if (overallFill) {
+          overallFill.style.width = overallPct + '%';
+        }
+        if (overallWrap) {
+          overallWrap.setAttribute('aria-valuenow', String(overallPct));
+        }
+
+        for (var k = 0; k < groups.length; k++) {
+          var grpKey = groups[k];
+          var st = groupStats[grpKey];
+          var pct = st.total > 0 ? Math.round((st.checked / st.total) * 100) : 0;
+          var countEl = document.getElementById('count-' + grpKey);
+          var fillEl = document.getElementById('fill-' + grpKey);
+          if (countEl) {
+            countEl.textContent = st.checked + ' / ' + st.total + ' (' + pct + '%)';
+          }
+          if (fillEl) {
+            fillEl.style.width = pct + '%';
+          }
+        }
+      }
+
+      // Initialize checkboxes from saved state
+      function initChecklist() {
+        loadChecklistState();
+        var checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+        for (var i = 0; i < checkboxes.length; i++) {
+          var cb = checkboxes[i];
+          if (memoryState[cb.id] === true) {
+            cb.checked = true;
+          }
+          cb.addEventListener('change', function(e) {
+            var target = e.target;
+            memoryState[target.id] = Boolean(target.checked);
+            saveChecklistState();
+            updateAllProgress();
+          });
+        }
+        updateAllProgress();
+      }
+
+      // Initialize reset controls (using inline confirmation box instead of blocked confirm())
+      function initResetControls() {
+        var btnPrompt = document.getElementById('btn-reset-prompt');
+        var confirmBox = document.getElementById('reset-confirm-box');
+        var btnConfirm = document.getElementById('btn-confirm-reset');
+        var btnCancel = document.getElementById('btn-cancel-reset');
+
+        if (btnPrompt && confirmBox) {
+          btnPrompt.addEventListener('click', function() {
+            confirmBox.classList.toggle('visible');
+          });
+        }
+
+        if (btnCancel && confirmBox) {
+          btnCancel.addEventListener('click', function() {
+            confirmBox.classList.remove('visible');
+          });
+        }
+
+        if (btnConfirm && confirmBox) {
+          btnConfirm.addEventListener('click', function() {
+            memoryState = {};
+            try {
+              window.localStorage.removeItem(STORAGE_KEY);
+            } catch (err) {
+              storageAvailable = false;
+            }
+            var checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+              checkboxes[i].checked = false;
+            }
+            updateAllProgress();
+            confirmBox.classList.remove('visible');
+          });
+        }
+      }
+
+      // Initialize Accordion and Level Filter Buttons
+      function initGrammarSection() {
+        var headers = document.querySelectorAll('.accordion-header');
+        for (var i = 0; i < headers.length; i++) {
+          headers[i].addEventListener('click', function() {
+            var item = this.closest('.accordion-item');
+            if (!item) return;
+            var isOpen = item.classList.toggle('open');
+            this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          });
+        }
+
+        var filterBtns = document.querySelectorAll('[data-level-filter]');
+        var accordionItems = document.querySelectorAll('.accordion-item');
+
+        for (var j = 0; j < filterBtns.length; j++) {
+          filterBtns[j].addEventListener('click', function() {
+            var targetLevel = this.getAttribute('data-level-filter');
+            for (var b = 0; b < filterBtns.length; b++) {
+              filterBtns[b].classList.remove('active');
+            }
+            this.classList.add('active');
+
+            for (var a = 0; a < accordionItems.length; a++) {
+              var acc = accordionItems[a];
+              var itemLevel = acc.getAttribute('data-level');
+              var hdr = acc.querySelector('.accordion-header');
+              if (targetLevel === 'all' || itemLevel === targetLevel) {
+                acc.style.display = 'block';
+                if (targetLevel !== 'all') {
+                  acc.classList.add('open');
+                  if (hdr) hdr.setAttribute('aria-expanded', 'true');
+                }
+              } else {
+                acc.style.display = 'none';
+              }
+            }
+          });
+        }
+
+        var expandAllBtn = document.getElementById('btn-expand-all');
+        if (expandAllBtn) {
+          expandAllBtn.addEventListener('click', function() {
+            var anyClosed = false;
+            for (var a = 0; a < accordionItems.length; a++) {
+              if (accordionItems[a].style.display !== 'none' && !accordionItems[a].classList.contains('open')) {
+                anyClosed = true;
+                break;
+              }
+            }
+            for (var m = 0; m < accordionItems.length; m++) {
+              var item = accordionItems[m];
+              var hdr = item.querySelector('.accordion-header');
+              if (anyClosed) {
+                item.classList.add('open');
+                if (hdr) hdr.setAttribute('aria-expanded', 'true');
+              } else {
+                item.classList.remove('open');
+                if (hdr) hdr.setAttribute('aria-expanded', 'false');
+              }
+            }
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        initGrammarSection();
+        initChecklist();
+        initResetControls();
+      });
+    })();
+  </script>
+</body>
+</html>
