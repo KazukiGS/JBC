@@ -194,7 +194,7 @@
   // ชื่อจุดเก็บที่ใช้ในรายการที่นับแล้ว
   const locShortNames = locNames;
 
-  // อีโมจิประจำเครื่องดื่ม (เมนูที่เพิ่มเองใช้ 🍹)
+  // อีโมจิประจำเครื่องดื่ม (เมนูที่เพิ่มเองใช้ 🍹 ยกเว้นชื่อที่มีคำว่า "นม" ใช้ 🥛)
   const drinkEmoji = {
     'นมเมจิเรย์': '🥛',
     'น้ำส้ม': '🍊',
@@ -204,7 +204,7 @@
     'น้ำเก๊กฮวย': '🌼',
     'น้ำลิ้นจี่': '🍒'
   };
-  const emojiOf = (name) => drinkEmoji[name] || '🍹';
+  const emojiOf = (name) => drinkEmoji[name] || (name.includes('นม') ? '🥛' : '🍹');
 
   window.onload = () => {
     const now = new Date();
@@ -248,7 +248,7 @@
 
     const allDrinks = [
       ...defaultDrinks,
-      ...customDrinks.map(name => ({ name: name, label: `🍹 ${name}` }))
+      ...customDrinks.map(name => ({ name: name, label: `${emojiOf(name)} ${name}` }))
     ];
 
     let html = '';
