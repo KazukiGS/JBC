@@ -25,7 +25,7 @@
     .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     
     /* Summary Bar */
-    .summary-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; background: #1e293b; color: white; padding: 12px; border-radius: 12px; margin-bottom: 14px; }
+    .summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; text-align: center; background: #1e293b; color: white; padding: 12px 6px; border-radius: 12px; margin-bottom: 14px; }
     .summary-box span { display: block; font-size: 0.75rem; color: #94a3b8; }
     .summary-box strong { font-size: 1.3rem; color: #38bdf8; }
     .summary-box.total strong { color: #4ade80; }
@@ -83,6 +83,10 @@
     <div class="summary-box">
       <span>🥛 นมเมจิเรย์</span>
       <strong id="sumMilk">0</strong>
+    </div>
+    <div class="summary-box">
+      <span>🥛 นมอื่น</span>
+      <strong id="sumOther">0</strong>
     </div>
     <div class="summary-box total">
       <span>✅ รวมทั้งหมด</span>
@@ -205,6 +209,10 @@
     'น้ำลิ้นจี่': '🍒'
   };
   const emojiOf = (name) => drinkEmoji[name] || (name.includes('นม') ? '🥛' : '🍹');
+
+  // นม = ชื่อที่มีคำว่า "นม" / นมเมจิเรย์ นับแยก ส่วนนมอื่นนับเป็น "นมอื่น"
+  const MAGIC_MILK = 'นมเมจิเรย์';
+  const isMilkName = (name) => name.includes('นม');
 
   window.onload = () => {
     const now = new Date();
@@ -336,7 +344,7 @@
         id: Date.now(),
         loc: currentLoc,
         drink: currentDrink,
-        isMilk: currentDrink === 'นมเมจิเรย์',
+        isMilk: isMilkName(currentDrink),
         exp: exp,
         sortKey: sortKey,
         qty: qty
@@ -412,6 +420,7 @@
 
     let totalJuice = 0;
     let totalMilk = 0;
+    let totalOther = 0;
     let sections = [];
 
     locOrder.forEach(locKey => {
@@ -427,8 +436,8 @@
         return a.sortKey.localeCompare(b.sortKey);
       });
 
-      const juices = locItems.filter(i => !i.isMilk);
-      const milks = locItems.filter(i => i.isMilk);
+      const juices = locItems.filter(i => !isMilkName(i.drink));
+      const milks = locItems.filter(i => isMilkName(i.drink));
       const fmt = (i) => `${emojiOf(i.drink)} ${i.drink} EXP ${i.exp} (${i.qty} แกลลอน)`;
 
       let secText = `${LINE}\n📍 ${locNames[locKey]}\n${LINE}\n`;
@@ -445,20 +454,24 @@
     });
 
     items.forEach(i => {
-      if (i.isMilk) totalMilk += i.qty;
+      if (i.drink === MAGIC_MILK) totalMilk += i.qty;
+      else if (isMilkName(i.drink)) totalOther += i.qty;
       else totalJuice += i.qty;
     });
 
     document.getElementById('sumJuice').innerText = totalJuice;
     document.getElementById('sumMilk').innerText = totalMilk;
-    document.getElementById('sumAll').innerText = totalJuice + totalMilk;
+    document.getElementById('sumOther').innerText = totalOther;
+    document.getElementById('sumAll').innerText = totalJuice + totalMilk + totalOther;
 
     let finalOutput = `📅 Update นม-น้ำผลไม้ ${updateDate}\n\n`;
     if (sections.length > 0) {
       finalOutput += sections.join('\n\n') + '\n\n';
     }
     finalOutput += `${LINE}\n📊 สรุปรวม\n${LINE}\n`;
-    finalOutput += `🍉 น้ำผลไม้ ${totalJuice} แกลลอน\n🥛 นมเมจิเรย์ ${totalMilk} แกลลอน\n✅ รวมทั้งหมด ${totalJuice + totalMilk} แกลลอน`;
+    finalOutput += `🍉 น้ำผลไม้ ${totalJuice} แกลลอน\n🥛 นมเมจิเรย์ ${totalMilk} แกลลอน\n`;
+    if (totalOther > 0) finalOutput += `🥛 นมอื่นๆ ${totalOther} แกลลอน\n`;
+    finalOutput += `✅ รวมทั้งหมด ${totalJuice + totalMilk + totalOther} แกลลอน`;
 
     document.getElementById('outputText').value = finalOutput;
   }
