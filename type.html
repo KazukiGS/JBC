@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KeyFlow — ฝึกพิมพ์สัมผัส ภาษาอังกฤษ &amp; ภาษาไทย</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-faint: #94a3b8;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --accent-text: #3730a3;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --error: #dc2626;
+      --error-soft: #fef2f2;
+      --warn-bg: #fffbeb;
+      --warn-border: #fde68a;
+      --warn-text: #92400e;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 8px 24px -6px rgba(15, 23, 42, 0.08);
+
+      /* Finger Palette (Calm & Distinct) */
+      --f-pinky: #e11d48;
+      --f-pinky-bg: #fff1f2;
+      --f-ring: #d97706;
+      --f-ring-bg: #fffbeb;
+      --f-middle: #059669;
+      --f-middle-bg: #ecfdf5;
+      --f-lindex: #0284c7;
+      --f-lindex-bg: #f0f9ff;
+      --f-rindex: #7c3aed;
+      --f-rindex-bg: #f5f3ff;
+      --f-thumb: #475569;
+      --f-thumb-bg: #f1f5f9;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-soft: #1e293b;
+      --border: #263244;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --accent: #818cf8;
+      --accent-soft: rgba(99, 102, 241, 0.16);
+      --accent-text: #c7d2fe;
+      --success: #34d399;
+      --success-soft: rgba(16, 185, 129, 0.14);
+      --error: #f87171;
+      --error-soft: rgba(239, 68, 68, 0.15);
+      --warn-bg: rgba(245, 158, 11, 0.14);
+      --warn-border: rgba(245, 158, 11, 0.35);
+      --warn-text: #fcd34d;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 12px 28px -8px rgba(0, 0, 0, 0.45);
+
+      --f-pinky: #fb7185;
+      --f-pinky-bg: rgba(244, 63, 94, 0.14);
+      --f-ring: #fbbf24;
+      --f-ring-bg: rgba(245, 158, 11, 0.14);
+      --f-middle: #34d399;
+      --f-middle-bg: rgba(16, 185, 129, 0.14);
+      --f-lindex: #38bdf8;
+      --f-lindex-bg: rgba(14, 165, 233, 0.14);
+      --f-rindex: #a78bfa;
+      --f-rindex-bg: rgba(139, 92, 246, 0.14);
+      --f-thumb: #94a3b8;
+      --f-thumb-bg: rgba(148, 163, 184, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.2s ease, color 0.2s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    /* Top Header */
+    .topbar {
+      height: 62px;
+      padding: 0 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--accent);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .brand span.sub {
+      font-weight: 400;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    /* Language Segmented Switch */
+    .lang-switch {
+      display: inline-flex;
+      background: var(--surface-soft);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+
+    .lang-btn {
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .icon-btn.active {
+      background: var(--accent-soft);
+      border-color: transparent;
+      color: var(--accent-text);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+    }
+
+    /* Main Workspace */
+    .workspace {
+      flex: 1;
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 24px 32px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Sidebar Roadmap */
+    .sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 82px;
+      max-height: calc(100vh - 104px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .sidebar-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .sidebar-progress-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .overall-bar {
+      height: 6px;
+      background: var(--surface-soft);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .overall-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+
+    .level-list {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+    }
+
+    .level-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .level-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 99px;
+    }
+
+    .level-item {
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 11px;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+    }
+
+    .level-item:hover {
+      background: var(--surface-soft);
+    }
+
+    .level-item.active {
+      background: var(--accent-soft);
+      border-color: rgba(79, 70, 229, 0.25);
+    }
+
+    .level-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .level-item.active .level-num {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .level-item.completed .level-num {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .level-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .level-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .level-keys-preview {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .level-stars {
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+
+    .level-stars .empty {
+      color: var(--border);
+    }
+
+    /* Main Practice Stage */
+    .stage-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .lesson-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 24px 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .lesson-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .lesson-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--accent-text);
+      background: var(--accent-soft);
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+    }
+
+    .lesson-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .lesson-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .new-keys-strip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .new-keys-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+
+    .mini-cap {
+      min-width: 28px;
+      height: 28px;
+      padding: 0 7px;
+      border-radius: 7px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    /* 3-Stage Stepper */
+    .stage-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .stage-tab {
+      padding: 10px 12px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      text-align: left;
+      transition: all 0.16s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .stage-tab:hover {
+      border-color: var(--accent);
+    }
+
+    .stage-tab.active {
+      background: var(--surface);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .stage-tab-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stage-tab-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .stage-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--border);
+      color: transparent;
+      font-size: 0.72rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .stage-tab.done .stage-check {
+      background: var(--success);
+      color: #fff;
+    }
+
+    /* Metrics Strip */
+    .metrics-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--surface-soft);
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metrics-group {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .metric {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .metric-lbl {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .restart-btn {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 6px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 0.15s ease;
+    }
+
+    .restart-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    /* Progress Bar inside Lesson */
+    .drill-progress {
+      height: 4px;
+      background: var(--surface-soft);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .drill-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.14s ease;
+    }
+
+    /* Language Mismatch Banner */
+    .lang-alert {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-border);
+      color: var(--warn-text);
+      font-size: 0.84rem;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+
+    .lang-alert.show {
+      display: flex;
+    }
+
+    /* Typing Display Canvas */
+    .typing-box {
+      position: relative;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 24px;
+      min-height: 146px;
+      cursor: text;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .typing-box:focus-within,
+    .typing-box.focused {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .typing-box.shake {
+      animation: shake 0.22s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    .typing-stream {
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+      font-size: 1.65rem;
+      line-height: 2.15;
+      letter-spacing: 0.02em;
+      word-break: break-word;
+    }
+
+    .typing-stream.thai-font {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      font-size: 1.85rem;
+      line-height: 2.2;
+      letter-spacing: 0.015em;
+    }
+
+    .cluster {
+      position: relative;
+      display: inline-block;
+      border-radius: 5px;
+      padding: 0 1px;
+      color: var(--text-faint);
+      transition: color 0.1s ease, background 0.1s ease;
+    }
+
+    .cluster.space-cluster {
+      min-width: 0.55em;
+    }
+
+    .cluster.space-cluster.active::after {
+      content: '␣';
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.72em;
+      color: var(--accent);
+      opacity: 0.85;
+    }
+
+    .cluster.done {
+      color: var(--text);
+    }
+
+    .cluster.done.had-error {
+      color: var(--error);
+      background: var(--error-soft);
+    }
+
+    .cluster.active {
+      color: var(--text);
+      background: var(--accent-soft);
+      box-shadow: inset 0 -2.5px 0 var(--accent);
+    }
+
+    .cluster.active.wrong-flash {
+      background: var(--error-soft);
+      box-shadow: inset 0 -2.5px 0 var(--error);
+      color: var(--error);
+    }
+
+    .sub-dots {
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 3px;
+      pointer-events: none;
+    }
+
+    .sub-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .sub-dot.filled {
+      background: var(--success);
+    }
+
+    .sub-dot.now {
+      background: var(--accent);
+    }
+
+    /* Next Key Cue Bar */
+    .next-cue-bar {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .cue-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .cue-keycap {
+      min-width: 28px;
+      height: 26px;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .finger-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Virtual Keyboard Card */
+    .keyboard-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .keyboard-card.hidden {
+      display: none;
+    }
+
+    .kb-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 820px;
+      margin: 0 auto;
+      user-select: none;
+    }
+
+    .kb-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .key {
+      position: relative;
+      height: 48px;
+      flex: 1;
+      min-width: 0;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      border-bottom-width: 3px;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s ease, background 0.12s ease, border-color 0.12s ease;
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+    }
+
+    .key.wide-15 { flex: 1.5; }
+    .key.wide-175 { flex: 1.75; }
+    .key.wide-2 { flex: 2; }
+    .key.wide-225 { flex: 2.25; }
+    .key.wide-6 { flex: 6.2; }
+
+    .key.special {
+      background: var(--surface-soft);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .key .k-main {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .key .k-sub {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-size: 0.65rem;
+      color: var(--text-faint);
+      line-height: 1;
+    }
+
+    .key.home-bump::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      width: 12px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--text-faint);
+    }
+
+    /* Subtle Finger Tint Bar on Top of Key */
+    .key[data-finger="lp"] { border-top: 3px solid var(--f-pinky); }
+    .key[data-finger="rp"] { border-top: 3px solid var(--f-pinky); }
+    .key[data-finger="lr"], .key[data-finger="rr"] { border-top: 3px solid var(--f-ring); }
+    .key[data-finger="lm"], .key[data-finger="rm"] { border-top: 3px solid var(--f-middle); }
+    .key[data-finger="li"] { border-top: 3px solid var(--f-lindex); }
+    .key[data-finger="ri"] { border-top: 3px solid var(--f-rindex); }
+    .key[data-finger="th"] { border-top: 3px solid var(--f-thumb); }
+
+    /* Target Highlight */
+    .key.target {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px -4px rgba(79, 70, 229, 0.48);
+    }
+
+    .key.target .k-main,
+    .key.target .k-sub {
+      color: #fff;
+    }
+
+    .key.target.home-bump::after {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .key.target-shift {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .key.pressed {
+      transform: translateY(2px);
+      border-bottom-width: 1px;
+    }
+
+    .key.wrong-key {
+      background: var(--error);
+      border-color: var(--error);
+      color: #fff;
+    }
+    .key.wrong-key .k-main,
+    .key.wrong-key .k-sub {
+      color: #fff;
+    }
+
+    /* Finger Legend */
+    .finger-legend {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Completion Overlay Card */
+    .result-overlay {
+      display: none;
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      animation: fadeUp 0.25s ease;
+    }
+
+    .result-overlay.show {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .result-stars {
+      font-size: 1.5rem;
+      letter-spacing: 4px;
+      color: #f59e0b;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .result-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .result-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+
+    .result-stat-lbl {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .missed-box {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .missed-chip {
+      padding: 3px 9px;
+      border-radius: 7px;
+      background: var(--error-soft);
+      color: var(--error);
+      font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+    }
+
+    .btn-secondary {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+    }
+
+    /* Hidden Input for Mobile/IME Capture Fallback */
+    #hidden-input {
+      position: fixed;
+      opacity: 0;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+      .sidebar {
+        display: none;
+        position: fixed;
+        inset: 62px 0 0 0;
+        max-height: none;
+        z-index: 40;
+        border-radius: 0;
+      }
+      .sidebar.open {
+        display: flex;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+      .stage-tabs {
+        grid-template-columns: 1fr;
+      }
+      .brand span.sub {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 0 12px;
+      }
+      .lesson-card {
+        padding: 16px;
+      }
+      .key {
+        height: 40px;
+      }
+      .key .k-main {
+        font-size: 0.82rem;
+      }
+      .typing-stream {
+        font-size: 1.35rem;
+      }
+      .typing-stream.thai-font {
+        font-size: 1.5rem;
+      }
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">KF</div>
+      <span>KeyFlow <span class="sub">ฝึกพิมพ์สัมผัส</span></span>
+    </div>
+
+    <div class="lang-switch" role="tablist" aria-label="เลือกภาษา">
+      <button class="lang-btn active" id="btn-lang-th" data-lang="th">ภาษาไทย (เกษมณี)</button>
+      <button class="lang-btn" id="btn-lang-en" data-lang="en">English (QWERTY)</button>
+    </div>
+
+    <div class="top-actions">
+      <button class="icon-btn mobile-menu-btn" id="btn-mobile-levels">บทเรียน</button>
+      <button class="icon-btn active" id="btn-toggle-kb" title="แสดง/ซ่อนคีย์บอร์ด">แป้นพิมพ์</button>
+      <button class="icon-btn active" id="btn-toggle-sound" title="เปิด/ปิดเสียงพิมพ์">เสียง</button>
+      <button class="icon-btn" id="btn-toggle-theme" title="สลับโหมดสี">ธีมมืด</button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="workspace">
+    <!-- Sidebar Roadmap -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title" id="sidebar-title">เส้นทางการฝึก (12 เลเวล)</span>
+        <span class="sidebar-progress-text" id="overall-progress-text">0/36 ด่าน</span>
+      </div>
+      <div class="overall-bar">
+        <div class="overall-bar-fill" id="overall-bar-fill"></div>
+      </div>
+      <div class="level-list" id="level-list"></div>
+    </aside>
+
+    <!-- Practice Area -->
+    <section class="stage-column">
+      <div class="lesson-card">
+        <div class="lesson-top">
+          <div>
+            <div class="lesson-badge" id="lesson-badge">Level 1</div>
+            <h1 class="lesson-title" id="lesson-title">แป้นเหย้า 8 ปุ่มหลัก</h1>
+            <p class="lesson-desc" id="lesson-desc">วางนิ้วบนแป้นเหย้าแล้วเคาะให้เป็นจังหวะโดยไม่มองแป้น</p>
+          </div>
+          <div class="new-keys-strip" id="new-keys-strip"></div>
+        </div>
+
+        <!-- 3-Stage Tabs -->
+        <div class="stage-tabs" id="stage-tabs"></div>
+
+        <!-- Live Metrics -->
+        <div class="metrics-row">
+          <div class="metrics-group">
+            <div class="metric">
+              <span class="metric-val" id="stat-wpm">0</span>
+              <span class="metric-lbl">WPM</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val" id="stat-acc">100%</span>
+              <span class="metric-lbl">แม่นยำ</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val" id="stat-time">0:00</span>
+              <span class="metric-lbl">เวลา</span>
+            </div>
+          </div>
+          <button class="restart-btn" id="btn-restart" title="กด Esc เพื่อเริ่มใหม่">เริ่มใหม่ (Esc)</button>
+        </div>
+
+        <!-- Drill Progress Bar -->
+        <div class="drill-progress">
+          <div class="drill-progress-fill" id="drill-progress-fill"></div>
+        </div>
+
+        <!-- Language Layout Alert -->
+        <div class="lang-alert" id="lang-alert">
+          <span id="lang-alert-text">คีย์บอร์ดของคุณยังไม่ได้สลับภาษา</span>
+        </div>
+
+        <!-- Typing Box -->
+        <div class="typing-box focused" id="typing-box" tabindex="0">
+          <div class="typing-stream" id="typing-stream"></div>
+        </div>
+
+        <!-- Next Key & Finger Cue -->
+        <div class="next-cue-bar">
+          <div class="cue-pill">
+            <span>ปุ่มถัดไป</span>
+            <span class="cue-keycap" id="cue-key">-</span>
+            <span class="finger-dot" id="cue-dot"></span>
+            <span id="cue-finger">วางนิ้วบนแป้นเหย้า</span>
+          </div>
+          <span id="cue-hint">พิมพ์ต่อได้เลย • เน้นแม่นยำก่อนความเร็ว</span>
+        </div>
+
+        <!-- Result Summary -->
+        <div class="result-overlay" id="result-overlay">
+          <div class="result-header">
+            <div>
+              <strong style="font-size: 1.05rem;">จบด่านแล้ว! ยอดเยี่ยมมาก</strong>
+              <p id="result-feedback" style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;"></p>
+            </div>
+            <div class="result-stars" id="result-stars">★★★</div>
+          </div>
+          <div class="result-grid">
+            <div class="result-stat">
+              <div class="result-stat-val" id="res-wpm">0</div>
+              <div class="result-stat-lbl">คำต่อนาที (WPM)</div>
+            </div>
+            <div class="result-stat">
+              <div class="result-stat-val" id="res-acc">100%</div>
+              <div class="result-stat-lbl">ความแม่นยำ</div>
+            </div>
+            <div class="result-stat">
+              <div class="result-stat-val" id="res-time">0:00</div>
+              <div class="result-stat-lbl">เวลาที่ใช้</div>
+            </div>
+          </div>
+          <div class="missed-box" id="missed-box"></div>
+          <div class="result-actions">
+            <button class="btn-primary" id="btn-next-stage">ด่านถัดไป (Enter)</button>
+            <button class="btn-secondary" id="btn-retry-stage">ฝึกด่านนี้อีกครั้ง (Esc)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Virtual Keyboard -->
+      <div class="keyboard-card" id="keyboard-card">
+        <div class="kb-grid" id="kb-grid"></div>
+        <div class="finger-legend">
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-pinky)"></span>นิ้วก้อย</span>
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-ring)"></span>นิ้วนาง</span>
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-middle)"></span>นิ้วกลาง</span>
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-lindex)"></span>นิ้วชี้ซ้าย</span>
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-rindex)"></span>นิ้วชี้ขวา</span>
+          <span class="legend-item"><span class="finger-dot" style="background: var(--f-thumb)"></span>นิ้วโป้ง (เว้นวรรค)</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <input type="text" id="hidden-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+
+  <script>
+    /* ============================================================
+       1. KEYBOARD LAYOUT & FINGER METADATA (US QWERTY + KEDMANEE)
+       ============================================================ */
+    const FINGER_INFO = {
+      lp: { label: 'นิ้วก้อยซ้าย', color: 'var(--f-pinky)', hand: 'left' },
+      lr: { label: 'นิ้วนางซ้าย', color: 'var(--f-ring)', hand: 'left' },
+      lm: { label: 'นิ้วกลางซ้าย', color: 'var(--f-middle)', hand: 'left' },
+      li: { label: 'นิ้วชี้ซ้าย', color: 'var(--f-lindex)', hand: 'left' },
+      ri: { label: 'นิ้วชี้ขวา', color: 'var(--f-rindex)', hand: 'right' },
+      rm: { label: 'นิ้วกลางขวา', color: 'var(--f-middle)', hand: 'right' },
+      rr: { label: 'นิ้วนางขวา', color: 'var(--f-ring)', hand: 'right' },
+      rp: { label: 'นิ้วก้อยขวา', color: 'var(--f-pinky)', hand: 'right' },
+      th: { label: 'นิ้วโป้ง', color: 'var(--f-thumb)', hand: 'thumb' }
+    };
+
+    const KEY_ROWS = [
+      [
+        { code: 'Backquote', en: '`', enShift: '~', th: '_', thShift: '%', finger: 'lp' },
+        { code: 'Digit1', en: '1', enShift: '!', th: 'ๅ', thShift: '+', finger: 'lp' },
+        { code: 'Digit2', en: '2', enShift: '@', th: '/', thShift: '๑', finger: 'lr' },
+        { code: 'Digit3', en: '3', enShift: '#', th: '-', thShift: '๒', finger: 'lm' },
+        { code: 'Digit4', en: '4', enShift: '$', th: 'ภ', thShift: '๓', finger: 'li' },
+        { code: 'Digit5', en: '5', enShift: '%', th: 'ถ', thShift: '๔', finger: 'li' },
+        { code: 'Digit6', en: '6', enShift: '^', th: 'ุ', thShift: 'ู', finger: 'ri' },
+        { code: 'Digit7', en: '7', enShift: '&', th: 'ึ', thShift: '฿', finger: 'ri' },
+        { code: 'Digit8', en: '8', enShift: '*', th: 'ค', thShift: '๕', finger: 'rm' },
+        { code: 'Digit9', en: '9', enShift: '(', th: 'ต', thShift: '๖', finger: 'rr' },
+        { code: 'Digit0', en: '0', enShift: ')', th: 'จ', thShift: '๗', finger: 'rp' },
+        { code: 'Minus', en: '-', enShift: '_', th: 'ข', thShift: '๘', finger: 'rp' },
+        { code: 'Equal', en: '=', enShift: '+', th: 'ช', thShift: '๙', finger: 'rp' },
+        { code: 'Backspace', label: '⌫', special: true, width: 'wide-175' }
+      ],
+      [
+        { code: 'Tab', label: 'Tab', special: true, width: 'wide-15' },
+        { code: 'KeyQ', en: 'q', enShift: 'Q', th: 'ๆ', thShift: '๐', finger: 'lp' },
+        { code: 'KeyW', en: 'w', enShift: 'W', th: 'ไ', thShift: '"', finger: 'lr' },
+        { code: 'KeyE', en: 'e', enShift: 'E', th: 'ำ', thShift: 'ฎ', finger: 'lm' },
+        { code: 'KeyR', en: 'r', enShift: 'R', th: 'พ', thShift: 'ฑ', finger: 'li' },
+        { code: 'KeyT', en: 't', enShift: 'T', th: 'ะ', thShift: 'ธ', finger: 'li' },
+        { code: 'KeyY', en: 'y', enShift: 'Y', th: 'ั', thShift: 'ํ', finger: 'ri' },
+        { code: 'KeyU', en: 'u', enShift: 'U', th: 'ี', thShift: '๊', finger: 'ri' },
+        { code: 'KeyI', en: 'i', enShift: 'I', th: 'ร', thShift: 'ณ', finger: 'rm' },
+        { code: 'KeyO', en: 'o', enShift: 'O', th: 'น', thShift: 'ฯ', finger: 'rr' },
+        { code: 'KeyP', en: 'p', enShift: 'P', th: 'ย', thShift: 'ญ', finger: 'rp' },
+        { code: 'BracketLeft', en: '[', enShift: '{', th: 'บ', thShift: 'ฐ', finger: 'rp' },
+        { code: 'BracketRight', en: ']', enShift: '}', th: 'ล', thShift: ',', finger: 'rp' },
+        { code: 'Backslash', en: '\\', enShift: '|', th: 'ฃ', thShift: 'ฅ', finger: 'rp', width: 'wide-15' }
+      ],
+      [
+        { code: 'CapsLock', label: 'Caps', special: true, width: 'wide-175' },
+        { code: 'KeyA', en: 'a', enShift: 'A', th: 'ฟ', thShift: 'ฤ', finger: 'lp' },
+        { code: 'KeyS', en: 's', enShift: 'S', th: 'ห', thShift: 'ฆ', finger: 'lr' },
+        { code: 'KeyD', en: 'd', enShift: 'D', th: 'ก', thShift: 'ฏ', finger: 'lm' },
+        { code: 'KeyF', en: 'f', enShift: 'F', th: 'ด', thShift: 'โ', finger: 'li', home: true },
+        { code: 'KeyG', en: 'g', enShift: 'G', th: 'เ', thShift: 'ฌ', finger: 'li' },
+        { code: 'KeyH', en: 'h', enShift: 'H', th: '้', thShift: '็', finger: 'ri' },
+        { code: 'KeyJ', en: 'j', enShift: 'J', th: '่', thShift: '๋', finger: 'ri', home: true },
+        { code: 'KeyK', en: 'k', enShift: 'K', th: 'า', thShift: 'ษ', finger: 'rm' },
+        { code: 'KeyL', en: 'l', enShift: 'L', th: 'ส', thShift: 'ศ', finger: 'rr' },
+        { code: 'Semicolon', en: ';', enShift: ':', th: 'ว', thShift: 'ซ', finger: 'rp' },
+        { code: 'Quote', en: "'", enShift: '"', th: 'ง', thShift: '.', finger: 'rp' },
+        { code: 'Enter', label: 'Enter', special: true, width: 'wide-2' }
+      ],
+      [
+        { code: 'ShiftLeft', label: 'Shift ซ้าย', special: true, width: 'wide-225', finger: 'lp' },
+        { code: 'KeyZ', en: 'z', enShift: 'Z', th: 'ผ', thShift: '(', finger: 'lp' },
+        { code: 'KeyX', en: 'x', enShift: 'X', th: 'ป', thShift: ')', finger: 'lr' },
+        { code: 'KeyC', en: 'c', enShift: 'C', th: 'แ', thShift: 'ฉ', finger: 'lm' },
+        { code: 'KeyV', en: 'v', enShift: 'V', th: 'อ', thShift: 'ฮ', finger: 'li' },
+        { code: 'KeyB', en: 'b', enShift: 'B', th: 'ิ', thShift: 'ฺ', finger: 'li' },
+        { code: 'KeyN', en: 'n', enShift: 'N', th: 'ื', thShift: '์', finger: 'ri' },
+        { code: 'KeyM', en: 'm', enShift: 'M', th: 'ท', thShift: '?', finger: 'ri' },
+        { code: 'Comma', en: ',', enShift: '<', th: 'ม', thShift: 'ฒ', finger: 'rm' },
+        { code: 'Period', en: '.', enShift: '>', th: 'ใ', thShift: 'ฬ', finger: 'rr' },
+        { code: 'Slash', en: '/', enShift: '?', th: 'ฝ', thShift: 'ฦ', finger: 'rp' },
+        { code: 'ShiftRight', label: 'Shift ขวา', special: true, width: 'wide-225', finger: 'rp' }
+      ],
+      [
+        { code: 'Space', label: 'Space (เว้นวรรค)', en: ' ', enShift: ' ', th: ' ', thShift: ' ', finger: 'th', width: 'wide-6' }
+      ]
+    ];
+
+    /* ============================================================
+       2. CURRICULUM DATA (12 LEVELS x 3 STAGES FOR TH & EN)
+       ============================================================ */
+    const CURRICULUM = {
+      th: [
+        {
+          id: 1,
+          title: 'แป้นเหย้า 8 ปุ่มหลัก',
+          desc: 'วางนิ้วชี้ซ้ายที่ ด และนิ้วชี้ขวาที่ ่ (ปุ่มนูน) เคาะสลับให้จำตำแหน่งพื้นฐาน',
+          newKeys: ['ฟ', 'ห', 'ก', 'ด', '่', 'า', 'ส', 'ว'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'จำตำแหน่ง 8 ปุ่มหลัก', text: 'ดด ่่ กก าา หห สส ฟฟ วว กด า่ หส ฟว ดก ่า สห วฟ' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ไล่จังหวะซ้าย-ขวา', text: 'ฟหกด ่าสว ดกหฟ วสา่ กดหฟ าสว่ ฟดหก ว่สา ด่า ก่า ห่า ส่า ว่า' },
+            { name: 'ฝึกคำจริง', sub: 'คำจากแป้นเหย้า', text: 'กา ด่า กาด สาด วาด ฟาด หาว สาว กาว ดาว หาก สาก ฟาก หวาด กวาด ด่าว่า ฟาดดาว' }
+          ]
+        },
+        {
+          id: 2,
+          title: 'ขยายนิ้วชี้กลาง & ก้อยขวา',
+          desc: 'เอื้อมนิ้วชี้ซ้ายไป เ นิ้วชี้ขวาไป ้ และนิ้วก้อยขวาไป ง แล้วรีบชักกลับแป้นเหย้า',
+          newKeys: ['เ', '้', 'ง'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'เอื้อมนิ้ว เ ้ ง', text: 'เเ ้้ งง เด ้่ เง งเ ดเ ่้ ว้ง กเก าส้ หง วเง' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมแป้นเหย้า', text: 'เก เด เห เส เว เฟ ก้า ด้า ห้า ส้า ว้า กาง หาง สาง วาง เงา เก่า เก้า เว้า ก้าว' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมด่าน 1-2', text: 'เก่ง เด้ง เหงา เสา เกา เดา เหว ห้าง ก้าง กางเกง สว่าง ว่าง ก้าว ห้าว เก้า เหง้า เก้ง สาวเหงา' }
+          ]
+        },
+        {
+          id: 3,
+          title: 'แถวบน: คู่นิ้วชี้หลัก (+2 ปุ่ม)',
+          desc: 'ก้าวขึ้นแถวบนด้วยนิ้วชี้ซ้าย พ และนิ้วชี้ขวา ี แล้วกลับลงมาที่ ด และ ่',
+          newKeys: ['พ', 'ี'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'ชี้ซ้าย พ / ชี้ขวา ี', text: 'พพ ีี ดพ ่ี กพี พี ีพ พด ีา พา พี่ พี้ พีก พีด พีว' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมแถวเหย้า-บน', text: 'พา พ่า พ้า พาง พาว เพ พี พี่ พี้ กี ดี สี วี ฟี กี้ ดี้ สี้ วี้' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมด่าน 1-3', text: 'พี่ พี่สาว พา พาด พาง พวง เพ ดี สี วี หวี สี่ สีกา ดีดี สี่ห้า พาพี่สาว สีสว่าง ดีเก่ง' }
+          ]
+        },
+        {
+          id: 4,
+          title: 'แถวบน: คู่นิ้วชี้เอื้อม (+2 ปุ่ม)',
+          desc: 'เอื้อมนิ้วชี้ซ้ายไป ะ และนิ้วชี้ขวาไป ั ฝึกจังหวะการเหยียดนิ้วแล้วชักกลับ',
+          newKeys: ['ะ', 'ั'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'เอื้อมบน ะ และ ั', text: 'ะะ ัั ดะ ั่ พะ พั กะ กั ดะ ดั หะ หั สะ สั วะ วั ฟะ ฟั' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมคำสระ ะ / ั', text: 'กะ กัก กัด กัง ดัก ดัง หัก สัก สัง วัก วัง ฟัก ฟัง พัก พัง กะดัก พะวัง' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมด่าน 1-4', text: 'พัก พัง พัด กัด กัก กะ ดัก ดัง ดัด หัก หัด สัก สั่ง วัด วัง ฟัก ฟัง ฟัด พะวง สักพัก พักวัด ฟังดัง' }
+          ]
+        },
+        {
+          id: 5,
+          title: 'แถวบน: คู่นิ้วกลาง (+2 ปุ่ม)',
+          desc: 'ยกนิ้วกลางซ้ายขึ้นไป ำ และนิ้วกลางขวาขึ้นไป ร ฝึกคำควบกล้ำเบื้องต้น',
+          newKeys: ['ำ', 'ร'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'กลางซ้าย ำ / กลางขวา ร', text: 'ำำ รร กำ าร ดำ ร่ หำ รส ฟำ รว พำ รี ะร ำั กร สร' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมคำ ร และ ำ', text: 'กำ ดำ สำ พำ รำ รัก รัด รัง ราง ราว รี รี่ รี้ เรา เร่ง กรำ พรำ สรำ' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมด่าน 1-5', text: 'รัก รัง ราง ราว เรา เร่ง รำ ร่ำ ราก กำ ดำ กระดาก กระเพรา พระ พราก สร้าง สระ สวด สร่าง รักเรา เร่งสร้าง' }
+          ]
+        },
+        {
+          id: 6,
+          title: 'แถวบน: นาง-ก้อยครบแถวบน',
+          desc: 'เก็บปุ่มแถวบนที่เหลือ ไ น ๆ ย บ ล เพื่อพิมพ์คำที่ใช้บ่อยได้หลากหลายขึ้นมาก',
+          newKeys: ['ไ', 'น', 'ๆ', 'ย', 'บ', 'ล'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'นิ้วนางและก้อยแถวบน', text: 'ไไ นน ๆๆ ยย บบ ลล ไน นไ ยบ บล ลย ไๆ นย ไบ ลน ใด ใน ไล่' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'วอร์มแถวบนเต็ม', text: 'ไห ไส ไว ไก่ ไกล ไฟ ใน นา นาง นาน นับ นัด ยา ยาว ยาก ยาง บ้าน บาง บาน ลา ลาก ลาย' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมครบ 2 แถว', text: 'ไก่ ไกล ไฟ ไว ใน นา นาน นับ นัด น้ำ ยา ยาว ยาก บ้าน บาง บาน บวก ลา ลาย ลำ เล่า เล่น เลย ดีๆ ไวๆ สบาย น่ารัก สวัสดี หลากหลาย' }
+          ]
+        },
+        {
+          id: 7,
+          title: 'แถวล่าง: คู่นิ้วชี้ (+4 ปุ่ม)',
+          desc: 'ลดนิ้วชี้ลงแถวล่าง ซ้ายกด อ ิ ขวากด ื ท ระวังอย่าให้ข้อมือเกร็ง',
+          newKeys: ['อ', 'ิ', 'ื', 'ท'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'ลงแถวล่าง อ ิ ื ท', text: 'ออ ิิ ืื ทท ดอ กิ สื วท อิ ือ ทอ ทิ ทือ ออ ิื ทท' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมสระ ิ ื และ อ ท', text: 'อา อาน อ่าน อ่าง ออก ออน อิง อิน อืด อื่น ทา ทาง ทาน ทับ ทัก ทัน ทิ้ง ที ที่' },
+            { name: 'ฝึกคำจริง', sub: 'คำประสมด่าน 1-7', text: 'ออก อ่าน อ่าง อิน อิง อื่น ทาน ทาง ทับ ทัก ทัน ที ที่ ทิ้ง ท่าทาง ท้อง ทอง ทะเล เที่ยว เที่ยง ดิน กิน ลิ้น บิน ยืน ลื่น หรือ หนังสือ ทำดี ทำอาหาร' }
+          ]
+        },
+        {
+          id: 8,
+          title: 'แถวล่าง: กลาง-นาง-ก้อย ครบ 3 แถว',
+          desc: 'เพิ่ม แ ม ป ใ ผ ฝ ตอนนี้คุณพิมพ์ตัวอักษรหลักได้ครบทั้ง 3 แถวแล้ว',
+          newKeys: ['แ', 'ม', 'ป', 'ใ', 'ผ', 'ฝ'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'นิ้วกลาง-นาง-ก้อยแถวล่าง', text: 'แแ มม ปป ใใ ผผ ฝฝ แม ปใ ผฝ แป มใ ผแ ฝม ใบ ใฝ่ ใส ใหม่' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'วอร์ม 3 แถวหลัก', text: 'แมว แม่ แดง แสง แรง แปลง ปลา ป่า ปาก ปิด ปี ใหญ่ ใหม่ ผัก ผัด ผ้า ผิด ฝน ฝัน ฝาก ฝา' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคสั้น 3 แถว', text: 'แม่ แมว แสง แดง แรง แพง ปลา ป่า ปาก ปิด ไปไหน ใบไม้ ใหญ่ ใหม่ ใกล้ ใส่ ผัก ผัด ผ้า ผม ฝน ฝัน มือ มาก เมือง เมื่อ ทำไม ทำงาน แม่ทำผัดผัก ปลาว่ายน้ำ' }
+          ]
+        },
+        {
+          id: 9,
+          title: 'แถวบนสุด (ไม่กด Shift)',
+          desc: 'เอื้อมขึ้นแถวบนสุดเพื่อพิมพ์ ภ ถ ุ ึ ค ต จ ข ช เน้นการชักนิ้วกลับแป้นเหย้า',
+          newKeys: ['ภ', 'ถ', 'ุ', 'ึ', 'ค', 'ต', 'จ', 'ข', 'ช'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'เอื้อมแถวบนสุด', text: 'ภภ ถถ ุุ ึึ คค ตต จจ ขข ชช ภถ ุึ คต จข ชข ถูก คุก จุด ชอบ' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมทุกแป้นชั้นปกติ', text: 'ภาพ ภาชนะ ถุง ถนน ถูก ถาม คิด คุย คน คำ ตก ตา ตาม ตื่น ต้น ใจ จาน จด จริง ของ ขาว ข้าว ขับ ชอบ ช่วย ชาย ชื่อ' },
+            { name: 'ฝึกคำจริง', sub: 'คำศัพท์ชีวิตประจำวัน', text: 'ภาค ภาระ ถนนใหญ่ ถูกใจ คนเก่ง คิดถึง ครอบครัว ต้นไม้ ตื่นเช้า จริงใจ จดจำ ข้าวผัด ขับรถ ช่วยเหลือ ชีวิตประจำวัน ฝึกฝนทุกวัน จุดเริ่มต้น' }
+          ]
+        },
+        {
+          id: 10,
+          title: 'ตัวยก (Shift) แถวเหย้าและแถวล่าง',
+          desc: 'กด Shift ด้วยนิ้วก้อยมือตรงข้ามเสมอ เช่น พิมพ์ โ (มือซ้าย) ให้กด Shift ขวา',
+          newKeys: ['โ', 'ซ', 'ศ', 'ษ', '็', '๋', '์', 'ฉ', 'ฮ', 'ฤ', 'ฬ'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'ฝึกจังหวะ Shift มือตรงข้าม', text: 'โโ ซซ ศศ ษษ ็็ ๋๋ ์์ ฮฮ ฉฉ โซ ศษ ฤฆ ฉฮ ฒฬ เด็ก โต๊ะ' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'คำที่ใช้ Shift บ่อย', text: 'โลก โต โยน โรงเรียน โทรศัพท์ ซื้อ ซ้าย ซ่อม ศาล ศึกษา ภาษา เด็ก เป็น เจ็บ เห็น พิมพ์ ฉลาด ฉัน เฮฮา ฤดู กีฬา' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคผสมตัวยก', text: 'โรงเรียน โทรศัพท์ โลกกว้าง ซื้อของ ซ้ายขวา ศึกษาภาษา ภาษาไทย เด็กดี เป็นคนเก่ง ฉันชอบพิมพ์สัมผัส ฤดูฝน เฮฮา กีฬา ฉลาด สัตว์โลก' }
+          ]
+        },
+        {
+          id: 11,
+          title: 'ตัวยก (Shift) แถวบน & ครบทุกอักษร',
+          desc: 'เก็บตัวอักษรตัวยกชุดสุดท้าย ธ ณ ญ ฐ ู ฎ ฑ ๊ ฯ ให้ครบ 44 พยัญชนะไทย',
+          newKeys: ['ธ', 'ณ', 'ญ', 'ฐ', 'ู', 'ฎ', 'ฑ', '๊', 'ฯ'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'Shift แถวบนและสระ ู', text: 'ธธ ณณ ญญ ฐฐ ูู ๊๊ ฎฎ ฑฑ ฯฯ ธณ ญฐ ฎฑ พูด ดู ดูแล คุณ' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'คำศัพท์ทางการและทั่วไป', text: 'เธอ ธรรม ธรรมชาติ ธนาคาร คุณ ขอบคุณ ญาติ หญิง ฐาน ฐานะ กฎหมาย บัณฑิต ดูแล พูดคุย ภูเขา ลูก กุ๊ก ตุ๊กตา' },
+            { name: 'ฝึกคำจริง', sub: 'วอร์มครบทุกตัวอักษรไทย', text: 'ขอบคุณมาก คุณครู ธรรมชาติสวยงาม ธนาคาร ญาติพี่น้อง ผู้หญิง ฐานข้อมูล กฎหมายไทย ดูแลสุขภาพ พูดคุยอย่างสุภาพ ภูเขาสีเขียว กรุงเทพฯ' }
+          ]
+        },
+        {
+          id: 12,
+          title: 'ทดสอบความคล่องภาษาไทย',
+          desc: 'ฝึกพิมพ์ประโยคต่อเนื่องครบทุกแถว รักษาจังหวะให้สม่ำเสมอและความแม่นยำ 95% ขึ้นไป',
+          newKeys: ['ครบทุกปุ่ม'],
+          stages: [
+            { name: 'วอร์มนิ้วเต็มระบบ', sub: 'ประโยคสั้นสร้างจังหวะ', text: 'การฝึกพิมพ์สัมผัสอย่างสม่ำเสมอช่วยให้มือจำตำแหน่งปุ่มได้แม่นยำและเป็นธรรมชาติ' },
+            { name: 'ประโยคทำงาน', sub: 'ผสมสระ วรรณยุกต์ และ Shift', text: 'ความเร็วที่แท้จริงเกิดจากความแม่นยำ วางนิ้วบนแป้นเหย้าแล้วค่อยๆ เพิ่มจังหวะการพิมพ์ให้ลื่นไหล' },
+            { name: 'บททดสอบความคล่อง', sub: 'ความเร็วและความแม่นยำ', text: 'เทคโนโลยีช่วยให้เราทำงานได้เร็วขึ้น แต่ทักษะการพิมพ์สัมผัสที่ดีจะช่วยให้ความคิดไหลลื่นลงสู่หน้าจอได้อย่างอิสระโดยไม่ต้องก้มมองแป้นพิมพ์เลย' }
+          ]
+        }
+      ],
+
+      en: [
+        {
+          id: 1,
+          title: 'Home Row Core (8 Keys)',
+          desc: 'Rest left fingers on A S D F and right fingers on J K L ; using the bumps on F and J.',
+          newKeys: ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'Home Row 8 ปุ่มหลัก', text: 'ff jj dd kk ss ll aa ;; fj dk sl a; jf kd ls ;a fjdk sla;' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'สลับนิ้วซ้าย-ขวา', text: 'asdf jkl; fdsa ;lkj fafa jaja dada kaka sasa lala a;a; fjdksla;' },
+            { name: 'ฝึกคำจริง', sub: 'คำจากแป้นเหย้า', text: 'as sad dad fad lad ask all fall salad flask add dads lads sass; a sad dad; all lads ask;' }
+          ]
+        },
+        {
+          id: 2,
+          title: 'Center Index Reach (+2 Keys)',
+          desc: 'Stretch left index right to G and right index left to H, then return to F and J.',
+          newKeys: ['g', 'h'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'เอื้อมนิ้วชี้ G / H', text: 'gg hh fg jh gf hj gh hg fgh jhg gfh hgf fgf jhj gfg hgh' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมแป้นเหย้าเต็ม', text: 'gag hah gas has lag hag flag glad half hall flash dash gash' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคจากแถวเหย้า', text: 'a glad dad had a half glass; lads dash; flags flash; a hall had a saga; sash gash hash;' }
+          ]
+        },
+        {
+          id: 3,
+          title: 'Top Row: Middle Pair (+2 Keys)',
+          desc: 'Reach up with left middle finger to E and right middle finger to I.',
+          newKeys: ['e', 'i'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'นิ้วกลางขึ้นบน E / I', text: 'ee ii de ki ed ik ei ie ded kik fef jij dei kie eie iei' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ผสมสระ E / I', text: 'see sea fee fed led lid did hid kid side hide slide like life file' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคด่าน 1-3', text: 'he said she liked jade; a kid hid inside; she feels safe; a desk held his files; high hills; a leaf fell;' }
+          ]
+        },
+        {
+          id: 4,
+          title: 'Top Row: Index Pair (+2 Keys)',
+          desc: 'Reach up with left index to R and right index to U, then return immediately to F and J.',
+          newKeys: ['r', 'u'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'นิ้วชี้ขึ้นบน R / U', text: 'rr uu fr ju rf uj ru ur frf juj rfr uju dru kur fre jui' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'วอร์มคำ R / U', text: 'fur rug hug jug dug lug red rid rig fire hire sure pure rule rush' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคด่าน 1-4', text: 'her red rug is here; a girl heard a rush; he used a fresh jar; sure fire; a duke rules a fair hall; dark dusk;' }
+          ]
+        },
+        {
+          id: 5,
+          title: 'Top Row: Index Reach (+2 Keys)',
+          desc: 'Reach diagonally with index fingers to T (left) and Y (right).',
+          newKeys: ['t', 'y'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'เอื้อมบน T / Y', text: 'tt yy ft jy tf yj ty yt ftf jyj rtr uyu gtg hyh fty jyt' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'คำศัพท์ T / Y', text: 'try dry fry fly sky shy stay tray they that this true tree rest test' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคด่าน 1-5', text: 'they try hard daily; that little tree stays tall; she tells a true tale; a fast jet flies high; early start;' }
+          ]
+        },
+        {
+          id: 6,
+          title: 'Top Row: Ring & Pinky (+4 Keys)',
+          desc: 'Add W O (ring fingers) and Q P (pinkies) to complete the entire Top Row.',
+          newKeys: ['w', 'o', 'q', 'p'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'นิ้วนาง-ก้อย W O Q P', text: 'ww oo qq pp sw lo aq ;p wo ow qp pq sws lol aqa ;p;' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'วอร์มแถวบนครบชุด', text: 'who how two top pot pop low slow flow glow work word world quiet quite' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคแถวเหย้า+บน', text: 'people work well together; a quiet owl flew low; write your short story; drop two apples; follow good rules;' }
+          ]
+        },
+        {
+          id: 7,
+          title: 'Bottom Row: Index Keys (+4 Keys)',
+          desc: 'Reach down with index fingers: V B (left) and M N (right).',
+          newKeys: ['v', 'b', 'm', 'n'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'แถวล่างนิ้วชี้ V B M N', text: 'vv mm bb nn fv jm fb jn vm mv bn nb fvf jmj fbf jnj' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'วอร์มคำสะสม', text: 'van man ban fan vine mine fine line moon noon move more best nest name' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคด่าน 1-7', text: 'many brave men move forward; a brown bird built a warm nest; remember every small number; never give up;' }
+          ]
+        },
+        {
+          id: 8,
+          title: 'Bottom Row Complete',
+          desc: 'Add C , (middle), X . (ring), and Z / (pinky) to master all 26 letters and core punctuation.',
+          newKeys: ['c', ',', 'x', '.', 'z', '/'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'ปุ่มแถวล่างที่เหลือ', text: 'cc ,, xx .. zz // dc k, sx l. az ;/ c, x. z/ ,c .x /z' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ครบ 26 ตัวอักษร', text: 'cat cap car box fox fix six mix zen zip zero jazz, cool, calm. next.' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคครบทุกอักษร', text: 'quick brown foxes jump over lazy dogs. practice makes exact focus, calm rhythm, and zero errors.' }
+          ]
+        },
+        {
+          id: 9,
+          title: 'Shift & Capital Letters',
+          desc: 'Hold Shift with the opposite hand pinky when typing uppercase letters.',
+          newKeys: ['Shift', 'A–Z'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'จังหวะ Shift ซ้าย-ขวา', text: 'Aa Ss Dd Ff Jj Kk Ll Gg Hh Ee Ii Rr Uu Tt Yy' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'คำเฉพาะและชื่อเมือง', text: 'Bangkok, Tokyo, London, Paris, Monday, Friday, April, August, Typing, Focus.' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคมาตรฐาน', text: 'Good habits build real speed. Keep your fingers on Home Row, look at the screen, and type with calm rhythm.' }
+          ]
+        },
+        {
+          id: 10,
+          title: 'Number Row (0–9)',
+          desc: 'Reach up to the top number row and always bring your fingers back to Home Row.',
+          newKeys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+          stages: [
+            { name: 'ฝึกปุ่มใหม่', sub: 'ตำแหน่งตัวเลข 1-0', text: '11 22 33 44 55 66 77 88 99 00 10 29 38 47 56 12345 67890' },
+            { name: 'วอร์มนิ้วสะสม', sub: 'ชุดตัวเลขและวันที่', text: '100 2026 365 404 512 640 789 8080 950 15:30 24/7' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคผสมตัวเลข', text: 'Practice 15 minutes every day for 30 days to reach 65 WPM with 98 percent accuracy in 2026.' }
+          ]
+        },
+        {
+          id: 11,
+          title: 'High-Frequency Flow Warm-up',
+          desc: 'Build automatic muscle memory on the most common English words.',
+          newKeys: ['Flow'],
+          stages: [
+            { name: 'วอร์มชุดที่ 1', sub: 'คำสั้นความถี่สูง', text: 'the and that have with this from they will what make time just know take' },
+            { name: 'วอร์มชุดที่ 2', sub: 'เชื่อมจังหวะนิ้ว', text: 'people could other think look come over back work well even want give most' },
+            { name: 'ฝึกคำจริง', sub: 'ประโยคต่อเนื่อง', text: 'small daily steps create lasting skill when you stay relaxed and keep returning to the home row keys.' }
+          ]
+        },
+        {
+          id: 12,
+          title: 'Speed & Accuracy Mastery',
+          desc: 'Full passages to sharpen rhythm and fluency. Aim for 95%+ accuracy.',
+          newKeys: ['All Keys'],
+          stages: [
+            { name: 'วอร์มความแม่นยำ', sub: 'เน้นจังหวะสม่ำเสมอ', text: 'Accuracy always comes before speed. When your fingers learn exact paths, speed arrives naturally without tension.' },
+            { name: 'ความต่อเนื่อง', sub: 'ไม่มองแป้นพิมพ์', text: 'Touch typing frees your mind to focus on ideas rather than searching for keys. Keep your wrists level and breathe.' },
+            { name: 'บททดสอบเต็มรูปแบบ', sub: 'Speed & Fluency', text: 'Consistent practice turns conscious effort into smooth muscle memory. Aim for 95 percent accuracy first, then let your rhythm flow effortlessly across every line.' }
+          ]
+        }
+      ]
+    };
+
+    /* ============================================================
+       3. APP STATE & PERSISTENCE
+       ============================================================ */
+    const STORAGE_KEY = 'keyflow_progress_v1';
+    let progress = loadProgress();
+
+    const state = {
+      lang: 'th',
+      levelIdx: 0,
+      stageIdx: 0,
+      text: '',
+      clusters: [],
+      cursor: 0,
+      startTime: null,
+      timerId: null,
+      totalKeystrokes: 0,
+      correctKeystrokes: 0,
+      hadErrorAtPos: {},
+      keyMistakes: {},
+      finished: false,
+      showKeyboard: true,
+      soundEnabled: true,
+      theme: localStorage.getItem('keyflow_theme') || 'light'
+    };
+
+    function loadProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { th: {}, en: {} };
+      } catch {
+        return { th: {}, en: {} };
+      }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      } catch {}
+    }
+
+    /* ============================================================
+       4. WEB AUDIO SYNTH (SUBTLE MECHANICAL CLICK)
+       ============================================================ */
+    let audioCtx = null;
+    function playClick(isError = false) {
+      if (!state.soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = isError ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(isError ? 170 : 540, now);
+        osc.frequency.exponentialRampToValueAtTime(isError ? 90 : 180, now + 0.035);
+        gain.gain.setValueAtTime(isError ? 0.07 : 0.045, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.045);
+      } catch {}
+    }
+
+    /* ============================================================
+       5. THAI GRAPHEME CLUSTERING (PREVENTS BROKEN COMBINING MARKS)
+       ============================================================ */
+    const THAI_CONSONANT = /[\u0E01-\u0E2E]/;
+    const THAI_COMBINING = /[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/;
+    const THAI_SARA_AM = '\u0E33';
+
+    function buildClusters(text) {
+      const clusters = [];
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const prev = clusters[clusters.length - 1];
+        const isCombining = THAI_COMBINING.test(ch);
+        const isSaraAm = ch === THAI_SARA_AM;
+
+        if ((isCombining || isSaraAm) && prev && prev.hasConsonant) {
+          prev.chars.push(ch);
+          prev.end = i;
+        } else {
+          clusters.push({
+            start: i,
+            end: i,
+            chars: [ch],
+            hasConsonant: THAI_CONSONANT.test(ch),
+            standaloneCombining: isCombining
+          });
+        }
+      }
+      return clusters;
+    }
+
+    /* ============================================================
+       6. KEY LOOKUP HELPERS
+       ============================================================ */
+    function findKeyForChar(ch, lang) {
+      for (const row of KEY_ROWS) {
+        for (const k of row) {
+          if (lang === 'en') {
+            if (k.en === ch) return { key: k, shift: false };
+            if (k.enShift === ch) return { key: k, shift: true };
+          } else {
+            if (k.th === ch) return { key: k, shift: false };
+            if (k.thShift === ch) return { key: k, shift: true };
+          }
+        }
+      }
+      return null;
+    }
+
+    function formatDisplayChar(ch) {
+      if (ch === ' ') return 'Space';
+      if (THAI_COMBINING.test(ch)) return '◌' + ch;
+      return ch;
+    }
+
+    /* ============================================================
+       7. RENDERING UI
+       ============================================================ */
+    const els = {
+      levelList: document.getElementById('level-list'),
+      overallProgressText: document.getElementById('overall-progress-text'),
+      overallBarFill: document.getElementById('overall-bar-fill'),
+      lessonBadge: document.getElementById('lesson-badge'),
+      lessonTitle: document.getElementById('lesson-title'),
+      lessonDesc: document.getElementById('lesson-desc'),
+      newKeysStrip: document.getElementById('new-keys-strip'),
+      stageTabs: document.getElementById('stage-tabs'),
+      typingBox: document.getElementById('typing-box'),
+      typingStream: document.getElementById('typing-stream'),
+      drillProgressFill: document.getElementById('drill-progress-fill'),
+      statWpm: document.getElementById('stat-wpm'),
+      statAcc: document.getElementById('stat-acc'),
+      statTime: document.getElementById('stat-time'),
+      cueKey: document.getElementById('cue-key'),
+      cueDot: document.getElementById('cue-dot'),
+      cueFinger: document.getElementById('cue-finger'),
+      langAlert: document.getElementById('lang-alert'),
+      langAlertText: document.getElementById('lang-alert-text'),
+      kbGrid: document.getElementById('kb-grid'),
+      kbCard: document.getElementById('keyboard-card'),
+      resultOverlay: document.getElementById('result-overlay'),
+      resultStars: document.getElementById('result-stars'),
+      resultFeedback: document.getElementById('result-feedback'),
+      resWpm: document.getElementById('res-wpm'),
+      resAcc: document.getElementById('res-acc'),
+      resTime: document.getElementById('res-time'),
+      missedBox: document.getElementById('missed-box'),
+      sidebar: document.getElementById('sidebar'),
+      hiddenInput: document.getElementById('hidden-input')
+    };
+
+    function getStageRecord(lang, levelId, stageIdx) {
+      return progress[lang]?.[`${levelId}-${stageIdx}`] || null;
+    }
+
+    function getLevelStars(lang, levelId) {
+      let sum = 0, completed = 0;
+      for (let s = 0; s < 3; s++) {
+        const rec = getStageRecord(lang, levelId, s);
+        if (rec) {
+          completed++;
+          sum += rec.stars;
+        }
+      }
+      if (completed === 0) return { completed: 0, avgStars: 0 };
+      return { completed, avgStars: Math.round(sum / 3) };
+    }
+
+    function renderSidebar() {
+      const levels = CURRICULUM[state.lang];
+      let totalDone = 0;
+      const totalStages = levels.length * 3;
+      els.levelList.innerHTML = '';
+
+      levels.forEach((lv, idx) => {
+        const { completed, avgStars } = getLevelStars(state.lang, lv.id);
+        totalDone += completed;
+
+        const btn = document.createElement('button');
+        btn.className = 'level-item' +
+          (idx === state.levelIdx ? ' active' : '') +
+          (completed === 3 ? ' completed' : '');
+
+        const starStr = [1, 2, 3]
+          .map(n => `<span class="${n <= avgStars ? '' : 'empty'}">★</span>`)
+          .join('');
+
+        btn.innerHTML = `
+          <div class="level-num">${completed === 3 ? '✓' : lv.id}</div>
+          <div class="level-meta">
+            <div class="level-name">${lv.title}</div>
+            <div class="level-keys-preview">${lv.newKeys.map(formatDisplayChar).join(' ')}</div>
+          </div>
+          <div class="level-stars">${starStr}</div>
+        `;
+        btn.onclick = () => {
+          state.levelIdx = idx;
+          state.stageIdx = 0;
+          els.sidebar.classList.remove('open');
+          loadCurrentStage();
+        };
+        els.levelList.appendChild(btn);
+      });
+
+      els.overallProgressText.textContent = `${totalDone}/${totalStages} ด่าน`;
+      els.overallBarFill.style.width = `${Math.round((totalDone / totalStages) * 100)}%`;
+    }
+
+    function renderLessonHeader() {
+      const lv = CURRICULUM[state.lang][state.levelIdx];
+      els.lessonBadge.textContent = `Level ${lv.id} • ${state.lang === 'th' ? 'ภาษาไทย เกษมณี' : 'English QWERTY'}`;
+      els.lessonTitle.textContent = lv.title;
+      els.lessonDesc.textContent = lv.desc;
+
+      els.newKeysStrip.innerHTML = `<span class="new-keys-label">ปุ่มโฟกัส:</span>` +
+        lv.newKeys.map(k => `<span class="mini-cap">${formatDisplayChar(k)}</span>`).join('');
+
+      els.stageTabs.innerHTML = '';
+      lv.stages.forEach((st, idx) => {
+        const rec = getStageRecord(state.lang, lv.id, idx);
+        const tab = document.createElement('button');
+        tab.className = 'stage-tab' +
+          (idx === state.stageIdx ? ' active' : '') +
+          (rec ? ' done' : '');
+        tab.innerHTML = `
+          <div>
+            <div class="stage-tab-title">${idx + 1}. ${st.name}</div>
+            <div class="stage-tab-sub">${rec ? `สูงสุด ${rec.wpm} WPM • ${rec.acc}%` : st.sub}</div>
+          </div>
+          <div class="stage-check">✓</div>
+        `;
+        tab.onclick = () => {
+          state.stageIdx = idx;
+          loadCurrentStage();
+        };
+        els.stageTabs.appendChild(tab);
+      });
+    }
+
+    function renderTypingStream() {
+      els.typingStream.className = 'typing-stream' + (state.lang === 'th' ? ' thai-font' : '');
+      els.typingStream.innerHTML = '';
+
+      state.clusters.forEach((cl, idx) => {
+        const span = document.createElement('span');
+        const isSpace = cl.chars.length === 1 && cl.chars[0] === ' ';
+        span.className = 'cluster' + (isSpace ? ' space-cluster' : '');
+        span.dataset.cidx = idx;
+
+        if (isSpace) {
+          span.textContent = '\u00A0';
+        } else if (cl.standaloneCombining) {
+          span.textContent = '◌' + cl.chars.join('');
+        } else {
+          span.textContent = cl.chars.join('');
+        }
+        els.typingStream.appendChild(span);
+      });
+
+      updateClusterHighlights();
+    }
+
+    function updateClusterHighlights(wrongFlash = false) {
+      const nodes = els.typingStream.children;
+      for (let i = 0; i < state.clusters.length; i++) {
+        const cl = state.clusters[i];
+        const node = nodes[i];
+        node.classList.remove('done', 'active', 'had-error', 'wrong-flash');
+
+        // Remove old sub-dots
+        const oldDots = node.querySelector('.sub-dots');
+        if (oldDots) oldDots.remove();
+
+        if (state.cursor > cl.end) {
+          node.classList.add('done');
+          for (let p = cl.start; p <= cl.end; p++) {
+            if (state.hadErrorAtPos[p]) {
+              node.classList.add('had-error');
+              break;
+            }
+          }
+        } else if (state.cursor >= cl.start && state.cursor <= cl.end) {
+          node.classList.add('active');
+          if (wrongFlash) node.classList.add('wrong-flash');
+
+          // Show subtle step dots if Thai cluster has multiple keystrokes (e.g. พ + ี + ่)
+          if (cl.chars.length > 1) {
+            const dots = document.createElement('span');
+            dots.className = 'sub-dots';
+            for (let k = 0; k < cl.chars.length; k++) {
+              const d = document.createElement('span');
+              const pos = cl.start + k;
+              d.className = 'sub-dot' + (pos < state.cursor ? ' filled' : pos === state.cursor ? ' now' : '');
+              dots.appendChild(d);
+            }
+            node.appendChild(dots);
+          }
+        }
+      }
+
+      const pct = state.text.length ? Math.round((state.cursor / state.text.length) * 100) : 0;
+      els.drillProgressFill.style.width = `${pct}%`;
+
+      updateKeyboardAndCue();
+    }
+
+    function renderKeyboard(showShiftLayer = false) {
+      els.kbGrid.innerHTML = '';
+      KEY_ROWS.forEach(row => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'kb-row';
+        row.forEach(k => {
+          const kEl = document.createElement('div');
+          kEl.className = 'key' +
+            (k.special ? ' special' : '') +
+            (k.width ? ` ${k.width}` : '') +
+            (k.home ? ' home-bump' : '');
+          kEl.dataset.code = k.code;
+          if (k.finger) kEl.dataset.finger = k.finger;
+
+          if (k.special || k.code === 'Space') {
+            kEl.textContent = k.label;
+          } else {
+            const normal = state.lang === 'th' ? k.th : k.en;
+            const shifted = state.lang === 'th' ? k.thShift : k.enShift;
+            const mainChar = showShiftLayer ? shifted : normal;
+            const subChar = showShiftLayer ? normal : shifted;
+
+            const showSub = state.lang === 'th' || !/[a-z]/.test(normal);
+            kEl.innerHTML = `
+              ${showSub ? `<span class="k-sub">${formatDisplayChar(subChar)}</span>` : ''}
+              <span class="k-main">${formatDisplayChar(mainChar)}</span>
+            `;
+          }
+          rowEl.appendChild(kEl);
+        });
+        els.kbGrid.appendChild(rowEl);
+      });
+    }
+
+    function updateKeyboardAndCue() {
+      if (state.finished || state.cursor >= state.text.length) {
+        els.cueKey.textContent = '✓';
+        els.cueDot.style.background = 'var(--success)';
+        els.cueFinger.textContent = 'พิมพ์ครบแล้ว!';
+        renderKeyboard(false);
+        return;
+      }
+
+      const targetChar = state.text[state.cursor];
+      const match = findKeyForChar(targetChar, state.lang);
+
+      renderKeyboard(match ? match.shift : false);
+
+      if (!match) {
+        els.cueKey.textContent = formatDisplayChar(targetChar);
+        els.cueFinger.textContent = '';
+        return;
+      }
+
+      const fInfo = FINGER_INFO[match.key.finger];
+      els.cueKey.textContent = match.shift
+        ? `Shift + ${formatDisplayChar(targetChar)}`
+        : formatDisplayChar(targetChar);
+      els.cueDot.style.background = fInfo ? fInfo.color : 'var(--accent)';
+
+      let fingerText = fInfo ? fInfo.label : '';
+      if (match.shift && fInfo) {
+        const shiftSide = fInfo.hand === 'left' ? 'Shift ขวา (นิ้วก้อยขวา)' : 'Shift ซ้าย (นิ้วก้อยซ้าย)';
+        fingerText += ` + กด ${shiftSide}`;
+      }
+      els.cueFinger.textContent = fingerText;
+
+      // Highlight key(s) on virtual keyboard
+      const targetEl = els.kbGrid.querySelector(`[data-code="${match.key.code}"]`);
+      if (targetEl) targetEl.classList.add('target');
+
+      if (match.shift && fInfo) {
+        const shiftCode = fInfo.hand === 'left' ? 'ShiftRight' : 'ShiftLeft';
+        const shiftEl = els.kbGrid.querySelector(`[data-code="${shiftCode}"]`);
+        if (shiftEl) shiftEl.classList.add('target-shift');
+      }
+    }
+
+    /* ============================================================
+       8. STATS & TIMER
+       ============================================================ */
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    function updateLiveStats() {
+      const elapsedSec = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
+      const elapsedMin = state.startTime ? Math.max((Date.now() - state.startTime) / 60000, 1 / 60) : 0;
+      const wpm = elapsedMin > 0 ? Math.round((state.correctKeystrokes / 5) / elapsedMin) : 0;
+      const acc = state.totalKeystrokes > 0
+        ? Math.round((state.correctKeystrokes / state.totalKeystrokes) * 100)
+        : 100;
+
+      els.statWpm.textContent = wpm;
+      els.statAcc.textContent = `${acc}%`;
+      els.statTime.textContent = formatTime(elapsedSec);
+      return { wpm, acc, elapsedSec };
+    }
+
+    function startTimerIfNeeded() {
+      if (!state.startTime) {
+        state.startTime = Date.now();
+        state.timerId = setInterval(updateLiveStats, 500);
+      }
+    }
+
+    function stopTimer() {
+      if (state.timerId) {
+        clearInterval(state.timerId);
+        state.timerId = null;
+      }
+    }
+
+    /* ============================================================
+       9. STAGE LIFECYCLE
+       ============================================================ */
+    function loadCurrentStage() {
+      stopTimer();
+      const lv = CURRICULUM[state.lang][state.levelIdx];
+      const st = lv.stages[state.stageIdx];
+
+      state.text = st.text;
+      state.clusters = buildClusters(state.text);
+      state.cursor = 0;
+      state.startTime = null;
+      state.totalKeystrokes = 0;
+      state.correctKeystrokes = 0;
+      state.hadErrorAtPos = {};
+      state.keyMistakes = {};
+      state.finished = false;
+
+      els.langAlert.classList.remove('show');
+      els.resultOverlay.classList.remove('show');
+      els.statWpm.textContent = '0';
+      els.statAcc.textContent = '100%';
+      els.statTime.textContent = '0:00';
+
+      renderSidebar();
+      renderLessonHeader();
+      renderTypingStream();
+      els.typingBox.focus();
+    }
+
+    function finishStage() {
+      state.finished = true;
+      stopTimer();
+      const { wpm, acc, elapsedSec } = updateLiveStats();
+
+      const stars = acc >= 97 ? 3 : acc >= 90 ? 2 : 1;
+      const lv = CURRICULUM[state.lang][state.levelIdx];
+      const key = `${lv.id}-${state.stageIdx}`;
+      const prev = progress[state.lang][key];
+
+      progress[state.lang][key] = {
+        wpm: Math.max(wpm, prev?.wpm || 0),
+        acc: Math.max(acc, prev?.acc || 0),
+        stars: Math.max(stars, prev?.stars || 0)
+      };
+      saveProgress();
+
+      // Update Result Card
+      els.resultStars.innerHTML = [1, 2, 3]
+        .map(n => `<span style="color:${n <= stars ? '#f59e0b' : 'var(--border)'}">★</span>`)
+        .join('');
+      els.resWpm.textContent = wpm;
+      els.resAcc.textContent = `${acc}%`;
+      els.resTime.textContent = formatTime(elapsedSec);
+
+      els.resultFeedback.textContent =
+        acc >= 97 ? 'ความแม่นยำยอดเยี่ยมมาก! พร้อมไปด่านถัดไปได้เลยครับ'
+        : acc >= 90 ? 'จังหวะดีมากครับ ลองฝึกซ้ำหรือลุยด่านถัดไปได้เลย'
+        : 'แนะนำลองชะลอความเร็วลงนิดหน่อย เพื่อเน้นความแม่นยำให้เกิน 90% ครับ';
+
+      // Show top missed keys
+      const missed = Object.entries(state.keyMistakes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+      if (missed.length === 0) {
+        els.missedBox.innerHTML = `<span style="color: var(--success); font-weight: 600;">ไม่มีปุ่มที่พิมพ์พลาดเลยในรอบนี้ (100% Clean!)</span>`;
+      } else {
+        els.missedBox.innerHTML = `<span>ปุ่มที่พลาดบ่อย:</span>` +
+          missed.map(([ch, cnt]) => `<span class="missed-chip">${formatDisplayChar(ch)} ×${cnt}</span>`).join('');
+      }
+
+      els.resultOverlay.classList.add('show');
+      renderSidebar();
+      renderLessonHeader();
+      updateKeyboardAndCue();
+    }
+
+    function goNextStage() {
+      const levels = CURRICULUM[state.lang];
+      if (state.stageIdx < 2) {
+        state.stageIdx++;
+      } else if (state.levelIdx < levels.length - 1) {
+        state.levelIdx++;
+        state.stageIdx = 0;
+      } else {
+        state.levelIdx = 0;
+        state.stageIdx = 0;
+      }
+      loadCurrentStage();
+    }
+
+    /* ============================================================
+       10. KEYBOARD INPUT HANDLING
+       ============================================================ */
+    function checkLayoutMismatch(pressedKey) {
+      if (state.lang === 'th' && /^[a-zA-Z;'\[\],.\/\-=`]$/.test(pressedKey)) {
+        els.langAlertText.textContent = 'ตรวจพบว่าคีย์บอร์ดยังเป็นภาษาอังกฤษ กรุณากดเปลี่ยนภาษาเป็น "ภาษาไทย (เกษมณี)" ครับ';
+        els.langAlert.classList.add('show');
+        return true;
+      }
+      if (state.lang === 'en' && /[\u0E00-\u0E7F]/.test(pressedKey)) {
+        els.langAlertText.textContent = 'ตรวจพบว่าคีย์บอร์ดยังเป็นภาษาไทย กรุณากดเปลี่ยนภาษาเป็น "English (US)" ครับ';
+        els.langAlert.classList.add('show');
+        return true;
+      }
+      return false;
+    }
+
+    function flashVirtualKey(code, isWrong) {
+      const keyEl = els.kbGrid.querySelector(`[data-code="${code}"]`);
+      if (!keyEl) return;
+      keyEl.classList.add('pressed');
+      if (isWrong) keyEl.classList.add('wrong-key');
+      setTimeout(() => {
+        keyEl.classList.remove('pressed', 'wrong-key');
+      }, 160);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        loadCurrentStage();
+        return;
+      }
+
+      if (state.finished) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          goNextStage();
+        }
+        return;
+      }
+
+      // Ignore pure modifier or navigation keys
+      if (['Shift', 'CapsLock', 'Tab', 'Dead', 'Process', 'Backspace', 'Enter',
+           'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        if (e.key === 'Tab') e.preventDefault();
+        return;
+      }
+
+      if (e.key.length !== 1) return;
+      if (e.key === ' ') e.preventDefault();
+
+      const expected = state.text[state.cursor];
+      startTimerIfNeeded();
+
+      if (e.key === expected) {
+        els.langAlert.classList.remove('show');
+        state.totalKeystrokes++;
+        state.correctKeystrokes++;
+        state.cursor++;
+        playClick(false);
+        flashVirtualKey(e.code, false);
+
+        if (state.cursor >= state.text.length) {
+          updateClusterHighlights(false);
+          finishStage();
+        } else {
+          updateClusterHighlights(false);
+          updateLiveStats();
+        }
+      } else {
+        const isMismatch = checkLayoutMismatch(e.key);
+        playClick(true);
+        flashVirtualKey(e.code, true);
+
+        if (!isMismatch) {
+          state.totalKeystrokes++;
+          state.hadErrorAtPos[state.cursor] = true;
+          state.keyMistakes[expected] = (state.keyMistakes[expected] || 0) + 1;
+          updateLiveStats();
+        }
+
+        updateClusterHighlights(true);
+        els.typingBox.classList.remove('shake');
+        void els.typingBox.offsetWidth;
+        els.typingBox.classList.add('shake');
+      }
+    });
+
+    /* ============================================================
+       11. CONTROLS & EVENTS
+       ============================================================ */
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nextLang = btn.dataset.lang;
+        if (nextLang === state.lang) return;
+        state.lang = nextLang;
+        state.levelIdx = 0;
+        state.stageIdx = 0;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === nextLang));
+        loadCurrentStage();
+      });
+    });
+
+    document.getElementById('btn-restart').addEventListener('click', loadCurrentStage);
+    document.getElementById('btn-retry-stage').addEventListener('click', loadCurrentStage);
+    document.getElementById('btn-next-stage').addEventListener('click', goNextStage);
+
+    document.getElementById('btn-toggle-kb').addEventListener('click', (e) => {
+      state.showKeyboard = !state.showKeyboard;
+      e.currentTarget.classList.toggle('active', state.showKeyboard);
+      els.kbCard.classList.toggle('hidden', !state.showKeyboard);
+    });
+
+    document.getElementById('btn-toggle-sound').addEventListener('click', (e) => {
+      state.soundEnabled = !state.soundEnabled;
+      e.currentTarget.classList.toggle('active', state.soundEnabled);
+    });
+
+    function applyTheme(theme) {
+      state.theme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('keyflow_theme', theme);
+      const btn = document.getElementById('btn-toggle-theme');
+      btn.textContent = theme === 'dark' ? 'ธีมสว่าง' : 'ธีมมืด';
+    }
+
+    document.getElementById('btn-toggle-theme').addEventListener('click', () => {
+      applyTheme(state.theme === 'dark' ? 'light' : 'dark');
+    });
+
+    document.getElementById('btn-mobile-levels').addEventListener('click', () => {
+      els.sidebar.classList.toggle('open');
+    });
+
+    els.typingBox.addEventListener('click', () => {
+      els.typingBox.focus();
+      els.hiddenInput.focus();
+    });
+
+    // Init
+    applyTheme(state.theme);
+    loadCurrentStage();
+  </script>
+</body>
+</html>
