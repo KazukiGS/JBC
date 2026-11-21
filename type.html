@@ -776,7 +776,7 @@
       position: relative;
       display: inline-block;
       border-radius: 4px;
-      padding: 0 1px;
+      padding: 0 1.5px;
       color: var(--text-faint);
       transition: color 0.08s ease, background 0.08s ease;
     }
@@ -796,9 +796,8 @@
       display: grid;
       place-items: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65em;
-      color: var(--yellow);
-      opacity: 0.9;
+      font-size: 0.68em;
+      color: inherit;
     }
 
     .cluster.space-cluster.state-red::after {
@@ -836,43 +835,56 @@
       text-shadow: 0 0 12px rgba(255, 42, 60, 0.4);
     }
 
-    /* Active Caret + Blinking Indicator */
+    /* Active Target Character — Blinking Character (No Cursor Bar) */
     .cluster.active {
-      color: var(--text);
-      background: rgba(250, 204, 21, 0.14);
-      box-shadow: inset 0 -2.5px 0 rgba(250, 204, 21, 0.85);
+      color: var(--yellow-bright);
+      background: rgba(250, 204, 21, 0.18);
+      box-shadow: inset 0 -2px 0 var(--yellow);
+      text-shadow: 0 0 14px var(--yellow-glow);
+      animation: targetCharBlink 0.85s ease-in-out infinite;
     }
 
     .cluster.active.partial-red {
       color: var(--red);
       background: var(--red-soft);
+      box-shadow: inset 0 -2px 0 var(--red);
+      text-shadow: 0 0 14px var(--red-glow);
+      animation: targetCharBlinkRed 0.85s ease-in-out infinite;
     }
 
-    /* Blinking Vertical Caret Bar */
-    .cluster.active::before {
-      content: '';
-      position: absolute;
-      left: -1.5px;
-      top: 14%;
-      bottom: 14%;
-      width: 2.5px;
-      border-radius: 2px;
-      background: var(--yellow-bright);
-      box-shadow: 0 0 10px var(--yellow), 0 0 4px #fff;
-      animation: caretBlink 0.95s steps(2, start) infinite;
-      pointer-events: none;
-      z-index: 2;
+    @keyframes targetCharBlink {
+      0%, 100% {
+        color: var(--yellow-bright);
+        background: rgba(250, 204, 21, 0.2);
+        box-shadow: inset 0 -2px 0 var(--yellow);
+        text-shadow: 0 0 14px var(--yellow-glow);
+      }
+      50% {
+        color: rgba(250, 204, 21, 0.24);
+        background: rgba(250, 204, 21, 0.03);
+        box-shadow: inset 0 -2px 0 rgba(250, 204, 21, 0.18);
+        text-shadow: none;
+      }
     }
 
-    /* Keep caret solid while actively typing for smoother tracking */
-    .typing-stream.is-typing .cluster.active::before {
-      animation: none;
-      opacity: 1;
+    @keyframes targetCharBlinkRed {
+      0%, 100% {
+        color: var(--red);
+        background: var(--red-soft);
+        box-shadow: inset 0 -2px 0 var(--red);
+        text-shadow: 0 0 14px var(--red-glow);
+      }
+      50% {
+        color: rgba(255, 42, 60, 0.26);
+        background: rgba(255, 42, 60, 0.04);
+        box-shadow: inset 0 -2px 0 rgba(255, 42, 60, 0.2);
+        text-shadow: none;
+      }
     }
 
-    @keyframes caretBlink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0.08; }
+    @keyframes dotBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
     }
 
     .sub-dots {
@@ -894,11 +906,7 @@
     .sub-dot.now {
       background: var(--yellow);
       box-shadow: 0 0 7px var(--yellow);
-      animation: caretBlink 0.95s steps(2, start) infinite;
-    }
-    .typing-stream.is-typing .sub-dot.now {
-      animation: none;
-      opacity: 1;
+      animation: dotBlink 0.85s ease-in-out infinite;
     }
     .sub-dot.clean { background: #f8fafc; }
     .sub-dot.yellow { background: var(--yellow-bright); }
@@ -1089,7 +1097,6 @@
       box-shadow: 0 0 16px var(--red-glow);
     }
 
-    /* Pressed & Wrong Key Feedback (now visibly works without DOM wipe!) */
     .key.pressed {
       transform: translateY(2px);
       border-bottom-width: 1px;
@@ -1593,7 +1600,7 @@
     ];
 
     /* ============================================================
-       2. CURRICULUM DATA (VERIFIED ZERO OUT-OF-LEVEL LEAKS)
+       2. CURRICULUM DATA
        ============================================================ */
     const CURRICULUM = {
       th: [
@@ -1876,7 +1883,7 @@
 
     const state = {
       lang: 'th',
-      enFont: localStorage.getItem(FONT_STORAGE_KEY) || 'mono', // 'mono' | 'lora' | 'caveat'
+      enFont: localStorage.getItem(FONT_STORAGE_KEY) || 'mono',
       levelIdx: 0,
       stageIdx: 0,
       text: '',
@@ -1886,7 +1893,6 @@
       mistakeCounts: [],
       startTime: null,
       timerId: null,
-      typingIdleTimer: null,
       totalKeystrokes: 0,
       correctKeystrokes: 0,
       keyMistakes: {},
@@ -2056,7 +2062,6 @@
     const keyNodeMap = new Map();
     const keyFlashTimers = new Map();
 
-    // Build Keyboard DOM ONCE so press/error flash animations never get destroyed
     function initKeyboardDOM() {
       els.kbGrid.innerHTML = '';
       keyNodeMap.clear();
@@ -2116,10 +2121,8 @@
         if (state.enFont === 'lora') classes.push('en-font-lora');
         else if (state.enFont === 'caveat') classes.push('en-font-caveat');
       }
-      const keepTyping = els.typingStream.classList.contains('is-typing');
-      els.typingStream.className = classes.join(' ') + (keepTyping ? ' is-typing' : '');
+      els.typingStream.className = classes.join(' ');
 
-      // Show font picker in EN mode
       els.fontPicker.classList.toggle('hidden', state.lang !== 'en');
       document.querySelectorAll('.font-opt').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.font === state.enFont);
@@ -2276,7 +2279,6 @@
         } else if (state.cursor >= cl.start && state.cursor <= cl.end) {
           node.classList.add('active');
 
-          // If an earlier character inside this Thai cluster was already wrong, tint immediately
           for (let p = cl.start; p < state.cursor; p++) {
             if (getPosState(p) === 'red') {
               node.classList.add('partial-red');
@@ -2408,14 +2410,6 @@
       }
     }
 
-    function markActivelyTyping() {
-      els.typingStream.classList.add('is-typing');
-      if (state.typingIdleTimer) clearTimeout(state.typingIdleTimer);
-      state.typingIdleTimer = setTimeout(() => {
-        els.typingStream.classList.remove('is-typing');
-      }, 420);
-    }
-
     /* ============================================================
        10. STAGE LIFECYCLE
        ============================================================ */
@@ -2435,7 +2429,6 @@
       state.keyMistakes = {};
       state.finished = false;
 
-      els.typingStream.classList.remove('is-typing');
       els.langAlert.classList.remove('show');
       els.trailingHint.classList.remove('show');
       els.resultOverlay.classList.remove('show');
@@ -2519,13 +2512,11 @@
     }
 
     /* ============================================================
-       11. KEYBOARD INPUT HANDLING (FIXED MISMATCH & CAPSLOCK)
+       11. KEYBOARD INPUT HANDLING
        ============================================================ */
     function checkLayoutMismatch(pressedKey, expectedKey) {
-      // Never flag a valid expected key as a layout mismatch
       if (pressedKey === expectedKey) return false;
 
-      // Only flag characters that do NOT exist on Thai Kedmanee layout
       if (state.lang === 'th' && /^[a-zA-Z;'\[\]=`\\]$/.test(pressedKey)) {
         els.langAlertText.textContent = 'ตรวจพบว่าคีย์บอร์ดยังเป็นภาษาอังกฤษ กรุณาสลับภาษาเป็น "ภาษาไทย (เกษมณี)" ครับ';
         els.langAlert.classList.add('show');
@@ -2580,7 +2571,6 @@
         return;
       }
 
-      // CapsLock warning for English mode
       if (state.lang === 'en' && e.getModifierState && e.getModifierState('CapsLock')) {
         els.langAlertText.textContent = 'Caps Lock เปิดอยู่ — แนะนำปิด Caps Lock เพื่อให้พิมพ์ตัวพิมพ์เล็กได้ถูกต้องครับ';
         els.langAlert.classList.add('show');
@@ -2588,13 +2578,11 @@
         els.langAlert.classList.remove('show');
       }
 
-      // Backspace support
       if (e.key === 'Backspace') {
         e.preventDefault();
         if (state.cursor === 0) return;
 
         els.trailingHint.classList.remove('show');
-        markActivelyTyping();
 
         if (isCtrlBackspace) {
           while (state.cursor > 0 && state.text[state.cursor - 1] === ' ') {
@@ -2636,13 +2624,11 @@
         return;
       }
 
-      // Clear mismatch alert if not CapsLock
       if (!(state.lang === 'en' && e.getModifierState && e.getModifierState('CapsLock'))) {
         els.langAlert.classList.remove('show');
       }
 
       startTimerIfNeeded();
-      markActivelyTyping();
 
       state.totalKeystrokes++;
       state.typedChars[pos] = e.key;
@@ -2673,7 +2659,7 @@
     });
 
     /* ============================================================
-       12. CONTROLS & EVENTS (ALL BLUR AFTER CLICK TO PREVENT BUGS)
+       12. CONTROLS & EVENTS
        ============================================================ */
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => {
